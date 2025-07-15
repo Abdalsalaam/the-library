@@ -1,0 +1,56 @@
+{
+	"name": "abdalsalaam/wp-resource-library",
+	"description": "A comprehensive files/books/videos library plugin with user data collection for downloads.",
+	"homepage": "https://github.com/Abdalsalaam",
+	"type": "wordpress-plugin",
+	"license": "GPL-3.0-or-later",
+	"archive": {
+		"exclude": [
+			"!/assets",
+			"!/dist",
+			"!/languages",
+			"node_modules",
+			"README.md",
+			"composer.json",
+			"composer.lock",
+			"package.json",
+			"package-lock.json",
+			"composer.json",
+			"composer.lock",
+			"pnpm-lock.yaml",
+			"wp-resource-library.zip",
+			".*"
+		]
+	},
+	"require-dev": {
+		"squizlabs/php_codesniffer": "*",
+		"dealerdirect/phpcodesniffer-composer-installer": "*",
+		"wp-coding-standards/wpcs": "*",
+		"woocommerce/woocommerce-sniffs": "*"
+	},
+	"scripts": {
+		"check-security": [
+			"./vendor/bin/phpcs . --ignore=vendor,.git,assets,node_modules,tests,dist --standard=./.phpcs.security.xml  --report-full --report-summary"
+		],
+		"check-php": [
+			"./vendor/bin/phpcs . --ignore=vendor,.git,assets,node_modules,tests,dist --standard=WooCommerce-Core,WordPress-Core,WordPress-Extra  --report-full --report-summary --colors"
+		],
+		"check-php:fix": [
+			"./vendor/bin/phpcbf . --ignore=vendor,.git,assets,node_modules,tests,dist --standard=WooCommerce-Core,WordPress-Core,WordPress-Extra  --report-full --report-summary --colors"
+		],
+		"check-all": [
+			"./vendor/bin/phpcs . --ignore=vendor,.git,assets,node_modules,tests,dist --standard=WooCommerce-Core,WordPress-Core,WordPress-Extra,WordPress-Docs  --report-full --report-summary --colors -s"
+		],
+		"check-all:fix": [
+			"./vendor/bin/phpcbf . --ignore=vendor,.git,assets,node_modules,tests,dist --standard=WooCommerce-Core,WordPress-Core,WordPress-Extra,WordPress-Docs  --report-full --report-summary --colors"
+		],
+		"qit:security": [
+			"npm run build && composer install && ./vendor/bin/qit run:security woocommerce-shipping-ups --zip=woocommerce-shipping-ups.zip"
+		]
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
+}
