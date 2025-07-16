@@ -1,0 +1,955 @@
+# Copyright (C) 2025 Abdalsalaam Halawa
+# This file is distributed under the same license as the WP Resource Library package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Resource Library 1.0\n"
+"Report-Msgid-Bugs-To: "
+"https://wordpress.org/support/plugin/wp-resource-library\n"
+"POT-Creation-Date: 2025-07-17 19:39:11+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: node-wp-i18n 1.2.8\n"
+
+#: includes/class-admin.php:37 includes/class-admin.php:38
+#: includes/class-admin.php:120 includes/class-admin.php:523
+msgid "Download Requests"
+msgstr ""
+
+#: includes/class-admin.php:46 includes/class-admin.php:47
+#: includes/class-admin.php:354
+msgid "System Logs"
+msgstr ""
+
+#: includes/class-admin.php:55 includes/class-admin.php:489
+msgid "System Maintenance"
+msgstr ""
+
+#: includes/class-admin.php:56
+msgid "Maintenance"
+msgstr ""
+
+#: includes/class-admin.php:72
+msgid "Security check failed. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:77 includes/class-admin.php:309
+msgid "You do not have sufficient permissions to perform this action."
+msgstr ""
+
+#: includes/class-admin.php:88
+#. translators: %d: number of deleted requests
+msgid "%d request deleted successfully."
+msgid_plural "%d requests deleted successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-admin.php:93
+msgid "Error deleting requests. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:137
+msgid "Export CSV"
+msgstr ""
+
+#: includes/class-admin.php:147
+msgid "Search requests:"
+msgstr ""
+
+#: includes/class-admin.php:148
+msgid "Search by name, email, or mobile..."
+msgstr ""
+
+#: includes/class-admin.php:149 includes/class-frontend.php:257
+msgid "Search"
+msgstr ""
+
+#: includes/class-admin.php:159
+msgid "Bulk Actions"
+msgstr ""
+
+#: includes/class-admin.php:160 includes/class-admin.php:242
+msgid "Delete"
+msgstr ""
+
+#: includes/class-admin.php:162
+msgid "Apply"
+msgstr ""
+
+#: includes/class-admin.php:170 includes/class-admin.php:257
+#. translators: %s: number of items
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-admin.php:178
+msgid "&laquo;"
+msgstr ""
+
+#: includes/class-admin.php:179
+msgid "&raquo;"
+msgstr ""
+
+#: includes/class-admin.php:198
+msgid "File"
+msgstr ""
+
+#: includes/class-admin.php:199
+msgid "Name"
+msgstr ""
+
+#: includes/class-admin.php:200
+msgid "Email"
+msgstr ""
+
+#: includes/class-admin.php:201
+msgid "Mobile"
+msgstr ""
+
+#: includes/class-admin.php:202 includes/class-csv-export.php:80
+msgid "Download Date"
+msgstr ""
+
+#: includes/class-admin.php:203 includes/class-admin.php:385
+#: includes/class-csv-export.php:81
+msgid "IP Address"
+msgstr ""
+
+#: includes/class-admin.php:204
+msgid "Actions"
+msgstr ""
+
+#: includes/class-admin.php:210
+msgid "No download requests found."
+msgstr ""
+
+#: includes/class-admin.php:224 includes/class-csv-export.php:91
+msgid "File not found"
+msgstr ""
+
+#: includes/class-admin.php:234 includes/class-download-handler.php:323
+msgid "Not provided"
+msgstr ""
+
+#: includes/class-admin.php:280
+msgid "Are you sure you want to delete this request?"
+msgstr ""
+
+#: includes/class-admin.php:292
+msgid "Error deleting request."
+msgstr ""
+
+#: includes/class-admin.php:314 includes/class-admin.php:320
+msgid "Invalid request ID."
+msgstr ""
+
+#: includes/class-admin.php:326
+msgid "Request deleted successfully."
+msgstr ""
+
+#: includes/class-admin.php:328
+msgid "Error deleting request or request not found."
+msgstr ""
+
+#: includes/class-admin.php:359
+msgid "Error logs table does not exist."
+msgstr ""
+
+#: includes/class-admin.php:360
+msgid ""
+"Please deactivate and reactivate the plugin to create the required database "
+"tables."
+msgstr ""
+
+#: includes/class-admin.php:368
+msgid "Clear Old Logs"
+msgstr ""
+
+#: includes/class-admin.php:374
+msgid "Error logs table is not available. Please reactivate the plugin."
+msgstr ""
+
+#: includes/class-admin.php:376
+msgid "No error logs found."
+msgstr ""
+
+#: includes/class-admin.php:381
+msgid "Timestamp"
+msgstr ""
+
+#: includes/class-admin.php:382
+msgid "Level"
+msgstr ""
+
+#: includes/class-admin.php:383
+msgid "Message"
+msgstr ""
+
+#: includes/class-admin.php:384
+msgid "User"
+msgstr ""
+
+#: includes/class-admin.php:411
+msgid "Guest"
+msgstr ""
+
+#: includes/class-admin.php:438
+msgid "Are you sure you want to clear old logs?"
+msgstr ""
+
+#: includes/class-admin.php:446
+msgid "Failed to clear logs."
+msgstr ""
+
+#: includes/class-admin.php:462 includes/class-admin.php:678
+#: includes/class-admin.php:732
+msgid "Insufficient permissions."
+msgstr ""
+
+#: includes/class-admin.php:471
+#. translators: %d: number of deleted logs
+msgid "%d old logs cleared successfully."
+msgstr ""
+
+#: includes/class-admin.php:492
+msgid "Database Statistics"
+msgstr ""
+
+#: includes/class-admin.php:495
+msgid "Total Downloads"
+msgstr ""
+
+#: includes/class-admin.php:499
+msgid "Today"
+msgstr ""
+
+#: includes/class-admin.php:503
+msgid "This Week"
+msgstr ""
+
+#: includes/class-admin.php:507
+msgid "This Month"
+msgstr ""
+
+#: includes/class-admin.php:511 includes/class-admin.php:532
+msgid "Error Logs"
+msgstr ""
+
+#: includes/class-admin.php:518
+msgid "Database Cleanup"
+msgstr ""
+
+#: includes/class-admin.php:519
+msgid "Clean up old data to optimize database performance."
+msgstr ""
+
+#: includes/class-admin.php:526
+msgid "Clean Old Download Requests"
+msgstr ""
+
+#: includes/class-admin.php:528
+msgid "Remove download requests older than 1 year."
+msgstr ""
+
+#: includes/class-admin.php:535
+msgid "Clean Old Error Logs"
+msgstr ""
+
+#: includes/class-admin.php:537
+msgid "Remove error logs older than 30 days."
+msgstr ""
+
+#: includes/class-admin.php:541
+msgid "Expired Transients"
+msgstr ""
+
+#: includes/class-admin.php:544
+msgid "Clean Expired Transients"
+msgstr ""
+
+#: includes/class-admin.php:546
+msgid "Remove expired download tokens and cache data."
+msgstr ""
+
+#: includes/class-admin.php:550
+msgid "Orphaned Metadata"
+msgstr ""
+
+#: includes/class-admin.php:553
+msgid "Clean Orphaned Metadata"
+msgstr ""
+
+#: includes/class-admin.php:555
+msgid "Remove metadata for deleted posts."
+msgstr ""
+
+#: includes/class-admin.php:559
+msgid "Full Cleanup"
+msgstr ""
+
+#: includes/class-admin.php:562
+msgid "Run Full Cleanup"
+msgstr ""
+
+#: includes/class-admin.php:564
+msgid "Run all cleanup tasks at once."
+msgstr ""
+
+#: includes/class-admin.php:573
+msgid "Cache Management"
+msgstr ""
+
+#: includes/class-admin.php:574
+msgid "Manage plugin cache for better performance."
+msgstr ""
+
+#: includes/class-admin.php:578
+msgid "File Types Cache"
+msgstr ""
+
+#: includes/class-admin.php:581
+msgid "Clear File Types Cache"
+msgstr ""
+
+#: includes/class-admin.php:583
+msgid "Force refresh of file types dropdown cache."
+msgstr ""
+
+#: includes/class-admin.php:587
+msgid "All Caches"
+msgstr ""
+
+#: includes/class-admin.php:590
+msgid "Clear All Plugin Caches"
+msgstr ""
+
+#: includes/class-admin.php:592
+msgid "Clear all plugin-related cache data."
+msgstr ""
+
+#: includes/class-admin.php:606
+msgid "Running..."
+msgstr ""
+
+#: includes/class-admin.php:628
+msgid "Cleanup failed. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:638
+msgid "Clearing..."
+msgstr ""
+
+#: includes/class-admin.php:660
+msgid "Failed to clear cache. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:683 includes/class-admin.php:718
+msgid "Invalid cleanup type."
+msgstr ""
+
+#: includes/class-admin.php:695
+#. translators: %d: number of deleted requests
+msgid "Cleaned up %d old download requests."
+msgstr ""
+
+#: includes/class-admin.php:701
+#. translators: %d: number of deleted logs
+msgid "Cleaned up %d error logs."
+msgstr ""
+
+#: includes/class-admin.php:708
+#. translators: 1: number of download requests cleaned, 2: number of error logs
+#. cleaned, 3: number of transients cleaned, 4: number of orphaned metadata
+#. cleaned
+msgid ""
+"Full cleanup completed. Download requests: %1$d, Error logs: %2$d, "
+"Transients: %3$d, Orphaned metadata: %4$d"
+msgstr ""
+
+#: includes/class-admin.php:737 includes/class-admin.php:755
+msgid "Invalid cache type."
+msgstr ""
+
+#: includes/class-admin.php:746
+msgid "File types cache cleared successfully."
+msgstr ""
+
+#: includes/class-admin.php:751
+msgid "All plugin caches cleared successfully."
+msgstr ""
+
+#: includes/class-csv-export.php:40
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: includes/class-csv-export.php:55
+msgid "No download requests found to export."
+msgstr ""
+
+#: includes/class-csv-export.php:75
+msgid "ID"
+msgstr ""
+
+#: includes/class-csv-export.php:76
+msgid "File Title"
+msgstr ""
+
+#: includes/class-csv-export.php:77
+msgid "User Name"
+msgstr ""
+
+#: includes/class-csv-export.php:78
+msgid "User Email"
+msgstr ""
+
+#: includes/class-csv-export.php:79
+msgid "User Mobile"
+msgstr ""
+
+#: includes/class-csv-export.php:82
+msgid "User Agent"
+msgstr ""
+
+#: includes/class-custom-post-type.php:42
+msgid "Add New"
+msgstr ""
+
+#: includes/class-custom-post-type.php:43
+msgid "Add New File"
+msgstr ""
+
+#: includes/class-custom-post-type.php:44
+msgid "New File"
+msgstr ""
+
+#: includes/class-custom-post-type.php:45
+msgid "Edit File"
+msgstr ""
+
+#: includes/class-custom-post-type.php:46
+msgid "View File"
+msgstr ""
+
+#: includes/class-custom-post-type.php:47
+msgid "All Files"
+msgstr ""
+
+#: includes/class-custom-post-type.php:48
+msgid "Search Files"
+msgstr ""
+
+#: includes/class-custom-post-type.php:49
+msgid "Parent Files:"
+msgstr ""
+
+#: includes/class-custom-post-type.php:50 includes/class-frontend.php:309
+msgid "No files found."
+msgstr ""
+
+#: includes/class-custom-post-type.php:51
+msgid "No files found in Trash."
+msgstr ""
+
+#: includes/class-custom-post-type.php:92
+msgid "Search File Categories"
+msgstr ""
+
+#: includes/class-custom-post-type.php:93
+msgid "All File Categories"
+msgstr ""
+
+#: includes/class-custom-post-type.php:94
+msgid "Parent File Category"
+msgstr ""
+
+#: includes/class-custom-post-type.php:95
+msgid "Parent File Category:"
+msgstr ""
+
+#: includes/class-custom-post-type.php:96
+msgid "Edit File Category"
+msgstr ""
+
+#: includes/class-custom-post-type.php:97
+msgid "Update File Category"
+msgstr ""
+
+#: includes/class-custom-post-type.php:98
+msgid "Add New File Category"
+msgstr ""
+
+#: includes/class-custom-post-type.php:99
+msgid "New File Category Name"
+msgstr ""
+
+#: includes/class-custom-post-type.php:100
+msgid "File Categories"
+msgstr ""
+
+#: includes/class-custom-post-type.php:122
+msgid "File Upload"
+msgstr ""
+
+#: includes/class-custom-post-type.php:131
+msgid "File Details"
+msgstr ""
+
+#: includes/class-custom-post-type.php:155
+#: includes/class-custom-post-type.php:160
+msgid "Upload File"
+msgstr ""
+
+#: includes/class-custom-post-type.php:161
+msgid "Remove File"
+msgstr ""
+
+#: includes/class-custom-post-type.php:162
+msgid "Upload the file that users will be able to download."
+msgstr ""
+
+#: includes/class-custom-post-type.php:178
+#: templates/single-files-library.php:187
+msgid "File Size:"
+msgstr ""
+
+#: includes/class-custom-post-type.php:178
+#: includes/class-custom-post-type.php:179
+msgid "N/A"
+msgstr ""
+
+#: includes/class-custom-post-type.php:179
+#: templates/single-files-library.php:194
+msgid "File Type:"
+msgstr ""
+
+#: includes/class-custom-post-type.php:180
+msgid "Download Count:"
+msgstr ""
+
+#: includes/class-download-handler.php:41
+msgid "Required fields are missing."
+msgstr ""
+
+#: includes/class-download-handler.php:55
+msgid "Please fill in all required fields."
+msgstr ""
+
+#: includes/class-download-handler.php:64
+msgid "Please enter a valid mobile number (minimum 7 digits)."
+msgstr ""
+
+#: includes/class-download-handler.php:73
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: includes/class-download-handler.php:83
+#: includes/class-download-handler.php:176
+#: includes/class-download-handler.php:229
+#: includes/class-download-handler.php:309
+msgid "File not found."
+msgstr ""
+
+#: includes/class-download-handler.php:113
+msgid "Database error occurred. Please try again."
+msgstr ""
+
+#: includes/class-download-handler.php:121
+msgid "Thank you! Your download will start shortly."
+msgstr ""
+
+#: includes/class-download-handler.php:137
+msgid "Download token is required."
+msgstr ""
+
+#: includes/class-download-handler.php:147
+msgid "Invalid download token."
+msgstr ""
+
+#: includes/class-download-handler.php:165
+msgid "Download token has expired. Please request the file again."
+msgstr ""
+
+#: includes/class-download-handler.php:204
+msgid "Invalid download request. Missing parameters."
+msgstr ""
+
+#: includes/class-download-handler.php:211
+msgid "Invalid download request."
+msgstr ""
+
+#: includes/class-download-handler.php:218
+msgid "Download token has expired or is invalid. Please request the file again."
+msgstr ""
+
+#: includes/class-download-handler.php:223
+msgid "Invalid download token for this file."
+msgstr ""
+
+#: includes/class-download-handler.php:241
+msgid "File not found on server."
+msgstr ""
+
+#: includes/class-download-handler.php:278
+msgid "You must be logged in to download files directly."
+msgstr ""
+
+#: includes/class-download-handler.php:289
+msgid "Post ID is required."
+msgstr ""
+
+#: includes/class-download-handler.php:299
+msgid "Invalid post ID."
+msgstr ""
+
+#: includes/class-download-handler.php:344
+msgid "Error saving your request. Please try again."
+msgstr ""
+
+#: includes/class-frontend.php:68 includes/class-frontend.php:89
+msgid "Loading..."
+msgstr ""
+
+#: includes/class-frontend.php:69 includes/class-frontend.php:90
+msgid "No more files to load."
+msgstr ""
+
+#: includes/class-frontend.php:70 includes/class-frontend.php:91
+msgid "Error loading files. Please try again."
+msgstr ""
+
+#: includes/class-frontend.php:256 templates/archive-files-library.php:43
+msgid "Search files..."
+msgstr ""
+
+#: includes/class-frontend.php:264 templates/archive-files-library.php:50
+msgid "All Categories"
+msgstr ""
+
+#: includes/class-frontend.php:279 templates/archive-files-library.php:90
+msgid "Newest First"
+msgstr ""
+
+#: includes/class-frontend.php:280 templates/archive-files-library.php:91
+msgid "Oldest First"
+msgstr ""
+
+#: includes/class-frontend.php:281 templates/archive-files-library.php:92
+msgid "Title A-Z"
+msgstr ""
+
+#: includes/class-frontend.php:282 templates/archive-files-library.php:93
+msgid "Title Z-A"
+msgstr ""
+
+#: includes/class-frontend.php:283 templates/archive-files-library.php:94
+msgid "Most Downloaded"
+msgstr ""
+
+#: includes/class-frontend.php:302
+msgid "Load More"
+msgstr ""
+
+#: includes/class-frontend.php:348 includes/class-frontend.php:378
+#. translators: %s: file title
+msgid "Download %s"
+msgstr ""
+
+#: includes/class-frontend.php:359
+#. translators: %s: file title
+msgid "View details for %s"
+msgstr ""
+
+#: includes/class-frontend.php:399
+#. translators: %s: category name.
+msgid "View all %s files"
+msgstr ""
+
+#: includes/class-frontend.php:424
+msgid "File size:"
+msgstr ""
+
+#: includes/class-frontend.php:432
+msgid "File type:"
+msgstr ""
+
+#: includes/class-frontend.php:439
+msgid "Download count:"
+msgstr ""
+
+#: includes/class-frontend.php:443
+#. translators: %d: download count
+msgid "download"
+msgid_plural "downloads"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-frontend.php:450 templates/single-files-library.php:73
+#: templates/single-files-library.php:205
+msgid "Published:"
+msgstr ""
+
+#: includes/class-frontend.php:466
+#. translators: %s: file title
+msgid "View details and download %s"
+msgstr ""
+
+#: includes/class-frontend.php:472
+msgid "View Details"
+msgstr ""
+
+#: includes/class-frontend.php:478
+#. translators: %s: file title
+msgid "for %s"
+msgstr ""
+
+#: templates/archive-files-library.php:16
+msgid "Files in Category: "
+msgstr ""
+
+#: templates/archive-files-library.php:18 templates/single-files-library.php:26
+msgid "Files Library"
+msgstr ""
+
+#: templates/archive-files-library.php:71
+msgid "All File Types"
+msgstr ""
+
+#: templates/archive-files-library.php:110
+msgid "Filter"
+msgstr ""
+
+#: templates/archive-files-library.php:121
+msgid "Clear Filters"
+msgstr ""
+
+#: templates/archive-files-library.php:142
+#. translators: 1: start number, 2: end number, 3: total number
+msgid "Showing %1$d-%2$d of %3$d files"
+msgstr ""
+
+#: templates/archive-files-library.php:148
+#: templates/archive-files-library.php:195
+msgid "No files found"
+msgstr ""
+
+#: templates/archive-files-library.php:183
+msgid "&laquo; Previous"
+msgstr ""
+
+#: templates/archive-files-library.php:184
+msgid "Next &raquo;"
+msgstr ""
+
+#: templates/archive-files-library.php:196
+msgid "Try adjusting your search criteria or browse all files."
+msgstr ""
+
+#: templates/archive-files-library.php:198
+msgid "Browse All Files"
+msgstr ""
+
+#: templates/single-files-library.php:24
+msgid "Home"
+msgstr ""
+
+#: templates/single-files-library.php:52
+msgid "Size:"
+msgstr ""
+
+#: templates/single-files-library.php:60
+msgid "Type:"
+msgstr ""
+
+#: templates/single-files-library.php:67 templates/single-files-library.php:200
+msgid "Downloads:"
+msgstr ""
+
+#: templates/single-files-library.php:93
+msgid "Download This File"
+msgstr ""
+
+#: templates/single-files-library.php:99
+msgid "Welcome back! You can download this file directly."
+msgstr ""
+
+#: templates/single-files-library.php:103
+#: templates/single-files-library.php:153
+#: templates/single-files-library.php:384
+msgid "Download File"
+msgstr ""
+
+#: templates/single-files-library.php:111
+msgid "To download this file, please provide your contact information below:"
+msgstr ""
+
+#: templates/single-files-library.php:115
+#. translators: 1: opening link tag, 2: closing link tag
+msgid "Already have an account? %1$sLogin here%2$s for direct downloads."
+msgstr ""
+
+#: templates/single-files-library.php:129
+msgid "Full Name *"
+msgstr ""
+
+#: templates/single-files-library.php:134
+msgid "Email Address (Optional)"
+msgstr ""
+
+#: templates/single-files-library.php:141
+msgid "Mobile Number *"
+msgstr ""
+
+#: templates/single-files-library.php:164
+msgid "Thank you!"
+msgstr ""
+
+#: templates/single-files-library.php:165
+msgid ""
+"Your download will start automatically. If it doesn't start, click the "
+"button below."
+msgstr ""
+
+#: templates/single-files-library.php:167
+msgid "Download Now"
+msgstr ""
+
+#: templates/single-files-library.php:174
+msgid "No file available for download."
+msgstr ""
+
+#: templates/single-files-library.php:183
+msgid "File Information"
+msgstr ""
+
+#: templates/single-files-library.php:210
+msgid "Last Updated:"
+msgstr ""
+
+#: templates/single-files-library.php:219
+msgid "Categories"
+msgstr ""
+
+#: templates/single-files-library.php:257
+msgid "Related Files"
+msgstr ""
+
+#: templates/single-files-library.php:287
+msgid "← Back to Files Library"
+msgstr ""
+
+#: templates/single-files-library.php:312
+#: templates/single-files-library.php:350
+msgid "Processing..."
+msgstr ""
+
+#: templates/single-files-library.php:334
+#: templates/single-files-library.php:381
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: vendor/woocommerce/qit-cli/_tests/custom_tests/helpers/custom-test-mu-plugin.php:257
+#. translators: %s: Name of the plugin
+msgid "\"%s\" plugin is enabled!"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WP Resource Library"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://github.com/Abdalsalaam"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"A comprehensive files/books/videos library plugin with user data collection "
+"for downloads."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Abdalsalaam Halawa"
+msgstr ""
+
+#: includes/class-custom-post-type.php:38
+msgctxt "Post type general name"
+msgid "Files Library"
+msgstr ""
+
+#: includes/class-custom-post-type.php:39
+msgctxt "Post type singular name"
+msgid "File"
+msgstr ""
+
+#: includes/class-custom-post-type.php:40
+msgctxt "Admin Menu text"
+msgid "Files Library"
+msgstr ""
+
+#: includes/class-custom-post-type.php:41
+msgctxt "Add New on Toolbar"
+msgid "File"
+msgstr ""
+
+#: includes/class-custom-post-type.php:52
+msgctxt "Overrides the \"Featured Image\" phrase"
+msgid "File Featured Image"
+msgstr ""
+
+#: includes/class-custom-post-type.php:53
+msgctxt "Overrides the \"Set featured image\" phrase"
+msgid "Set featured image"
+msgstr ""
+
+#: includes/class-custom-post-type.php:54
+msgctxt "Overrides the \"Remove featured image\" phrase"
+msgid "Remove featured image"
+msgstr ""
+
+#: includes/class-custom-post-type.php:55
+msgctxt "Overrides the \"Use as featured image\" phrase"
+msgid "Use as featured image"
+msgstr ""
+
+#: includes/class-custom-post-type.php:56
+msgctxt "The post type archive label"
+msgid "File archives"
+msgstr ""
+
+#: includes/class-custom-post-type.php:57
+msgctxt "Overrides the \"Insert into post\" phrase"
+msgid "Insert into file"
+msgstr ""
+
+#: includes/class-custom-post-type.php:58
+msgctxt "Overrides the \"Uploaded to this post\" phrase"
+msgid "Uploaded to this file"
+msgstr ""
+
+#: includes/class-custom-post-type.php:59
+msgctxt "Screen reader text for the filter links"
+msgid "Filter files list"
+msgstr ""
+
+#: includes/class-custom-post-type.php:60
+msgctxt "Screen reader text for the pagination"
+msgid "Files list navigation"
+msgstr ""
+
+#: includes/class-custom-post-type.php:61
+msgctxt "Screen reader text for the items list"
+msgid "Files list"
+msgstr ""
+
+#: includes/class-custom-post-type.php:90
+msgctxt "taxonomy general name"
+msgid "File Categories"
+msgstr ""
+
+#: includes/class-custom-post-type.php:91
+msgctxt "taxonomy singular name"
+msgid "File Category"
+msgstr ""

@@ -1,6 +1,8 @@
 <?php
 /**
- * Single file template for Files Library
+ * Single file template for Files Library.
+ *
+ * @package WPResourceLibrary
  */
 
 get_header(); ?>
@@ -12,22 +14,19 @@ get_header(); ?>
 			the_post();
 			?>
 			<?php
-			$file_url       = get_post_meta( get_the_ID(), '_wprl_file_url', true );
-			$file_size      = get_post_meta( get_the_ID(), '_wprl_file_size', true );
-			$file_type      = get_post_meta( get_the_ID(), '_wprl_file_type', true );
-			$download_count = get_post_meta( get_the_ID(), '_wprl_download_count', true );
-			$categories     = get_the_terms( get_the_ID(), 'file_category' );
+			$file_data  = WPResourceLibrary\Utils::get_file_data();
+			$categories = get_the_terms( get_the_ID(), 'file_category' );
 			?>
 
 			<article class="wprl-single-file">
 				<!-- Breadcrumbs -->
 				<nav class="wprl-breadcrumbs">
-					<a href="<?php echo home_url(); ?>"><?php esc_html_e( 'Home', 'wp-resource-library' ); ?></a>
+					<a href="<?php echo esc_url( home_url() ); ?>"><?php esc_html_e( 'Home', 'wp-resource-library' ); ?></a>
 					<span class="wprl-separator">/</span>
-					<a href="<?php echo get_post_type_archive_link( 'files_library' ); ?>"><?php esc_html_e( 'Files Library', 'wp-resource-library' ); ?></a>
+					<a href="<?php echo esc_url( get_post_type_archive_link( 'files_library' ) ); ?>"><?php esc_html_e( 'Files Library', 'wp-resource-library' ); ?></a>
 					<?php if ( $categories && ! is_wp_error( $categories ) ) : ?>
 						<span class="wprl-separator">/</span>
-						<a href="<?php echo get_term_link( $categories[0] ); ?>"><?php echo esc_html( $categories[0]->name ); ?></a>
+						<a href="<?php echo esc_url( get_term_link( $categories[0] ) ); ?>"><?php echo esc_html( $categories[0]->name ); ?></a>
 					<?php endif; ?>
 					<span class="wprl-separator">/</span>
 					<span class="wprl-current"><?php the_title(); ?></span>
@@ -39,7 +38,7 @@ get_header(); ?>
 					<?php if ( $categories && ! is_wp_error( $categories ) ) : ?>
 					<div class="wprl-file-categories">
 						<?php foreach ( $categories as $category ) : ?>
-							<a href="<?php echo get_term_link( $category ); ?>" class="wprl-category-tag">
+							<a href="<?php echo esc_url( get_term_link( $category ) ); ?>" class="wprl-category-tag">
 								<?php echo esc_html( $category->name ); ?>
 							</a>
 						<?php endforeach; ?>
@@ -47,26 +46,26 @@ get_header(); ?>
 					<?php endif; ?>
 
 					<div class="wprl-file-meta">
-						<?php if ( $file_size ) : ?>
+						<?php if ( $file_data['size'] ) : ?>
 							<span class="wprl-meta-item">
 								<i class="wprl-icon-size"></i>
 								<strong><?php esc_html_e( 'Size:', 'wp-resource-library' ); ?></strong>
-								<?php echo size_format( $file_size ); ?>
+								<?php echo esc_html( size_format( $file_data['size'] ) ); ?>
 							</span>
 						<?php endif; ?>
 
-						<?php if ( $file_type ) : ?>
+						<?php if ( $file_data['type'] ) : ?>
 							<span class="wprl-meta-item">
 								<i class="wprl-icon-type"></i>
 								<strong><?php esc_html_e( 'Type:', 'wp-resource-library' ); ?></strong>
-								<?php echo esc_html( strtoupper( pathinfo( $file_url, PATHINFO_EXTENSION ) ) ); ?>
+								<?php echo esc_html( $file_data['type'] ); ?>
 							</span>
 						<?php endif; ?>
 
 						<span class="wprl-meta-item">
 							<i class="wprl-icon-download"></i>
 							<strong><?php esc_html_e( 'Downloads:', 'wp-resource-library' ); ?></strong>
-							<?php echo intval( $download_count ); ?>
+							<?php echo intval( $file_data['download_count'] ); ?>
 						</span>
 
 						<span class="wprl-meta-item">
@@ -93,13 +92,13 @@ get_header(); ?>
 						<div class="wprl-download-section">
 							<h3><?php esc_html_e( 'Download This File', 'wp-resource-library' ); ?></h3>
 
-							<?php if ( ! empty( $file_url ) ) : ?>
+							<?php if ( ! empty( $file_data['url'] ) ) : ?>
 								<?php if ( is_user_logged_in() ) : ?>
 									<!-- Logged-in user - Direct download -->
 									<div class="wprl-logged-in-download">
 										<p><?php esc_html_e( 'Welcome back! You can download this file directly.', 'wp-resource-library' ); ?></p>
 										<div class="wprl-direct-download-actions">
-											<button type="button" id="wprl-direct-download" class="wprl-download-button" data-post-id="<?php echo get_the_ID(); ?>">
+											<button type="button" id="wprl-direct-download" class="wprl-download-button" data-post-id="<?php echo esc_attr( get_the_ID() ); ?>">
 												<i class="wprl-icon-download"></i>
 												<?php esc_html_e( 'Download File', 'wp-resource-library' ); ?>
 											</button>
@@ -110,7 +109,12 @@ get_header(); ?>
 									<!-- Non-logged-in user - Form required -->
 									<div class="wprl-download-info">
 										<p><?php esc_html_e( 'To download this file, please provide your contact information below:', 'wp-resource-library' ); ?></p>
-										<p><small><?php printf( esc_html__( 'Already have an account? %1$sLogin here%2$s for direct downloads.', 'wp-resource-library' ), '<a href="' . wp_login_url( get_permalink() ) . '">', '</a>' ); ?></small></p>
+										<p><small>
+										<?php
+										/* translators: 1: opening link tag, 2: closing link tag */
+										printf( esc_html__( 'Already have an account? %1$sLogin here%2$s for direct downloads.', 'wp-resource-library' ), '<a href="' . esc_url( wp_login_url( get_permalink() ) ) . '">', '</a>' );
+										?>
+										</small></p>
 									</div>
 								<?php endif; ?>
 
@@ -118,7 +122,7 @@ get_header(); ?>
 								<div id="wprl-download-form-container">
 									<form id="wprl-download-form" class="wprl-download-form">
 										<?php wp_nonce_field( 'wprl_download_nonce', 'wprl_download_nonce' ); ?>
-										<input type="hidden" name="post_id" value="<?php echo get_the_ID(); ?>">
+										<input type="hidden" name="post_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
 
 										<div class="wprl-form-row">
 											<div class="wprl-form-field">
@@ -178,33 +182,33 @@ get_header(); ?>
 						<div class="wprl-sidebar-widget">
 							<h4><?php esc_html_e( 'File Information', 'wp-resource-library' ); ?></h4>
 							<ul class="wprl-file-info-list">
-								<?php if ( $file_size ) : ?>
+								<?php if ( $file_data['size'] ) : ?>
 								<li>
 									<strong><?php esc_html_e( 'File Size:', 'wp-resource-library' ); ?></strong>
-									<?php echo size_format( $file_size ); ?>
+									<?php echo esc_html( size_format( $file_data['size'] ) ); ?>
 								</li>
 								<?php endif; ?>
 
-								<?php if ( $file_type ) : ?>
+								<?php if ( $file_data['type'] ) : ?>
 								<li>
 									<strong><?php esc_html_e( 'File Type:', 'wp-resource-library' ); ?></strong>
-									<?php echo esc_html( $file_type ); ?>
+									<?php echo esc_html( $file_data['type'] ); ?>
 								</li>
 								<?php endif; ?>
 
 								<li>
 									<strong><?php esc_html_e( 'Downloads:', 'wp-resource-library' ); ?></strong>
-									<?php echo intval( $download_count ); ?>
+									<?php echo intval( $file_data['download_count'] ); ?>
 								</li>
 
 								<li>
 									<strong><?php esc_html_e( 'Published:', 'wp-resource-library' ); ?></strong>
-									<?php echo get_the_date(); ?>
+									<?php echo esc_html( get_the_date() ); ?>
 								</li>
 
 								<li>
 									<strong><?php esc_html_e( 'Last Updated:', 'wp-resource-library' ); ?></strong>
-									<?php echo get_the_modified_date(); ?>
+									<?php echo esc_html( get_the_modified_date() ); ?>
 								</li>
 							</ul>
 						</div>
@@ -216,9 +220,9 @@ get_header(); ?>
 							<ul class="wprl-categories-list">
 								<?php foreach ( $categories as $category ) : ?>
 								<li>
-									<a href="<?php echo get_term_link( $category ); ?>">
+									<a href="<?php echo esc_url( get_term_link( $category ) ); ?>">
 										<?php echo esc_html( $category->name ); ?>
-										<span class="wprl-category-count">(<?php echo $category->count; ?>)</span>
+										<span class="wprl-category-count">(<?php echo esc_html( $category->count ); ?>)</span>
 									</a>
 								</li>
 								<?php endforeach; ?>
@@ -279,7 +283,7 @@ get_header(); ?>
 
 						<!-- Back to Library -->
 						<div class="wprl-sidebar-widget">
-							<a href="<?php echo get_post_type_archive_link( 'files_library' ); ?>" class="wprl-back-to-library">
+							<a href="<?php echo esc_url( get_post_type_archive_link( 'files_library' ) ); ?>" class="wprl-back-to-library">
 								<?php esc_html_e( '← Back to Files Library', 'wp-resource-library' ); ?>
 							</a>
 						</div>
@@ -309,11 +313,11 @@ jQuery(document).ready(function($) {
 		$messageDiv.hide();
 
 		$.ajax({
-			url: '<?php echo admin_url( 'admin-ajax.php' ); ?>',
+			url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
 			type: 'POST',
 			data: {
 				action: 'wprl_direct_download',
-				nonce: '<?php echo wp_create_nonce( 'wprl_direct_download_nonce' ); ?>',
+				nonce: '<?php echo esc_js( wp_create_nonce( 'wprl_direct_download_nonce' ) ); ?>',
 				post_id: postId
 			},
 			success: function(response) {
@@ -346,7 +350,7 @@ jQuery(document).ready(function($) {
 		submitButton.prop('disabled', true).text('<?php esc_html_e( 'Processing...', 'wp-resource-library' ); ?>');
 
 		$.ajax({
-			url: '<?php echo admin_url( 'admin-ajax.php' ); ?>',
+			url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
 			type: 'POST',
 			data: {
 				action: 'wprl_submit_download_form',
@@ -392,7 +396,7 @@ jQuery(document).ready(function($) {
 			window.location.href = downloadUrl;
 		} else if (downloadToken) {
 			// Fallback: construct URL from token (for backward compatibility)
-			var fallbackUrl = '<?php echo home_url(); ?>?wprl_download=1&token=' + downloadToken + '&post_id=<?php echo get_the_ID(); ?>';
+			var fallbackUrl = '<?php echo esc_js( home_url() ); ?>?wprl_download=1&token=' + downloadToken + '&post_id=<?php echo esc_js( get_the_ID() ); ?>';
 			window.location.href = fallbackUrl;
 		}
 	}

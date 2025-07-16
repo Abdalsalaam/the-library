@@ -1,14 +1,22 @@
 <?php
 /**
  * Custom Post Type Class
+ *
+ * @package WPResourceLibrary
  */
 
-// Prevent direct access.
+namespace WPResourceLibrary;
+
+use WP_Post;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPRL_Custom_Post_Type {
+/**
+ * Custom Post Type class for managing Files Library post type.
+ */
+class Custom_Post_Type {
 
 	/**
 	 * Constructor.
@@ -19,6 +27,7 @@ class WPRL_Custom_Post_Type {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_meta_boxes' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+		add_action( 'delete_post', array( $this, 'clear_cache_on_delete' ) );
 	}
 
 	/**
@@ -70,7 +79,8 @@ class WPRL_Custom_Post_Type {
 		);
 
 		register_post_type( 'files_library', $args );
-	}
+		flush_rewrite_rules();
+    }
 
 	/**
 	 * Register taxonomy for categories.
@@ -128,12 +138,15 @@ class WPRL_Custom_Post_Type {
 
 	/**
 	 * File upload meta box.
+	 *
+	 * @param WP_Post $post The post object.
 	 */
-	public function file_upload_meta_box( $post ) {
+	public function file_upload_meta_box( WP_Post $post ) {
 		wp_nonce_field( 'wprl_save_meta_box_data', 'wprl_meta_box_nonce' );
 
-		$file_url = get_post_meta( $post->ID, '_wprl_file_url', true );
-		$file_id  = get_post_meta( $post->ID, '_wprl_file_id', true );
+		$file_data = Utils::get_file_data( $post->ID );
+		$file_url  = $file_data['url'];
+		$file_id   = $file_data['file_id'];
 
 		?>
 		<table class="form-table">
@@ -155,28 +168,30 @@ class WPRL_Custom_Post_Type {
 
 	/**
 	 * File details meta box.
+	 *
+	 * @param WP_Post $post The post object.
 	 */
-	public function file_details_meta_box( $post ) {
-		$file_size      = get_post_meta( $post->ID, '_wprl_file_size', true );
-		$file_type      = get_post_meta( $post->ID, '_wprl_file_type', true );
-		$download_count = get_post_meta( $post->ID, '_wprl_download_count', true );
+	public function file_details_meta_box( WP_Post $post ) {
+		$file_data = Utils::get_file_data( $post->ID );
 
 		?>
-		<p><strong><?php esc_html_e( 'File Size:', 'wp-resource-library' ); ?></strong> <?php echo $file_size ? esc_html__( size_format( $file_size ) ) : esc_html__( 'N/A', 'wp-resource-library' ); ?></p>
-		<p><strong><?php esc_html_e( 'File Type:', 'wp-resource-library' ); ?></strong> <?php echo $file_type ? esc_html( $file_type ) : esc_html__( 'N/A', 'wp-resource-library' ); ?></p>
-		<p><strong><?php esc_html_e( 'Download Count:', 'wp-resource-library' ); ?></strong> <?php echo intval( $download_count ); ?></p>
+		<p><strong><?php esc_html_e( 'File Size:', 'wp-resource-library' ); ?></strong> <?php echo $file_data['size'] ? esc_html( size_format( $file_data['size'] ) ) : esc_html__( 'N/A', 'wp-resource-library' ); ?></p>
+		<p><strong><?php esc_html_e( 'File Type:', 'wp-resource-library' ); ?></strong> <?php echo $file_data['type'] ? esc_html( $file_data['type'] ) : esc_html__( 'N/A', 'wp-resource-library' ); ?></p>
+		<p><strong><?php esc_html_e( 'Download Count:', 'wp-resource-library' ); ?></strong> <?php echo intval( $file_data['download_count'] ); ?></p>
 		<?php
 	}
 
 	/**
 	 * Save meta box data.
+	 *
+	 * @param int $post_id The post ID.
 	 */
-	public function save_meta_boxes( $post_id ) {
+	public function save_meta_boxes( int $post_id ) {
 		if ( ! isset( $_POST['wprl_meta_box_nonce'] ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( wp_unslash( $_POST['wprl_meta_box_nonce'] ), 'wprl_save_meta_box_data' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wprl_meta_box_nonce'] ) ), 'wprl_save_meta_box_data' ) ) {
 			return;
 		}
 
@@ -188,39 +203,58 @@ class WPRL_Custom_Post_Type {
 			return;
 		}
 
-		// Save file data.
+		// Save file data using consolidated approach.
+		$file_data = Utils::get_file_data( $post_id );
+
 		if ( isset( $_POST['wprl_file_url'] ) ) {
-			update_post_meta( $post_id, '_wprl_file_url', sanitize_url( wp_unslash( $_POST['wprl_file_url'] ) ) );
+			$file_data['url'] = sanitize_url( wp_unslash( $_POST['wprl_file_url'] ) );
 		}
 
 		if ( isset( $_POST['wprl_file_id'] ) ) {
-			$file_id = intval( $_POST['wprl_file_id'] );
-			update_post_meta( $post_id, '_wprl_file_id', $file_id );
+			$file_id              = intval( $_POST['wprl_file_id'] );
+			$file_data['file_id'] = $file_id;
 
 			// Get file details.
 			$file_path = get_attached_file( $file_id );
 			if ( $file_path && file_exists( $file_path ) ) {
-				$file_size = filesize( $file_path );
-				$file_type = wp_check_filetype( $file_path );
-
-				update_post_meta( $post_id, '_wprl_file_size', $file_size );
-				update_post_meta( $post_id, '_wprl_file_type', $file_type['type'] );
+				$file_data['size'] = filesize( $file_path );
+				$file_type_info    = wp_check_filetype( $file_path );
+				$file_data['type'] = Utils::get_simplified_file_type( $file_type_info['type'] );
 			}
 		}
+
+		// Update consolidated file data.
+		Utils::update_file_data( $post_id, $file_data );
+
+		// Clear file types cache when file data changes.
+		Utils::clear_file_types_cache();
 	}
 
 	/**
 	 * Enqueue admin scripts.
+	 *
+	 * @param string $hook The current admin page hook.
 	 */
-	public function enqueue_admin_scripts( $hook ) {
+	public function enqueue_admin_scripts( string $hook ) {
 		global $post;
 
-		if ( ( $hook !== 'post.php' && $hook !== 'post-new.php' ) || 'files_library' !== $post->post_type ) {
+		if ( ( 'post.php' !== $hook && 'post-new.php' !== $hook ) || 'files_library' !== $post->post_type ) {
 			return;
 		}
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'wprl-admin-js', WPRL_PLUGIN_URL . 'assets/js/admin.js', array( 'jquery' ), WPRL_VERSION, true );
-		wp_enqueue_style( 'wprl-admin-css', WPRL_PLUGIN_URL . 'assets/css/admin.css', array(), WPRL_VERSION );
+		wp_enqueue_script( 'wprl-admin-js', Utils::get_plugin_url( 'assets/js/admin.js' ), array( 'jquery' ), Utils::get_version(), true );
+		wp_enqueue_style( 'wprl-admin-css', Utils::get_plugin_url( 'assets/css/admin.css' ), array(), Utils::get_version() );
+	}
+
+	/**
+	 * Clear cache when files_library post is deleted.
+	 *
+	 * @param int $post_id Post ID.
+	 */
+	public function clear_cache_on_delete( int $post_id ) {
+		if ( get_post_type( $post_id ) === 'files_library' ) {
+			Utils::clear_file_types_cache();
+		}
 	}
 }

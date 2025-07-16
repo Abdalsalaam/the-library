@@ -1,20 +1,36 @@
 <?php
 /**
  * Frontend Class
+ *
+ * @package WPResourceLibrary
  */
 
-// Prevent direct access.
+namespace WPResourceLibrary;
+
+use WP_Query;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPRL_Frontend {
+/**
+ * Frontend class for handling frontend display and functionality.
+ */
+class Frontend {
+
+	/**
+	 * Static instance for template access.
+	 *
+	 * @var ?Frontend
+	 */
+	private static ?Frontend $instance = null;
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'auto_enqueue_scripts' ) );
 		add_filter( 'template_include', array( $this, 'template_include' ) );
 		add_action( 'pre_get_posts', array( $this, 'modify_main_query' ) );
 		add_shortcode( 'files_library', array( $this, 'files_library_shortcode' ) );
@@ -23,41 +39,88 @@ class WPRL_Frontend {
 	}
 
 	/**
-	 * Enqueue frontend scripts and styles
+	 * Get instance for template access.
+	 *
+	 * @return Frontend
+	 */
+	public static function get_instance(): ?Frontend {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Register frontend scripts and styles.
+	 */
+	public function register_scripts() {
+		wp_register_style( 'wprl-frontend-css', Utils::get_plugin_url( 'assets/css/frontend.css' ), array(), Utils::get_version() );
+		wp_register_script( 'wprl-frontend-js', Utils::get_plugin_url( 'assets/js/frontend.js' ), array( 'jquery' ), Utils::get_version(), true );
+
+		wp_localize_script(
+			'wprl-frontend-js',
+			'wprl_ajax',
+			array(
+				'ajax_url'              => admin_url( 'admin-ajax.php' ),
+				'nonce'                 => wp_create_nonce( 'wprl_frontend_nonce' ),
+				'direct_download_nonce' => wp_create_nonce( 'wprl_direct_download_nonce' ),
+				'loading_text'          => esc_html__( 'Loading...', 'wp-resource-library' ),
+				'no_more_files'         => esc_html__( 'No more files to load.', 'wp-resource-library' ),
+				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'wp-resource-library' ),
+			)
+		);
+	}
+
+	/**
+	 * Enqueue frontend scripts and styles.
 	 */
 	public function enqueue_scripts() {
-		if ( is_post_type_archive( 'files_library' ) || is_singular( 'files_library' ) || is_tax( 'file_category' ) ) {
-			wp_enqueue_style( 'wprl-frontend-css', WPRL_PLUGIN_URL . 'assets/css/frontend.css', array(), WPRL_VERSION );
-			wp_enqueue_script( 'wprl-frontend-js', WPRL_PLUGIN_URL . 'assets/js/frontend.js', array( 'jquery' ), WPRL_VERSION, true );
+		wp_enqueue_style( 'wprl-frontend-css' );
+		wp_enqueue_script( 'wprl-frontend-js' );
 
-			wp_localize_script(
-				'wprl-frontend-js',
-				'wprl_ajax',
-				array(
-					'ajax_url'              => admin_url( 'admin-ajax.php' ),
-					'nonce'                 => wp_create_nonce( 'wprl_frontend_nonce' ),
-					'direct_download_nonce' => wp_create_nonce( 'wprl_direct_download_nonce' ),
-					'loading_text'          => esc_html__( 'Loading...', 'wp-resource-library' ),
-					'no_more_files'         => esc_html__( 'No more files to load.', 'wp-resource-library' ),
-					'error_message'         => esc_html__( 'Error loading files. Please try again.', 'wp-resource-library' ),
-				)
-			);
+		wp_localize_script(
+			'wprl-frontend-js',
+			'wprl_ajax',
+			array(
+				'ajax_url'              => admin_url( 'admin-ajax.php' ),
+				'nonce'                 => wp_create_nonce( 'wprl_frontend_nonce' ),
+				'direct_download_nonce' => wp_create_nonce( 'wprl_direct_download_nonce' ),
+				'loading_text'          => esc_html__( 'Loading...', 'wp-resource-library' ),
+				'no_more_files'         => esc_html__( 'No more files to load.', 'wp-resource-library' ),
+				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'wp-resource-library' ),
+			)
+		);
+	}
+
+	/**
+	 * Auto enqueue frontend scripts and styles.
+	 */
+	public function auto_enqueue_scripts() {
+		if ( ! Utils::is_frontend_script_required() ) {
+			return;
 		}
+
+		self::enqueue_scripts();
 	}
 
 	/**
 	 * Include custom templates.
+	 *
+	 * @param string $template The path of the template to include.
+	 *
+	 * @return string The path of the template to include.
 	 */
-	public function template_include( $template ) {
-		if ( is_post_type_archive( 'files_library' ) ) {
-			$custom_template = WPRL_PLUGIN_PATH . 'templates/archive-files-library.php';
+	public function template_include( string $template ): string {
+		if ( Utils::is_files_archive() ) {
+			$custom_template = Utils::get_plugin_path( 'templates/archive-files-library.php' );
 			if ( file_exists( $custom_template ) ) {
 				return $custom_template;
 			}
 		}
 
-		if ( is_singular( 'files_library' ) ) {
-			$custom_template = WPRL_PLUGIN_PATH . 'templates/single-files-library.php';
+		if ( Utils::is_single_file() ) {
+			$custom_template = Utils::get_plugin_path( 'templates/single-files-library.php' );
 			if ( file_exists( $custom_template ) ) {
 				return $custom_template;
 			}
@@ -68,13 +131,15 @@ class WPRL_Frontend {
 
 	/**
 	 * Modify main query for files library archive.
+	 *
+	 * @param WP_Query $query The WP_Query instance.
 	 */
-	public function modify_main_query( $query ) {
-		if ( is_admin() || ! $query->is_main_query() ) {
+	public function modify_main_query( WP_Query $query ) {
+		if ( Utils::is_admin_request() || ! $query->is_main_query() ) {
 			return;
 		}
 
-		if ( is_post_type_archive( 'files_library' ) ) {
+		if ( Utils::is_files_archive() ) {
 			$query->set( 'posts_per_page', 12 );
 
 			// Handle search.
@@ -102,8 +167,8 @@ class WPRL_Frontend {
 					'meta_query',
 					array(
 						array(
-							'key'     => '_wprl_file_type',
-							'value'   => sanitize_text_field( wp_unslash( $_GET['wprl_file_type'] ) ),
+							'key'     => '_wprl_file_data',
+							'value'   => '"type":"' . sanitize_text_field( wp_unslash( $_GET['wprl_file_type'] ) ) . '"',
 							'compare' => 'LIKE',
 						),
 					)
@@ -112,7 +177,7 @@ class WPRL_Frontend {
 
 			// Handle sorting.
 			if ( ! empty( $_GET['wprl_sort'] ) ) {
-				switch ( wp_unslash( $_GET['wprl_sort'] ) ) {
+				switch ( sanitize_text_field( wp_unslash( $_GET['wprl_sort'] ) ) ) {
 					case 'date_desc':
 						$query->set( 'orderby', 'date' );
 						$query->set( 'order', 'DESC' );
@@ -141,8 +206,14 @@ class WPRL_Frontend {
 
 	/**
 	 * Files library shortcode.
+	 *
+	 * @param array $atts Shortcode attributes.
+	 *
+	 * @return string Shortcode output.
 	 */
-	public function files_library_shortcode( $atts ) {
+	public function files_library_shortcode( array $atts ): string {
+		self::enqueue_scripts();
+
 		$atts = shortcode_atts(
 			array(
 				'posts_per_page' => 12,
@@ -178,16 +249,16 @@ class WPRL_Frontend {
 		if ( $query->have_posts() ) {
 			?>
 			<div class="wprl-files-library-shortcode">
-				<?php if ( $atts['show_search'] === 'true' || $atts['show_filters'] === 'true' ) : ?>
+				<?php if ( 'true' === $atts['show_search'] || 'true' === $atts['show_filters'] ) : ?>
 				<div class="wprl-filters-wrapper">
-					<?php if ( $atts['show_search'] === 'true' ) : ?>
+					<?php if ( 'true' === $atts['show_search'] ) : ?>
 					<div class="wprl-search-form">
 						<input type="text" id="wprl-search-input" placeholder="<?php esc_html_e( 'Search files...', 'wp-resource-library' ); ?>">
 						<button type="button" id="wprl-search-button"><?php esc_html_e( 'Search', 'wp-resource-library' ); ?></button>
 					</div>
 					<?php endif; ?>
-					
-					<?php if ( $atts['show_filters'] === 'true' ) : ?>
+
+					<?php if ( 'true' === $atts['show_filters'] ) : ?>
 					<div class="wprl-filters">
 						<select id="wprl-category-filter">
 							<option value=""><?php esc_html_e( 'All Categories', 'wp-resource-library' ); ?></option>
@@ -245,59 +316,175 @@ class WPRL_Frontend {
 
 	/**
 	 * Render file card.
+	 *
+	 * @param array $args Optional arguments to customize the card display.
 	 */
-	public function render_file_card() {
-		$file_url       = get_post_meta( get_the_ID(), '_wprl_file_url', true );
-		$file_size      = get_post_meta( get_the_ID(), '_wprl_file_size', true );
-		$file_type      = get_post_meta( get_the_ID(), '_wprl_file_type', true );
-		$download_count = get_post_meta( get_the_ID(), '_wprl_download_count', true );
-		$categories     = get_the_terms( get_the_ID(), 'file_category' );
+	public function render_file_card( array $args = array() ) {
+		$defaults = array(
+			'heading_tag'     => 'h3',
+			'show_excerpt'    => true,
+			'show_date'       => false,
+			'show_file_size'  => true,
+			'show_categories' => true,
+			'thumbnail_size'  => 'medium',
+			'link_categories' => false,
+		);
+
+		$args       = wp_parse_args( $args, $defaults );
+		$file_data  = Utils::get_file_data();
+		$categories = get_the_terms( get_the_ID(), 'file_category' );
+		$post_title = get_the_title();
+		$permalink  = get_the_permalink();
 		?>
-		<div class="wprl-file-card">
+		<article class="wprl-file-card">
 			<?php if ( has_post_thumbnail() ) : ?>
 			<div class="wprl-file-thumbnail">
-				<a href="<?php the_permalink(); ?>">
-					<?php the_post_thumbnail( 'medium' ); ?>
+				<a href="<?php echo esc_url( $permalink ); ?>"
+					title="
+					<?php
+					echo esc_attr(
+						sprintf(
+						/* translators: %s: file title */
+							__( 'Download %s', 'wp-resource-library' ),
+							$post_title
+						)
+					);
+					?>
+					"
+					aria-label="
+					<?php
+					echo esc_attr(
+						sprintf(
+						/* translators: %s: file title */
+							__( 'View details for %s', 'wp-resource-library' ),
+							$post_title
+						)
+					);
+					?>
+					">
+					<?php the_post_thumbnail( $args['thumbnail_size'] ); ?>
 				</a>
 			</div>
 			<?php endif; ?>
 
 			<div class="wprl-file-content">
-				<h3>
-					<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-				</h3>
+				<<?php echo esc_html( $args['heading_tag'] ); ?> class="wprl-file-title">
+					<a href="<?php echo esc_url( $permalink ); ?>"
+						title="
+						<?php
+						echo esc_attr(
+							sprintf(
+							/* translators: %s: file title */
+								__( 'Download %s', 'wp-resource-library' ),
+								$post_title
+							)
+						);
+						?>
+						">
+						<?php echo esc_html( $post_title ); ?>
+					</a>
+				</<?php echo esc_html( $args['heading_tag'] ); ?>>
 
-				<?php if ( $categories && ! is_wp_error( $categories ) ) : ?>
+				<?php if ( $args['show_categories'] && $categories && ! is_wp_error( $categories ) ) : ?>
 				<div class="wprl-file-categories">
 					<?php foreach ( $categories as $category ) : ?>
-						<span class="wprl-category-tag"><?php echo esc_html( $category->name ); ?></span>
+						<?php if ( $args['link_categories'] ) : ?>
+							<a href="<?php echo esc_url( get_term_link( $category ) ); ?>"
+								class="wprl-category-tag"
+								title="
+								<?php
+								echo esc_attr(
+									sprintf(
+									/* translators: %s: category name. */
+										__( 'View all %s files', 'wp-resource-library' ),
+										$category->name
+									)
+								);
+								?>
+								">
+								<?php echo esc_html( $category->name ); ?>
+							</a>
+						<?php else : ?>
+							<span class="wprl-category-tag"><?php echo esc_html( $category->name ); ?></span>
+						<?php endif; ?>
 					<?php endforeach; ?>
 				</div>
 				<?php endif; ?>
 
+				<?php if ( $args['show_excerpt'] ) : ?>
 				<div class="wprl-file-excerpt">
 					<?php the_excerpt(); ?>
 				</div>
+				<?php endif; ?>
 
 				<div class="wprl-file-meta">
-					<?php if ( $file_size ) : ?>
-						<span class="wprl-file-size"><?php echo size_format( $file_size ); ?></span>
+					<?php if ( $args['show_file_size'] && $file_data['size'] ) : ?>
+						<span class="wprl-file-size">
+							<i class="wprl-icon-size" aria-hidden="true"></i>
+							<span class="screen-reader-text"><?php esc_html_e( 'File size:', 'wp-resource-library' ); ?></span>
+							<?php echo esc_html( size_format( $file_data['size'] ) ); ?>
+						</span>
 					<?php endif; ?>
 
-					<?php if ( $file_type ) : ?>
-						<span class="wprl-file-type"><?php echo esc_html( strtoupper( pathinfo( $file_url, PATHINFO_EXTENSION ) ) ); ?></span>
+					<?php if ( $file_data['type'] ) : ?>
+						<span class="wprl-file-type">
+							<i class="wprl-icon-type" aria-hidden="true"></i>
+							<span class="screen-reader-text"><?php esc_html_e( 'File type:', 'wp-resource-library' ); ?></span>
+							<?php echo esc_html( $file_data['type'] ); ?>
+						</span>
 					<?php endif; ?>
 
-					<span class="wprl-download-count"><?php printf( esc_html__( '%d downloads', 'wp-resource-library' ), intval( $download_count ) ); ?></span>
+					<span class="wprl-download-count">
+						<i class="wprl-icon-download" aria-hidden="true"></i>
+						<span class="screen-reader-text"><?php esc_html_e( 'Download count:', 'wp-resource-library' ); ?></span>
+						<?php echo esc_html( intval( $file_data['download_count'] ) ); ?>
+						<?php
+						/* translators: %d: download count */
+						printf( esc_html( _n( 'download', 'downloads', intval( $file_data['download_count'] ), 'wp-resource-library' ) ) );
+						?>
+					</span>
+
+					<?php if ( $args['show_date'] ) : ?>
+						<span class="wprl-file-date">
+							<i class="wprl-icon-date" aria-hidden="true"></i>
+							<span class="screen-reader-text"><?php esc_html_e( 'Published:', 'wp-resource-library' ); ?></span>
+							<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
+								<?php echo esc_html( get_the_date() ); ?>
+							</time>
+						</span>
+					<?php endif; ?>
 				</div>
 
 				<div class="wprl-file-actions">
-					<a href="<?php the_permalink(); ?>" class="btn button button-primary">
+					<a href="<?php echo esc_url( $permalink ); ?>"
+						class="btn button button-primary wprl-view-details"
+						title="
+						<?php
+						echo esc_attr(
+							sprintf(
+							/* translators: %s: file title */
+								__( 'View details and download %s', 'wp-resource-library' ),
+								$post_title
+							)
+						);
+						?>
+						">
 						<?php esc_html_e( 'View Details', 'wp-resource-library' ); ?>
+						<span class="screen-reader-text">
+						<?php
+						echo esc_html(
+							sprintf(
+							/* translators: %s: file title */
+								__( 'for %s', 'wp-resource-library' ),
+								$post_title
+							)
+						);
+						?>
+						</span>
 					</a>
 				</div>
 			</div>
-		</div>
+		</article>
 		<?php
 	}
 
@@ -307,10 +494,10 @@ class WPRL_Frontend {
 	public function load_more_files() {
 		check_ajax_referer( 'wprl_frontend_nonce', 'nonce' );
 
-		$page     = intval( wp_unslash( $_POST['page'] ) );
-		$search   = sanitize_text_field( wp_unslash( $_POST['search'] ) );
-		$category = sanitize_text_field( wp_unslash( $_POST['category'] ) );
-		$sort     = sanitize_text_field( wp_unslash( $_POST['sort'] ) );
+		$page     = isset( $_POST['page'] ) ? intval( wp_unslash( $_POST['page'] ) ) : 1;
+		$search   = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+		$category = isset( $_POST['category'] ) ? sanitize_text_field( wp_unslash( $_POST['category'] ) ) : '';
+		$sort     = isset( $_POST['sort'] ) ? sanitize_text_field( wp_unslash( $_POST['sort'] ) ) : 'date_desc';
 
 		$args = array(
 			'post_type'      => 'files_library',

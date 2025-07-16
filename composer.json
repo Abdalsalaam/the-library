@@ -8,6 +8,7 @@
 		"exclude": [
 			"!/assets",
 			"!/dist",
+			"vendor",
 			"!/languages",
 			"node_modules",
 			"README.md",

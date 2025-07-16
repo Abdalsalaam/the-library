@@ -1,36 +1,42 @@
 <?php
 /**
  * CSV Export Class
+ *
+ * @package WPResourceLibrary
  */
 
-// Prevent direct access
+namespace WPResourceLibrary;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WPRL_CSV_Export {
+/**
+ * CSV Export class for exporting download requests data.
+ */
+class CSV_Export {
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public function __construct() {
-		add_action(
-			'admin_init',
-			array(
-				$this,
-				'handle_csv_export',
-			)
-		);
+		add_action( 'admin_init', array( $this, 'handle_csv_export' ) );
 	}
 
 	/**
-	 * Handle CSV export
+	 * Handle CSV export.
 	 */
 	public function handle_csv_export() {
-		if ( isset( $_GET['page'] ) && $_GET['page'] === 'wprl-download-requests' &&
-			isset( $_GET['action'] ) && $_GET['action'] === 'export_csv' ) {
+		if (
+			isset( $_GET['page'] )
+			&& 'wprl-download-requests' === sanitize_text_field( wp_unslash( $_GET['page'] ) )
+			&& isset( $_GET['action'] )
+			&& 'export_csv' === sanitize_text_field( wp_unslash( $_GET['action'] ) )
+			&& isset( $_GET['nonce'] )
+			&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'wprl_export_csv' )
+		) {
 
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! Utils::current_user_can_manage() ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.' ) );
 			}
 
@@ -39,30 +45,21 @@ class WPRL_CSV_Export {
 	}
 
 	/**
-	 * Export download requests to CSV
+	 * Export download requests to CSV.
 	 */
 	private function export_download_requests() {
-		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'wprl_download_requests';
-
 		// Get all download requests with post titles.
-		$query = "SELECT dr.*, p.post_title
-                  FROM $table_name dr
-                  LEFT JOIN {$wpdb->posts} p ON dr.post_id = p.ID
-                  ORDER BY dr.download_date DESC";
-
-		$requests = $wpdb->get_results( $query );
+		$requests = Database::get_instance()->get_all_download_requests_for_export();
 
 		if ( empty( $requests ) ) {
 			wp_die( esc_html__( 'No download requests found to export.', 'wp-resource-library' ) );
 		}
 
-		// Set headers for CSV download
-		$filename = 'download-requests-' . date( 'Y-m-d-H-i-s' ) . '.csv';
+		// Set headers for CSV download.
+		$filename = 'download-requests-' . gmdate( 'Y-m-d-H-i-s' ) . '.csv';
 
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		header( 'Content-Disposition: attachment; filename="' . esc_attr( $filename ) . '"' );
 		header( 'Cache-Control: no-cache, must-revalidate' );
 		header( 'Pragma: no-cache' );
 		header( 'Expires: 0' );
@@ -87,7 +84,7 @@ class WPRL_CSV_Export {
 
 		fputcsv( $output, $headers );
 
-		// Add data rows
+		// Add data rows.
 		foreach ( $requests as $request ) {
 			$row = array(
 				$request->id,
@@ -105,57 +102,5 @@ class WPRL_CSV_Export {
 
 		fclose( $output );
 		exit;
-	}
-
-	/**
-	 * Export filtered download requests
-	 */
-	public function export_filtered_requests( $filters = array() ) {
-		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'wprl_download_requests';
-
-		$where_conditions = array();
-		$where_values     = array();
-
-		// Apply filters
-		if ( ! empty( $filters['start_date'] ) ) {
-			$where_conditions[] = 'dr.download_date >= %s';
-			$where_values[]     = $filters['start_date'] . ' 00:00:00';
-		}
-
-		if ( ! empty( $filters['end_date'] ) ) {
-			$where_conditions[] = 'dr.download_date <= %s';
-			$where_values[]     = $filters['end_date'] . ' 23:59:59';
-		}
-
-		if ( ! empty( $filters['post_id'] ) ) {
-			$where_conditions[] = 'dr.post_id = %d';
-			$where_values[]     = intval( $filters['post_id'] );
-		}
-
-		if ( ! empty( $filters['user_email'] ) ) {
-			$where_conditions[] = 'dr.user_email LIKE %s';
-			$where_values[]     = '%' . $wpdb->esc_like( $filters['user_email'] ) . '%';
-		}
-
-		// Build query.
-		$query = "SELECT dr.*, p.post_title 
-                  FROM $table_name dr 
-                  LEFT JOIN {$wpdb->posts} p ON dr.post_id = p.ID";
-
-		if ( ! empty( $where_conditions ) ) {
-			$query .= ' WHERE ' . implode( ' AND ', $where_conditions );
-		}
-
-		$query .= ' ORDER BY dr.download_date DESC';
-
-		if ( ! empty( $where_values ) ) {
-			$requests = $wpdb->get_results( $wpdb->prepare( $query, $where_values ) );
-		} else {
-			$requests = $wpdb->get_results( $query );
-		}
-
-		return $requests;
 	}
 }

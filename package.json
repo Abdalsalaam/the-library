@@ -13,9 +13,7 @@
 		"pnpm": "^10.4.1"
 	},
 	"scripts": {
-		"prebuild": "rm -rf ./vendor && composer clear-cache",
-		"build": "pnpm build:prod && pnpm makepot && pnpm archive",
-		"build:prod": "composer install --no-dev -o",
+		"build": "pnpm makepot && pnpm archive",
 		"archive": "composer archive --file=$npm_package_name --format=zip",
 		"makepot": "wpi18n makepot --domain-path languages --pot-file $npm_package_name.pot --type plugin --main-file $npm_package_name.php --exclude node_modules,tests,docs"
 	},
