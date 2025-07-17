@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WP Resource Library 1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-resource-library\n"
-"POT-Creation-Date: 2025-07-17 19:39:11+00:00\n"
+"POT-Creation-Date: 2025-07-17 21:32:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -63,7 +63,7 @@ msgstr ""
 msgid "Search by name, email, or mobile..."
 msgstr ""
 
-#: includes/class-admin.php:149 includes/class-frontend.php:257
+#: includes/class-admin.php:149
 msgid "Search"
 msgstr ""
 
@@ -446,7 +446,7 @@ msgstr ""
 msgid "Parent Files:"
 msgstr ""
 
-#: includes/class-custom-post-type.php:50 includes/class-frontend.php:309
+#: includes/class-custom-post-type.php:50
 msgid "No files found."
 msgstr ""
 
@@ -609,99 +609,67 @@ msgstr ""
 msgid "Error saving your request. Please try again."
 msgstr ""
 
-#: includes/class-frontend.php:68 includes/class-frontend.php:89
+#: includes/class-frontend.php:67 includes/class-frontend.php:88
 msgid "Loading..."
 msgstr ""
 
-#: includes/class-frontend.php:69 includes/class-frontend.php:90
+#: includes/class-frontend.php:68 includes/class-frontend.php:89
 msgid "No more files to load."
 msgstr ""
 
-#: includes/class-frontend.php:70 includes/class-frontend.php:91
+#: includes/class-frontend.php:69 includes/class-frontend.php:90
 msgid "Error loading files. Please try again."
 msgstr ""
 
-#: includes/class-frontend.php:256 templates/archive-files-library.php:43
-msgid "Search files..."
-msgstr ""
-
-#: includes/class-frontend.php:264 templates/archive-files-library.php:50
-msgid "All Categories"
-msgstr ""
-
-#: includes/class-frontend.php:279 templates/archive-files-library.php:90
-msgid "Newest First"
-msgstr ""
-
-#: includes/class-frontend.php:280 templates/archive-files-library.php:91
-msgid "Oldest First"
-msgstr ""
-
-#: includes/class-frontend.php:281 templates/archive-files-library.php:92
-msgid "Title A-Z"
-msgstr ""
-
-#: includes/class-frontend.php:282 templates/archive-files-library.php:93
-msgid "Title Z-A"
-msgstr ""
-
-#: includes/class-frontend.php:283 templates/archive-files-library.php:94
-msgid "Most Downloaded"
-msgstr ""
-
-#: includes/class-frontend.php:302
-msgid "Load More"
-msgstr ""
-
-#: includes/class-frontend.php:348 includes/class-frontend.php:378
+#: includes/class-frontend.php:237 includes/class-frontend.php:267
 #. translators: %s: file title
 msgid "Download %s"
 msgstr ""
 
-#: includes/class-frontend.php:359
+#: includes/class-frontend.php:248
 #. translators: %s: file title
 msgid "View details for %s"
 msgstr ""
 
-#: includes/class-frontend.php:399
+#: includes/class-frontend.php:288
 #. translators: %s: category name.
 msgid "View all %s files"
 msgstr ""
 
-#: includes/class-frontend.php:424
+#: includes/class-frontend.php:313
 msgid "File size:"
 msgstr ""
 
-#: includes/class-frontend.php:432
+#: includes/class-frontend.php:321
 msgid "File type:"
 msgstr ""
 
-#: includes/class-frontend.php:439
+#: includes/class-frontend.php:328
 msgid "Download count:"
 msgstr ""
 
-#: includes/class-frontend.php:443
+#: includes/class-frontend.php:332
 #. translators: %d: download count
 msgid "download"
 msgid_plural "downloads"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-frontend.php:450 templates/single-files-library.php:73
+#: includes/class-frontend.php:339 templates/single-files-library.php:73
 #: templates/single-files-library.php:205
 msgid "Published:"
 msgstr ""
 
-#: includes/class-frontend.php:466
+#: includes/class-frontend.php:355
 #. translators: %s: file title
 msgid "View details and download %s"
 msgstr ""
 
-#: includes/class-frontend.php:472
+#: includes/class-frontend.php:361
 msgid "View Details"
 msgstr ""
 
-#: includes/class-frontend.php:478
+#: includes/class-frontend.php:367
 #. translators: %s: file title
 msgid "for %s"
 msgstr ""
@@ -714,8 +682,36 @@ msgstr ""
 msgid "Files Library"
 msgstr ""
 
+#: templates/archive-files-library.php:43
+msgid "Search files..."
+msgstr ""
+
+#: templates/archive-files-library.php:50
+msgid "All Categories"
+msgstr ""
+
 #: templates/archive-files-library.php:71
 msgid "All File Types"
+msgstr ""
+
+#: templates/archive-files-library.php:90
+msgid "Newest First"
+msgstr ""
+
+#: templates/archive-files-library.php:91
+msgid "Oldest First"
+msgstr ""
+
+#: templates/archive-files-library.php:92
+msgid "Title A-Z"
+msgstr ""
+
+#: templates/archive-files-library.php:93
+msgid "Title Z-A"
+msgstr ""
+
+#: templates/archive-files-library.php:94
+msgid "Most Downloaded"
 msgstr ""
 
 #: templates/archive-files-library.php:110

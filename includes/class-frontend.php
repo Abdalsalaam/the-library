@@ -33,7 +33,6 @@ class Frontend {
 		add_action( 'wp_enqueue_scripts', array( $this, 'auto_enqueue_scripts' ) );
 		add_filter( 'template_include', array( $this, 'template_include' ) );
 		add_action( 'pre_get_posts', array( $this, 'modify_main_query' ) );
-		add_shortcode( 'files_library', array( $this, 'files_library_shortcode' ) );
 		add_action( 'wp_ajax_wprl_load_more_files', array( $this, 'load_more_files' ) );
 		add_action( 'wp_ajax_nopriv_wprl_load_more_files', array( $this, 'load_more_files' ) );
 	}
@@ -202,116 +201,6 @@ class Frontend {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Files library shortcode.
-	 *
-	 * @param array $atts Shortcode attributes.
-	 *
-	 * @return string Shortcode output.
-	 */
-	public function files_library_shortcode( array $atts ): string {
-		self::enqueue_scripts();
-
-		$atts = shortcode_atts(
-			array(
-				'posts_per_page' => 12,
-				'category'       => '',
-				'show_filters'   => 'true',
-				'show_search'    => 'true',
-				'columns'        => 3,
-			),
-			$atts,
-			'files_library'
-		);
-
-		$args = array(
-			'post_type'      => 'files_library',
-			'posts_per_page' => intval( $atts['posts_per_page'] ),
-			'post_status'    => 'publish',
-		);
-
-		if ( ! empty( $atts['category'] ) ) {
-			$args['tax_query'] = array(
-				array(
-					'taxonomy' => 'file_category',
-					'field'    => 'term_id',
-					'terms'    => explode( ',', $atts['category'] ),
-				),
-			);
-		}
-
-		$query = new WP_Query( $args );
-
-		ob_start();
-
-		if ( $query->have_posts() ) {
-			?>
-			<div class="wprl-files-library-shortcode">
-				<?php if ( 'true' === $atts['show_search'] || 'true' === $atts['show_filters'] ) : ?>
-				<div class="wprl-filters-wrapper">
-					<?php if ( 'true' === $atts['show_search'] ) : ?>
-					<div class="wprl-search-form">
-						<input type="text" id="wprl-search-input" placeholder="<?php esc_html_e( 'Search files...', 'wp-resource-library' ); ?>">
-						<button type="button" id="wprl-search-button"><?php esc_html_e( 'Search', 'wp-resource-library' ); ?></button>
-					</div>
-					<?php endif; ?>
-
-					<?php if ( 'true' === $atts['show_filters'] ) : ?>
-					<div class="wprl-filters">
-						<select id="wprl-category-filter">
-							<option value=""><?php esc_html_e( 'All Categories', 'wp-resource-library' ); ?></option>
-							<?php
-							$categories = get_terms(
-								array(
-									'taxonomy'   => 'file_category',
-									'hide_empty' => true,
-								)
-							);
-							foreach ( $categories as $category ) {
-								echo '<option value="' . esc_attr( $category->term_id ) . '">' . esc_html( $category->name ) . '</option>';
-							}
-							?>
-						</select>
-						
-						<select id="wprl-sort-filter">
-							<option value="date_desc"><?php esc_html_e( 'Newest First', 'wp-resource-library' ); ?></option>
-							<option value="date_asc"><?php esc_html_e( 'Oldest First', 'wp-resource-library' ); ?></option>
-							<option value="title_asc"><?php esc_html_e( 'Title A-Z', 'wp-resource-library' ); ?></option>
-							<option value="title_desc"><?php esc_html_e( 'Title Z-A', 'wp-resource-library' ); ?></option>
-							<option value="downloads"><?php esc_html_e( 'Most Downloaded', 'wp-resource-library' ); ?></option>
-						</select>
-					</div>
-					<?php endif; ?>
-				</div>
-				<?php endif; ?>
-
-				<div class="wprl-files-grid" data-columns="<?php echo esc_attr( $atts['columns'] ); ?>">
-					<?php
-					while ( $query->have_posts() ) :
-						$query->the_post();
-						?>
-						<?php $this->render_file_card(); ?>
-					<?php endwhile; ?>
-				</div>
-
-				<?php if ( $query->max_num_pages > 1 ) : ?>
-				<div class="wprl-load-more-wrapper">
-					<button type="button" id="wprl-load-more" data-page="1" data-max-pages="<?php echo esc_attr( $query->max_num_pages ); ?>">
-						<?php esc_html_e( 'Load More', 'wp-resource-library' ); ?>
-					</button>
-				</div>
-				<?php endif; ?>
-			</div>
-			<?php
-		} else {
-			echo '<p>' . esc_html__( 'No files found.', 'wp-resource-library' ) . '</p>';
-		}
-
-		wp_reset_postdata();
-
-		return ob_get_clean();
 	}
 
 	/**

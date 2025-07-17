@@ -11,7 +11,6 @@
 			init: function () {
 				this.bindEvents()
 				this.initFilters()
-				this.initLoadMore()
 			},
 
 			bindEvents: function () {
@@ -31,12 +30,6 @@
 				// Filter changes
 				$( document ).on( 'change', '#wprl-category-filter, #wprl-sort-filter', function () {
 					WPRL_Frontend.applyFilters()
-				} )
-
-				// Load more functionality
-				$( document ).on( 'click', '#wprl-load-more', function ( e ) {
-					e.preventDefault()
-					WPRL_Frontend.loadMoreFiles( $( this ) )
 				} )
 
 				// Download form submission
@@ -92,19 +85,6 @@
 				}
 			},
 
-			initLoadMore: function () {
-				// Initialize load more button state
-				var $loadMoreBtn = $( '#wprl-load-more' )
-				if ( $loadMoreBtn.length ) {
-					var currentPage = parseInt( $loadMoreBtn.data( 'page' ) ) || 1
-					var maxPages = parseInt( $loadMoreBtn.data( 'max-pages' ) ) || 1
-
-					if ( currentPage >= maxPages ) {
-						$loadMoreBtn.hide()
-					}
-				}
-			},
-
 			performSearch: function () {
 				var searchTerm = $( '#wprl-search-input' ).val().trim()
 				var currentUrl = new URL( window.location.href )
@@ -142,60 +122,6 @@
 				currentUrl.searchParams.delete( 'paged' )
 
 				window.location.href = currentUrl.toString()
-			},
-
-			loadMoreFiles: function ( $button ) {
-				var currentPage = parseInt( $button.data( 'page' ) ) || 1
-				var maxPages = parseInt( $button.data( 'max-pages' ) ) || 1
-				var nextPage = currentPage + 1
-
-				if ( nextPage > maxPages ) {
-					$button.hide()
-					return
-				}
-
-				// Show loading state
-				var originalText = $button.text()
-				$button.text( wprl_ajax.loading_text ).prop( 'disabled', true )
-
-				// Get current filters
-				var searchTerm = $( '#wprl-search-input' ).val() || ''
-				var category = $( '#wprl-category-filter' ).val() || ''
-				var sort = $( '#wprl-sort-filter' ).val() || ''
-
-				$.ajax( {
-					url: wprl_ajax.ajax_url,
-					type: 'POST',
-					data: {
-						action: 'wprl_load_more_files',
-						nonce: wprl_ajax.nonce,
-						page: nextPage,
-						search: searchTerm,
-						category: category,
-						sort: sort
-					},
-					success: function ( response ) {
-						if ( response.success && response.data.html ) {
-							$( '.wprl-files-grid' ).append( response.data.html )
-							$button.data( 'page', nextPage )
-
-							if ( !response.data.has_more || nextPage >= maxPages ) {
-								$button.hide()
-							}
-
-							// Trigger custom event for loaded content
-							$( document ).trigger( 'wprl:files_loaded', [response.data.html] )
-						} else {
-							WPRL_Frontend.showMessage( wprl_ajax.error_message, 'error' )
-						}
-					},
-					error: function () {
-						WPRL_Frontend.showMessage( wprl_ajax.error_message, 'error' )
-					},
-					complete: function () {
-						$button.text( originalText ).prop( 'disabled', false )
-					}
-				} )
 			},
 
 			submitDownloadForm: function ( $form ) {

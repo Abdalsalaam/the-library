@@ -30,7 +30,6 @@ get_header(); ?>
 		<!-- Filters and Search -->
 		<div class="wprl-filters-wrapper">
 			<form method="get" class="wprl-filters-form">
-				<?php wp_nonce_field( 'wprl_search_filter', 'wprl_search_nonce' ); ?>
 				<div class="wprl-filters-row">
 					<!-- Search -->
 					<div class="wprl-search-field">
@@ -144,8 +143,6 @@ get_header(); ?>
 					esc_html( number_format_i18n( $end ) ),
 					esc_html( number_format_i18n( $total_files ) )
 				);
-			} else {
-				esc_html_e( 'No files found', 'wp-resource-library' );
 			}
 			?>
 		</div>
