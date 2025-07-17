@@ -80,7 +80,7 @@ class Custom_Post_Type {
 
 		register_post_type( 'files_library', $args );
 		flush_rewrite_rules();
-    }
+	}
 
 	/**
 	 * Register taxonomy for categories.

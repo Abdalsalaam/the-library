@@ -29,7 +29,7 @@ class Frontend {
 	 * Constructor.
 	 */
 	public function __construct() {
-        add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'auto_enqueue_scripts' ) );
 		add_filter( 'template_include', array( $this, 'template_include' ) );
 		add_action( 'pre_get_posts', array( $this, 'modify_main_query' ) );
@@ -111,7 +111,7 @@ class Frontend {
 	 * @return string The path of the template to include.
 	 */
 	public function template_include( string $template ): string {
-		if ( Utils::is_files_archive() ) {
+		if ( Utils::is_files_archive() || Utils::is_file_category() ) {
 			$custom_template = Utils::get_plugin_path( 'templates/archive-files-library.php' );
 			if ( file_exists( $custom_template ) ) {
 				return $custom_template;
@@ -166,8 +166,8 @@ class Frontend {
 					'meta_query',
 					array(
 						array(
-							'key'     => '_wprl_file_type',
-							'value'   => sanitize_title_for_query( wp_unslash( $_GET['wprl_file_type'] ) ),
+							'key'   => '_wprl_file_type',
+							'value' => sanitize_title_for_query( wp_unslash( $_GET['wprl_file_type'] ) ),
 						),
 					)
 				);

@@ -5,6 +5,8 @@
  * @package WPResourceLibrary
  */
 
+use WPResourceLibrary\Utils;
+
 get_header(); ?>
 
 <div class="wprl-archive-wrapper">
@@ -27,103 +29,109 @@ get_header(); ?>
 			<?php endif; ?>
 		</header>
 
-		<!-- Filters and Search -->
-		<div class="wprl-filters-wrapper">
-			<form method="get" class="wprl-filters-form">
-				<div class="wprl-filters-row">
-					<!-- Search -->
-					<div class="wprl-search-field">
+		<?php
+		if ( ! Utils::is_file_category() ) {
+			?>
+			<!-- Filters and Search -->
+			<div class="wprl-filters-wrapper">
+				<form method="get" class="wprl-filters-form">
+					<div class="wprl-filters-row">
+						<!-- Search -->
+						<div class="wprl-search-field">
+							<?php
+							$search_value = isset( $_GET['wprl_search'] ) ? sanitize_text_field( wp_unslash( $_GET['wprl_search'] ) ) : '';
+							?>
+							<input type="text"
+									name="wprl_search"
+									value="<?php echo esc_attr( $search_value ); ?>"
+									placeholder="<?php esc_html_e( 'Search files...', 'wp-resource-library' ); ?>"
+									class="wprl-search-input">
+						</div>
+
+						<!-- Category Filter -->
+						<div class="wprl-filter-field">
+							<select name="wprl_category" class="wprl-category-filter">
+								<option value=""><?php esc_html_e( 'All Categories', 'wp-resource-library' ); ?></option>
+								<?php
+								$categories        = get_terms(
+									array(
+										'taxonomy'   => 'file_category',
+										'hide_empty' => true,
+									)
+								);
+								$selected_category = isset( $_GET['wprl_category'] ) ? sanitize_text_field( wp_unslash( $_GET['wprl_category'] ) ) : '';
+
+								foreach ( $categories as $category ) {
+									$selected = selected( $selected_category, $category->term_id, false );
+									echo '<option value="' . esc_attr( $category->term_id ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $category->name ) . ' (' . esc_html( $category->count ) . ')</option>';
+								}
+								?>
+							</select>
+						</div>
+
+						<!-- File Type Filter -->
+						<div class="wprl-filter-field">
+							<select name="wprl_file_type" class="wprl-file-type-filter">
+								<option value=""><?php esc_html_e( 'All File Types', 'wp-resource-library' ); ?></option>
+								<?php
+								// Get cached file types for better performance.
+								$file_types         = WPResourceLibrary\Utils::get_cached_file_types();
+								$selected_file_type = isset( $_GET['wprl_file_type'] ) ? sanitize_text_field( wp_unslash( $_GET['wprl_file_type'] ) ) : '';
+
+								foreach ( $file_types as $type_name => $count ) {
+									$selected = selected( $selected_file_type, $type_name, false );
+									echo '<option value="' . esc_attr( $type_name ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $type_name ) . ' (' . esc_html( $count ) . ')</option>';
+								}
+								?>
+							</select>
+						</div>
+
+						<!-- Sort Filter -->
+						<div class="wprl-filter-field">
+							<select name="wprl_sort" class="wprl-sort-filter">
+								<?php
+								$sort_options = array(
+									'date_desc'  => esc_html__( 'Newest First', 'wp-resource-library' ),
+									'date_asc'   => esc_html__( 'Oldest First', 'wp-resource-library' ),
+									'title_asc'  => esc_html__( 'Title A-Z', 'wp-resource-library' ),
+									'title_desc' => esc_html__( 'Title Z-A', 'wp-resource-library' ),
+									'downloads'  => esc_html__( 'Most Downloaded', 'wp-resource-library' ),
+								);
+
+								$selected_sort = isset( $_GET['wprl_sort'] ) ? sanitize_text_field( wp_unslash( $_GET['wprl_sort'] ) ) : 'date_desc';
+
+								foreach ( $sort_options as $value => $label ) {
+									$selected = selected( $selected_sort, $value, false );
+									echo '<option value="' . esc_attr( $value ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $label ) . '</option>';
+								}
+								?>
+							</select>
+						</div>
+
+						<!-- Submit Button -->
+						<div class="wprl-filter-field">
+							<button type="submit" class="wprl-filter-submit">
+								<?php esc_html_e( 'Filter', 'wp-resource-library' ); ?>
+							</button>
+						</div>
+
+						<!-- Clear Filters -->
 						<?php
-						$search_value = isset( $_GET['wprl_search'] ) ? sanitize_text_field( wp_unslash( $_GET['wprl_search'] ) ) : '';
-						?>
-						<input type="text"
-								name="wprl_search"
-								value="<?php echo esc_attr( $search_value ); ?>"
-								placeholder="<?php esc_html_e( 'Search files...', 'wp-resource-library' ); ?>"
-								class="wprl-search-input">
-					</div>
-
-					<!-- Category Filter -->
-					<div class="wprl-filter-field">
-						<select name="wprl_category" class="wprl-category-filter">
-							<option value=""><?php esc_html_e( 'All Categories', 'wp-resource-library' ); ?></option>
-							<?php
-							$categories        = get_terms(
-								array(
-									'taxonomy'   => 'file_category',
-									'hide_empty' => true,
-								)
-							);
-							$selected_category = isset( $_GET['wprl_category'] ) ? sanitize_text_field( wp_unslash( $_GET['wprl_category'] ) ) : '';
-
-							foreach ( $categories as $category ) {
-								$selected = selected( $selected_category, $category->term_id, false );
-								echo '<option value="' . esc_attr( $category->term_id ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $category->name ) . ' (' . esc_html( $category->count ) . ')</option>';
-							}
+						$has_filters = ( ! empty( $_GET['wprl_search'] ) || ! empty( $_GET['wprl_category'] ) || ! empty( $_GET['wprl_file_type'] ) || ! empty( $_GET['wprl_sort'] ) );
+						if ( $has_filters ) :
 							?>
-						</select>
+							<div class="wprl-filter-field">
+								<a href="<?php echo esc_url( get_post_type_archive_link( 'files_library' ) ); ?>" class="wprl-clear-filters">
+									<?php esc_html_e( 'Clear Filters', 'wp-resource-library' ); ?>
+								</a>
+							</div>
+						<?php endif; ?>
 					</div>
-
-					<!-- File Type Filter -->
-					<div class="wprl-filter-field">
-						<select name="wprl_file_type" class="wprl-file-type-filter">
-							<option value=""><?php esc_html_e( 'All File Types', 'wp-resource-library' ); ?></option>
-							<?php
-							// Get cached file types for better performance.
-							$file_types         = WPResourceLibrary\Utils::get_cached_file_types();
-							$selected_file_type = isset( $_GET['wprl_file_type'] ) ? sanitize_text_field( wp_unslash( $_GET['wprl_file_type'] ) ) : '';
-
-							foreach ( $file_types as $type_name => $count ) {
-								$selected = selected( $selected_file_type, $type_name, false );
-								echo '<option value="' . esc_attr( $type_name ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $type_name ) . ' (' . esc_html( $count ) . ')</option>';
-							}
-							?>
-						</select>
-					</div>
-
-					<!-- Sort Filter -->
-					<div class="wprl-filter-field">
-						<select name="wprl_sort" class="wprl-sort-filter">
-							<?php
-							$sort_options = array(
-								'date_desc'  => esc_html__( 'Newest First', 'wp-resource-library' ),
-								'date_asc'   => esc_html__( 'Oldest First', 'wp-resource-library' ),
-								'title_asc'  => esc_html__( 'Title A-Z', 'wp-resource-library' ),
-								'title_desc' => esc_html__( 'Title Z-A', 'wp-resource-library' ),
-								'downloads'  => esc_html__( 'Most Downloaded', 'wp-resource-library' ),
-							);
-
-							$selected_sort = isset( $_GET['wprl_sort'] ) ? sanitize_text_field( wp_unslash( $_GET['wprl_sort'] ) ) : 'date_desc';
-
-							foreach ( $sort_options as $value => $label ) {
-								$selected = selected( $selected_sort, $value, false );
-								echo '<option value="' . esc_attr( $value ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $label ) . '</option>';
-							}
-							?>
-						</select>
-					</div>
-
-					<!-- Submit Button -->
-					<div class="wprl-filter-field">
-						<button type="submit" class="wprl-filter-submit">
-							<?php esc_html_e( 'Filter', 'wp-resource-library' ); ?>
-						</button>
-					</div>
-
-					<!-- Clear Filters -->
-					<?php
-					$has_filters = ( ! empty( $_GET['wprl_search'] ) || ! empty( $_GET['wprl_category'] ) || ! empty( $_GET['wprl_file_type'] ) || ! empty( $_GET['wprl_sort'] ) );
-					if ( $has_filters ) :
-						?>
-					<div class="wprl-filter-field">
-						<a href="<?php echo esc_url( get_post_type_archive_link( 'files_library' ) ); ?>" class="wprl-clear-filters">
-							<?php esc_html_e( 'Clear Filters', 'wp-resource-library' ); ?>
-						</a>
-					</div>
-					<?php endif; ?>
-				</div>
-			</form>
-		</div>
+				</form>
+			</div>
+			<?php
+		}
+		?>
 
 		<!-- Results Info -->
 		<div class="wprl-results-info">

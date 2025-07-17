@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WP Resource Library 1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-resource-library\n"
-"POT-Creation-Date: 2025-07-17 22:06:59+00:00\n"
+"POT-Creation-Date: 2025-07-17 22:42:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -674,76 +674,76 @@ msgstr ""
 msgid "for %s"
 msgstr ""
 
-#: templates/archive-files-library.php:16
+#: templates/archive-files-library.php:18
 msgid "Files in Category: "
 msgstr ""
 
-#: templates/archive-files-library.php:18 templates/single-files-library.php:26
+#: templates/archive-files-library.php:20 templates/single-files-library.php:26
 msgid "Files Library"
 msgstr ""
 
-#: templates/archive-files-library.php:42
+#: templates/archive-files-library.php:47
 msgid "Search files..."
 msgstr ""
 
-#: templates/archive-files-library.php:49
+#: templates/archive-files-library.php:54
 msgid "All Categories"
 msgstr ""
 
-#: templates/archive-files-library.php:70
+#: templates/archive-files-library.php:75
 msgid "All File Types"
 msgstr ""
 
-#: templates/archive-files-library.php:89
+#: templates/archive-files-library.php:94
 msgid "Newest First"
 msgstr ""
 
-#: templates/archive-files-library.php:90
+#: templates/archive-files-library.php:95
 msgid "Oldest First"
 msgstr ""
 
-#: templates/archive-files-library.php:91
+#: templates/archive-files-library.php:96
 msgid "Title A-Z"
 msgstr ""
 
-#: templates/archive-files-library.php:92
+#: templates/archive-files-library.php:97
 msgid "Title Z-A"
 msgstr ""
 
-#: templates/archive-files-library.php:93
+#: templates/archive-files-library.php:98
 msgid "Most Downloaded"
 msgstr ""
 
-#: templates/archive-files-library.php:109
+#: templates/archive-files-library.php:114
 msgid "Filter"
 msgstr ""
 
-#: templates/archive-files-library.php:120
+#: templates/archive-files-library.php:125
 msgid "Clear Filters"
 msgstr ""
 
-#: templates/archive-files-library.php:141
+#: templates/archive-files-library.php:149
 #. translators: 1: start number, 2: end number, 3: total number
 msgid "Showing %1$d-%2$d of %3$d files"
 msgstr ""
 
-#: templates/archive-files-library.php:180
+#: templates/archive-files-library.php:188
 msgid "&laquo; Previous"
 msgstr ""
 
-#: templates/archive-files-library.php:181
+#: templates/archive-files-library.php:189
 msgid "Next &raquo;"
 msgstr ""
 
-#: templates/archive-files-library.php:192
+#: templates/archive-files-library.php:200
 msgid "No files found"
 msgstr ""
 
-#: templates/archive-files-library.php:193
+#: templates/archive-files-library.php:201
 msgid "Try adjusting your search criteria or browse all files."
 msgstr ""
 
-#: templates/archive-files-library.php:195
+#: templates/archive-files-library.php:203
 msgid "Browse All Files"
 msgstr ""
 
