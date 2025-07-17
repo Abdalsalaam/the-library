@@ -227,6 +227,7 @@ class Utils {
 		$current_data = self::get_file_data( $post_id );
 		$updated_data = array_merge( $current_data, $data );
 
+		update_post_meta( $post_id, '_wprl_file_type', $updated_data['type'] );
 		return update_post_meta( $post_id, '_wprl_file_data', $updated_data );
 	}
 

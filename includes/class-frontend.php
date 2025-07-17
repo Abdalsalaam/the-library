@@ -154,7 +154,7 @@ class Frontend {
 						array(
 							'taxonomy' => 'file_category',
 							'field'    => 'term_id',
-							'terms'    => sanitize_text_field( wp_unslash( $_GET['wprl_category'] ) ),
+							'terms'    => intval( wp_unslash( $_GET['wprl_category'] ) ),
 						),
 					)
 				);
@@ -166,9 +166,8 @@ class Frontend {
 					'meta_query',
 					array(
 						array(
-							'key'     => '_wprl_file_data',
-							'value'   => '"type":"' . sanitize_text_field( wp_unslash( $_GET['wprl_file_type'] ) ) . '"',
-							'compare' => 'LIKE',
+							'key'     => '_wprl_file_type',
+							'value'   => sanitize_title_for_query( wp_unslash( $_GET['wprl_file_type'] ) ),
 						),
 					)
 				);
