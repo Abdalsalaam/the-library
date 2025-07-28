@@ -190,8 +190,7 @@ get_header(); ?>
 						<?php
 						$related_args = array(
 							'post_type'      => 'wprl_files_library',
-							'posts_per_page' => 5,
-							'post__not_in'   => array( get_the_ID() ),
+							'posts_per_page' => 6,
 							'post_status'    => 'publish',
 						);
 
@@ -206,6 +205,8 @@ get_header(); ?>
 						}
 
 						$related_query = new WP_Query( $related_args );
+						$exclude       = get_the_ID();
+						$posts         = 0;
 
 						if ( $related_query->have_posts() ) :
 							?>
@@ -213,8 +214,12 @@ get_header(); ?>
 							<h4><?php esc_html_e( 'Related Files', 'wp-resource-library' ); ?></h4>
 							<ul class="wprl-related-files">
 								<?php
-								while ( $related_query->have_posts() ) :
+								while ( $related_query->have_posts() && $posts < 5 ) :
 									$related_query->the_post();
+                                    if ( get_the_ID() === $exclude ) {
+                                        continue;
+                                    }
+									$posts++;
 									?>
 								<li>
 									<a href="<?php the_permalink(); ?>" class="wprl-related-file">
