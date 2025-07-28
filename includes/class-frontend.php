@@ -160,10 +160,6 @@ class Frontend {
 			// Handle sorting.
 			if ( ! empty( $_GET['wprl_sort'] ) ) {
 				switch ( sanitize_text_field( wp_unslash( $_GET['wprl_sort'] ) ) ) {
-					case 'date_desc':
-						$query->set( 'orderby', 'date' );
-						$query->set( 'order', 'DESC' );
-						break;
 					case 'date_asc':
 						$query->set( 'orderby', 'date' );
 						$query->set( 'order', 'ASC' );
@@ -179,6 +175,11 @@ class Frontend {
 					case 'downloads':
 						$query->set( 'meta_key', '_wprl_download_count' );
 						$query->set( 'orderby', 'meta_value_num' );
+						$query->set( 'order', 'DESC' );
+						break;
+					case 'date_desc':
+					default:
+						$query->set( 'orderby', 'date' );
 						$query->set( 'order', 'DESC' );
 						break;
 				}

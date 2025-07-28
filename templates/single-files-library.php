@@ -216,10 +216,10 @@ get_header(); ?>
 								<?php
 								while ( $related_query->have_posts() && $posts < 5 ) :
 									$related_query->the_post();
-                                    if ( get_the_ID() === $exclude ) {
-                                        continue;
-                                    }
-									$posts++;
+									if ( get_the_ID() === $exclude ) {
+										continue;
+									}
+									++$posts;
 									?>
 								<li>
 									<a href="<?php the_permalink(); ?>" class="wprl-related-file">

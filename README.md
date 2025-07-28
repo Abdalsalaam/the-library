@@ -20,7 +20,6 @@ A comprehensive WordPress plugin for creating a files/books/videos library with 
 - **Download Protection**: Users must provide contact information to download
 - **User Data Collection**: Collect name, email, and mobile number before download
 - **Download Tokens**: Secure download links valid for 24 hours
-- **Email Notifications**: Optional email notifications (disabled by default)
 
 ### Security Features
 - **Nonce Protection**: All AJAX requests are protected with nonces

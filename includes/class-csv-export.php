@@ -37,7 +37,7 @@ class CSV_Export {
 		) {
 
 			if ( ! Utils::current_user_can_manage() ) {
-				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.' ) );
+				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-resource-library' ) );
 			}
 
 			$this->export_download_requests();
@@ -100,7 +100,8 @@ class CSV_Export {
 			fputcsv( $output, $row );
 		}
 
-		fclose( $output );
+		// Close output stream - safe to ignore WPCS warning for php://output.
+		fclose( $output ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 		exit;
 	}
 }

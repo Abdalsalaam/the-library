@@ -256,8 +256,14 @@ class Download_Handler {
 				header( 'Pragma: private' );
 				header( 'Expires: 0' );
 
-				// Output file.
-				readfile( $file_path );
+				global $wp_filesystem;
+				if ( empty( $wp_filesystem ) ) {
+					require_once ABSPATH . '/wp-admin/includes/file.php';
+					WP_Filesystem();
+				}
+
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $wp_filesystem->get_contents( $file_path );
 			} else {
 				// Redirect to external URL.
 				wp_redirect( $file_data['url'] );
@@ -359,7 +365,7 @@ class Download_Handler {
 	/**
 	 * Generate download token and URL.
 	 *
-	 * @param int    $post_id    Post ID.
+	 * @param int $post_id    Post ID.
 	 *
 	 * @return string Download URL.
 	 */

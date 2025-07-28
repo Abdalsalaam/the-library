@@ -181,13 +181,15 @@ get_header(); ?>
 		<!-- Pagination -->
 		<div class="wprl-pagination">
 			<?php
-			echo paginate_links(
-				apply_filters(
-					'wprl_pagination_args',
-					array(
-						'prev_text' => esc_html__( '&laquo; Previous', 'wp-resource-library' ),
-						'next_text' => esc_html__( 'Next &raquo;', 'wp-resource-library' ),
-						'type'      => 'list',
+			echo wp_kses_post(
+				paginate_links(
+					apply_filters(
+						'wprl_pagination_args',
+						array(
+							'prev_text' => esc_html__( '&laquo; Previous', 'wp-resource-library' ),
+							'next_text' => esc_html__( 'Next &raquo;', 'wp-resource-library' ),
+							'type'      => 'list',
+						)
 					)
 				)
 			);

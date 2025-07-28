@@ -64,7 +64,6 @@ class Admin {
 	 * Download requests admin page.
 	 */
 	public function download_requests_page() {
-
 		// Handle bulk actions with proper nonce verification.
 		if ( isset( $_POST['action'] ) && 'bulk_delete' === sanitize_text_field( wp_unslash( $_POST['action'] ) ) && isset( $_POST['request_ids'] ) ) {
 			// Verify nonce for security.
@@ -170,21 +169,23 @@ class Admin {
 							printf( esc_html( _n( '%s item', '%s items', $total_items, 'wp-resource-library' ) ), esc_html( number_format_i18n( $total_items ) ) );
 							?>
 						</span>
-						<?php
-						$page_links = paginate_links(
-							array(
-								'base'      => add_query_arg( 'paged', '%#%' ),
-								'format'    => '',
-								'prev_text' => esc_html__( '&laquo;', 'wp-resource-library' ),
-								'next_text' => esc_html__( '&raquo;', 'wp-resource-library' ),
-								'total'     => $total_pages,
-								'current'   => $current_page,
-							)
-						);
-						if ( $page_links ) {
-							echo '<span class="pagination-links">' . $page_links . '</span>';
-						}
-						?>
+
+						<span class="pagination-links">
+							<?php
+							echo wp_kses_post(
+								paginate_links(
+									array(
+										'base'      => add_query_arg( 'paged', '%#%' ),
+										'format'    => '',
+										'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
+										'next_text' => is_rtl() ? '&larr;' : '&rarr;',
+										'total'     => $total_pages,
+										'current'   => $current_page,
+									)
+								)
+							);
+							?>
+						</span>
 					</div>
 					<?php endif; ?>
 				</div>
@@ -216,7 +217,7 @@ class Admin {
 								<input type="checkbox" name="request_ids[]" value="<?php echo esc_attr( $request->id ); ?>">
 							</th>
 							<td>
-								<?php if ( $request->post_title ) : ?>
+								<?php if ( ! empty( $request->post_title ) ) : ?>
 									<a href="<?php echo esc_url( get_edit_post_link( $request->post_id ) ); ?>" target="_blank">
 										<?php echo esc_html( $request->post_title ); ?>
 									</a>
@@ -247,24 +248,6 @@ class Admin {
 						<?php endif; ?>
 					</tbody>
 				</table>
-
-				<div class="tablenav bottom">
-					<?php if ( $total_pages > 1 ) : ?>
-					<div class="tablenav-pages">
-						<span class="displaying-num">
-							<?php
-							/* translators: %s: number of items */
-							printf( esc_html( _n( '%s item', '%s items', $total_items, 'wp-resource-library' ) ), esc_html( number_format_i18n( $total_items ) ) );
-							?>
-						</span>
-						<?php
-						if ( ! empty( $page_links ) ) {
-							echo '<span class="pagination-links">' . wp_kses_post( $page_links ) . '</span>';
-						}
-						?>
-					</div>
-					<?php endif; ?>
-				</div>
 			</form>
 		</div>
 		

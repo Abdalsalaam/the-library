@@ -6,6 +6,8 @@
  * Version: 1.0
  * Author: Abdalsalaam Halawa
  * Author URI: https://github.com/Abdalsalaam
+ * License: GPL v3 or later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: wp-resource-library
  *
  * @package WPResourceLibrary

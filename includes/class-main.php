@@ -29,9 +29,6 @@ class Main {
 	 * Initialize the plugin.
 	 */
 	public function init() {
-		// Load text domain.
-		load_plugin_textdomain( 'wp-resource-library', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-
 		// Include required files.
 		$this->includes();
 
