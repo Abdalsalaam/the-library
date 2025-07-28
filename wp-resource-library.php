@@ -3,7 +3,7 @@
  * Plugin Name: WP Resource Library
  * Plugin URI: https://github.com/Abdalsalaam
  * Description: A comprehensive files/books/videos library plugin with user data collection for downloads.
- * Version: 1.0
+ * Version: 1.0.0
  * Author: Abdalsalaam Halawa
  * Author URI: https://github.com/Abdalsalaam
  * License: GPL v3 or later
@@ -32,7 +32,7 @@ if ( ! defined( 'WPRL_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'WPRL_VERSION' ) ) {
-	define( 'WPRL_VERSION', '1.0' );
+	define( 'WPRL_VERSION', '1.0.0' );
 }
 
 // Initialize the plugin.
