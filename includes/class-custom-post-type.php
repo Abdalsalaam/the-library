@@ -78,7 +78,7 @@ class Custom_Post_Type {
 			'show_in_rest'       => true,
 		);
 
-		register_post_type( 'files_library', $args );
+		register_post_type( 'wprl_files_library', $args );
 		flush_rewrite_rules();
 	}
 
@@ -110,7 +110,7 @@ class Custom_Post_Type {
 			'show_in_rest'      => true,
 		);
 
-		register_taxonomy( 'file_category', array( 'files_library' ), $args );
+		register_taxonomy( 'wprl_file_category', array( 'wprl_files_library' ), $args );
 	}
 
 	/**
@@ -121,7 +121,7 @@ class Custom_Post_Type {
 			'wprl_file_upload',
 			esc_html__( 'File Upload', 'wp-resource-library' ),
 			array( $this, 'file_upload_meta_box' ),
-			'files_library',
+			'wprl_files_library',
 			'normal',
 			'high'
 		);
@@ -130,7 +130,7 @@ class Custom_Post_Type {
 			'wprl_file_details',
 			esc_html__( 'File Details', 'wp-resource-library' ),
 			array( $this, 'file_details_meta_box' ),
-			'files_library',
+			'wprl_files_library',
 			'side',
 			'default'
 		);
@@ -199,7 +199,7 @@ class Custom_Post_Type {
 			return;
 		}
 
-		if ( ! isset( $_POST['post_type'] ) || 'files_library' !== $_POST['post_type'] || ! current_user_can( 'edit_post', $post_id ) ) {
+		if ( ! isset( $_POST['post_type'] ) || 'wprl_files_library' !== $_POST['post_type'] || ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
 
@@ -238,7 +238,7 @@ class Custom_Post_Type {
 	public function enqueue_admin_scripts( string $hook ) {
 		global $post;
 
-		if ( ( 'post.php' !== $hook && 'post-new.php' !== $hook ) || 'files_library' !== $post->post_type ) {
+		if ( ( 'post.php' !== $hook && 'post-new.php' !== $hook ) || 'wprl_files_library' !== $post->post_type ) {
 			return;
 		}
 
@@ -248,12 +248,12 @@ class Custom_Post_Type {
 	}
 
 	/**
-	 * Clear cache when files_library post is deleted.
+	 * Clear cache when wprl_files_library post is deleted.
 	 *
 	 * @param int $post_id Post ID.
 	 */
 	public function clear_cache_on_delete( int $post_id ) {
-		if ( get_post_type( $post_id ) === 'files_library' ) {
+		if ( get_post_type( $post_id ) === 'wprl_files_library' ) {
 			Utils::clear_file_types_cache();
 		}
 	}

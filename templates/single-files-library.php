@@ -15,23 +15,9 @@ get_header(); ?>
 			?>
 			<?php
 			$file_data  = WPResourceLibrary\Utils::get_file_data();
-			$categories = get_the_terms( get_the_ID(), 'file_category' );
+			$categories = get_the_terms( get_the_ID(), 'wprl_file_category' );
 			?>
-
 			<article class="wprl-single-file">
-				<!-- Breadcrumbs -->
-				<nav class="wprl-breadcrumbs">
-					<a href="<?php echo esc_url( home_url() ); ?>"><?php esc_html_e( 'Home', 'wp-resource-library' ); ?></a>
-					<span class="wprl-separator">/</span>
-					<a href="<?php echo esc_url( get_post_type_archive_link( 'files_library' ) ); ?>"><?php esc_html_e( 'Files Library', 'wp-resource-library' ); ?></a>
-					<?php if ( $categories && ! is_wp_error( $categories ) ) : ?>
-						<span class="wprl-separator">/</span>
-						<a href="<?php echo esc_url( get_term_link( $categories[0] ) ); ?>"><?php echo esc_html( $categories[0]->name ); ?></a>
-					<?php endif; ?>
-					<span class="wprl-separator">/</span>
-					<span class="wprl-current"><?php the_title(); ?></span>
-				</nav>
-
 				<header class="wprl-file-header">
 					<h1><?php the_title(); ?></h1>
 
@@ -44,36 +30,6 @@ get_header(); ?>
 						<?php endforeach; ?>
 					</div>
 					<?php endif; ?>
-
-					<div class="wprl-file-meta">
-						<?php if ( $file_data['size'] ) : ?>
-							<span class="wprl-meta-item">
-								<i class="wprl-icon-size"></i>
-								<strong><?php esc_html_e( 'Size:', 'wp-resource-library' ); ?></strong>
-								<?php echo esc_html( size_format( $file_data['size'] ) ); ?>
-							</span>
-						<?php endif; ?>
-
-						<?php if ( $file_data['type'] ) : ?>
-							<span class="wprl-meta-item">
-								<i class="wprl-icon-type"></i>
-								<strong><?php esc_html_e( 'Type:', 'wp-resource-library' ); ?></strong>
-								<?php echo esc_html( $file_data['type'] ); ?>
-							</span>
-						<?php endif; ?>
-
-						<span class="wprl-meta-item">
-							<i class="wprl-icon-download"></i>
-							<strong><?php esc_html_e( 'Downloads:', 'wp-resource-library' ); ?></strong>
-							<?php echo intval( $file_data['download_count'] ); ?>
-						</span>
-
-						<span class="wprl-meta-item">
-							<i class="wprl-icon-date"></i>
-							<strong><?php esc_html_e( 'Published:', 'wp-resource-library' ); ?></strong>
-							<?php echo get_the_date(); ?>
-						</span>
-					</div>
 				</header>
 
 				<div class="wprl-file-content-wrapper">
@@ -233,7 +189,7 @@ get_header(); ?>
 						<!-- Related Files -->
 						<?php
 						$related_args = array(
-							'post_type'      => 'files_library',
+							'post_type'      => 'wprl_files_library',
 							'posts_per_page' => 5,
 							'post__not_in'   => array( get_the_ID() ),
 							'post_status'    => 'publish',
@@ -242,7 +198,7 @@ get_header(); ?>
 						if ( $categories && ! is_wp_error( $categories ) ) {
 							$related_args['tax_query'] = array(
 								array(
-									'taxonomy' => 'file_category',
+									'taxonomy' => 'wprl_file_category',
 									'field'    => 'term_id',
 									'terms'    => wp_list_pluck( $categories, 'term_id' ),
 								),
@@ -283,7 +239,7 @@ get_header(); ?>
 
 						<!-- Back to Library -->
 						<div class="wprl-sidebar-widget">
-							<a href="<?php echo esc_url( get_post_type_archive_link( 'files_library' ) ); ?>" class="wprl-back-to-library">
+							<a href="<?php echo esc_url( get_post_type_archive_link( 'wprl_files_library' ) ); ?>" class="wprl-back-to-library">
 								<?php esc_html_e( '← Back to Files Library', 'wp-resource-library' ); ?>
 							</a>
 						</div>

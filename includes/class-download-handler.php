@@ -114,7 +114,7 @@ class Download_Handler {
 		}
 
 		// Generate download token and URL.
-		$download_url = $this->generate_download_token_and_url( $post_id, $user_email );
+		$download_url = $this->generate_download_token_and_url( $post_id );
 
 		wp_send_json_success(
 			array(
@@ -347,7 +347,7 @@ class Download_Handler {
 		}
 
 		// Generate download token and URL.
-		$download_url = $this->generate_download_token_and_url( $post_id, $user_email );
+		$download_url = $this->generate_download_token_and_url( $post_id );
 
 		wp_send_json_success(
 			array(
@@ -360,11 +360,10 @@ class Download_Handler {
 	 * Generate download token and URL.
 	 *
 	 * @param int    $post_id    Post ID.
-	 * @param string $user_email User email.
 	 *
 	 * @return string Download URL.
 	 */
-	private function generate_download_token_and_url( int $post_id, string $user_email ): string {
+	private function generate_download_token_and_url( int $post_id ): string {
 		// Update download count using utility function.
 		Utils::increment_download_count( $post_id );
 
@@ -372,11 +371,8 @@ class Download_Handler {
 		$download_token = Utils::generate_token( 32 );
 		set_transient(
 			'wprl_download_' . $download_token,
-			array(
-				'post_id'    => $post_id,
-				'user_email' => $user_email,
-			),
-			24 * 60 * 60 // 24 hours
+			array( 'post_id' => $post_id ),
+			24 * 60 * 60 // 24 hours.
 		);
 
 		// Generate download URL.

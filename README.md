@@ -52,20 +52,6 @@ A comprehensive WordPress plugin for creating a files/books/videos library with 
 3. Export data as CSV using the "Export CSV" button
 4. Delete individual requests or use bulk actions
 
-### Shortcode Usage
-Display files anywhere using the shortcode:
-
-```
-[files_library posts_per_page="12" category="books,videos" show_filters="true" show_search="true" columns="3"]
-```
-
-**Shortcode Parameters:**
-- `posts_per_page`: Number of files to display (default: 12)
-- `category`: Comma-separated list of category slugs to filter
-- `show_filters`: Show filter dropdowns (true/false, default: true)
-- `show_search`: Show search box (true/false, default: true)
-- `columns`: Number of columns in grid (1-4, default: 3)
-
 ## Customization
 
 ### Template Override

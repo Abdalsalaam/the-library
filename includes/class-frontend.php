@@ -152,7 +152,7 @@ class Frontend {
 					'tax_query',
 					array(
 						array(
-							'taxonomy' => 'file_category',
+							'taxonomy' => 'wprl_file_category',
 							'field'    => 'term_id',
 							'terms'    => intval( wp_unslash( $_GET['wprl_category'] ) ),
 						),
@@ -220,7 +220,7 @@ class Frontend {
 
 		$args       = wp_parse_args( $args, $defaults );
 		$file_data  = Utils::get_file_data();
-		$categories = get_the_terms( get_the_ID(), 'file_category' );
+		$categories = get_the_terms( get_the_ID(), 'wprl_file_category' );
 		$post_title = get_the_title();
 		$permalink  = get_the_permalink();
 		?>
@@ -388,7 +388,7 @@ class Frontend {
 		$sort     = isset( $_POST['sort'] ) ? sanitize_text_field( wp_unslash( $_POST['sort'] ) ) : 'date_desc';
 
 		$args = array(
-			'post_type'      => 'files_library',
+			'post_type'      => 'wprl_files_library',
 			'posts_per_page' => 12,
 			'paged'          => $page,
 			'post_status'    => 'publish',
@@ -401,7 +401,7 @@ class Frontend {
 		if ( ! empty( $category ) ) {
 			$args['tax_query'] = array(
 				array(
-					'taxonomy' => 'file_category',
+					'taxonomy' => 'wprl_file_category',
 					'field'    => 'term_id',
 					'terms'    => $category,
 				),

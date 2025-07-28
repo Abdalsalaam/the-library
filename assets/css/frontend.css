@@ -241,20 +241,6 @@
     padding: 2rem 0;
 }
 
-.wprl-breadcrumbs {
-    margin-bottom: 2rem;
-    font-size: 0.9rem;
-}
-
-.wprl-breadcrumbs a {
-    color: #f49865;
-    text-decoration: none;
-}
-
-.wprl-breadcrumbs a:hover {
-    text-decoration: underline;
-}
-
 .wprl-separator {
     margin: 0 0.5rem;
     color: #666;

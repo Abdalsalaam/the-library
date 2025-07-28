@@ -14,7 +14,7 @@ get_header(); ?>
 		<header class="wprl-archive-header">
 			<h1 class="wprl-archive-title">
 				<?php
-				if ( is_tax( 'file_category' ) ) {
+				if ( is_tax( 'wprl_file_category' ) ) {
 					single_term_title( esc_html__( 'Files in Category: ', 'wp-resource-library' ) );
 				} else {
 					esc_html_e( 'Files Library', 'wp-resource-library' );
@@ -22,7 +22,7 @@ get_header(); ?>
 				?>
 			</h1>
 
-			<?php if ( is_tax( 'file_category' ) && term_description() ) : ?>
+			<?php if ( is_tax( 'wprl_file_category' ) && term_description() ) : ?>
 				<div class="wprl-archive-description">
 					<?php echo wp_kses_post( term_description() ); ?>
 				</div>
@@ -55,7 +55,7 @@ get_header(); ?>
 								<?php
 								$categories        = get_terms(
 									array(
-										'taxonomy'   => 'file_category',
+										'taxonomy'   => 'wprl_file_category',
 										'hide_empty' => true,
 									)
 								);
@@ -121,7 +121,7 @@ get_header(); ?>
 						if ( $has_filters ) :
 							?>
 							<div class="wprl-filter-field">
-								<a href="<?php echo esc_url( get_post_type_archive_link( 'files_library' ) ); ?>" class="wprl-clear-filters">
+								<a href="<?php echo esc_url( get_post_type_archive_link( 'wprl_files_library' ) ); ?>" class="wprl-clear-filters">
 									<?php esc_html_e( 'Clear Filters', 'wp-resource-library' ); ?>
 								</a>
 							</div>
@@ -199,7 +199,7 @@ get_header(); ?>
 		<div class="wprl-no-files">
 			<h2><?php esc_html_e( 'No files found', 'wp-resource-library' ); ?></h2>
 			<p><?php esc_html_e( 'Try adjusting your search criteria or browse all files.', 'wp-resource-library' ); ?></p>
-			<a href="<?php echo esc_url( get_post_type_archive_link( 'files_library' ) ); ?>" class="wprl-browse-all">
+			<a href="<?php echo esc_url( get_post_type_archive_link( 'wprl_files_library' ) ); ?>" class="wprl-browse-all">
 				<?php esc_html_e( 'Browse All Files', 'wp-resource-library' ); ?>
 			</a>
 		</div>

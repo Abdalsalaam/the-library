@@ -33,7 +33,7 @@ class Admin {
 	 */
 	public function add_admin_menu() {
 		add_submenu_page(
-			'edit.php?post_type=files_library',
+			'edit.php?post_type=wprl_files_library',
 			esc_html__( 'Download Requests', 'wp-resource-library' ),
 			esc_html__( 'Download Requests', 'wp-resource-library' ),
 			'manage_options',
@@ -42,7 +42,7 @@ class Admin {
 		);
 
 		add_submenu_page(
-			'edit.php?post_type=files_library',
+			'edit.php?post_type=wprl_files_library',
 			esc_html__( 'System Logs', 'wp-resource-library' ),
 			esc_html__( 'System Logs', 'wp-resource-library' ),
 			'manage_options',
@@ -51,7 +51,7 @@ class Admin {
 		);
 
 		add_submenu_page(
-			'edit.php?post_type=files_library',
+			'edit.php?post_type=wprl_files_library',
 			esc_html__( 'System Maintenance', 'wp-resource-library' ),
 			esc_html__( 'Maintenance', 'wp-resource-library' ),
 			'manage_options',
@@ -129,7 +129,7 @@ class Admin {
 						'action' => 'export_csv',
 						'nonce'  => wp_create_nonce( 'wprl_export_csv' ),
 					),
-					admin_url( 'edit.php?post_type=files_library' )
+					admin_url( 'edit.php?post_type=wprl_files_library' )
 				)
 			);
 			?>
@@ -141,7 +141,7 @@ class Admin {
 
 			<!-- Search form -->
 			<form method="get" class="search-form">
-				<input type="hidden" name="post_type" value="files_library">
+				<input type="hidden" name="post_type" value="wprl_files_library">
 				<input type="hidden" name="page" value="wprl-download-requests">
 				<p class="search-box">
 					<label class="screen-reader-text" for="request-search-input"><?php esc_html_e( 'Search requests:', 'wp-resource-library' ); ?></label>
