@@ -33,8 +33,6 @@ class Frontend {
 		add_action( 'wp_enqueue_scripts', array( $this, 'auto_enqueue_scripts' ) );
 		add_filter( 'template_include', array( $this, 'template_include' ) );
 		add_action( 'pre_get_posts', array( $this, 'modify_main_query' ) );
-		add_action( 'wp_ajax_wprl_load_more_files', array( $this, 'load_more_files' ) );
-		add_action( 'wp_ajax_nopriv_wprl_load_more_files', array( $this, 'load_more_files' ) );
 	}
 
 	/**
@@ -56,19 +54,6 @@ class Frontend {
 	public function register_scripts() {
 		wp_register_style( 'wprl-frontend-css', Utils::get_plugin_url( 'assets/css/frontend.css' ), array(), Utils::get_version() );
 		wp_register_script( 'wprl-frontend-js', Utils::get_plugin_url( 'assets/js/frontend.js' ), array( 'jquery' ), Utils::get_version(), true );
-
-		wp_localize_script(
-			'wprl-frontend-js',
-			'wprl_ajax',
-			array(
-				'ajax_url'              => admin_url( 'admin-ajax.php' ),
-				'nonce'                 => wp_create_nonce( 'wprl_frontend_nonce' ),
-				'direct_download_nonce' => wp_create_nonce( 'wprl_direct_download_nonce' ),
-				'loading_text'          => esc_html__( 'Loading...', 'wp-resource-library' ),
-				'no_more_files'         => esc_html__( 'No more files to load.', 'wp-resource-library' ),
-				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'wp-resource-library' ),
-			)
-		);
 	}
 
 	/**
@@ -86,7 +71,6 @@ class Frontend {
 				'nonce'                 => wp_create_nonce( 'wprl_frontend_nonce' ),
 				'direct_download_nonce' => wp_create_nonce( 'wprl_direct_download_nonce' ),
 				'loading_text'          => esc_html__( 'Loading...', 'wp-resource-library' ),
-				'no_more_files'         => esc_html__( 'No more files to load.', 'wp-resource-library' ),
 				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'wp-resource-library' ),
 			)
 		);
@@ -374,83 +358,5 @@ class Frontend {
 			</div>
 		</article>
 		<?php
-	}
-
-	/**
-	 * Load more files via AJAX.
-	 */
-	public function load_more_files() {
-		check_ajax_referer( 'wprl_frontend_nonce', 'nonce' );
-
-		$page     = isset( $_POST['page'] ) ? intval( wp_unslash( $_POST['page'] ) ) : 1;
-		$search   = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
-		$category = isset( $_POST['category'] ) ? sanitize_text_field( wp_unslash( $_POST['category'] ) ) : '';
-		$sort     = isset( $_POST['sort'] ) ? sanitize_text_field( wp_unslash( $_POST['sort'] ) ) : 'date_desc';
-
-		$args = array(
-			'post_type'      => 'wprl_files_library',
-			'posts_per_page' => 12,
-			'paged'          => $page,
-			'post_status'    => 'publish',
-		);
-
-		if ( ! empty( $search ) ) {
-			$args['s'] = $search;
-		}
-
-		if ( ! empty( $category ) ) {
-			$args['tax_query'] = array(
-				array(
-					'taxonomy' => 'wprl_file_category',
-					'field'    => 'term_id',
-					'terms'    => $category,
-				),
-			);
-		}
-
-		// Handle sorting.
-		switch ( $sort ) {
-			case 'date_asc':
-				$args['orderby'] = 'date';
-				$args['order']   = 'ASC';
-				break;
-			case 'title_asc':
-				$args['orderby'] = 'title';
-				$args['order']   = 'ASC';
-				break;
-			case 'title_desc':
-				$args['orderby'] = 'title';
-				$args['order']   = 'DESC';
-				break;
-			case 'downloads':
-				$args['meta_key'] = '_wprl_download_count';
-				$args['orderby']  = 'meta_value_num';
-				$args['order']    = 'DESC';
-				break;
-			default:
-				$args['orderby'] = 'date';
-				$args['order']   = 'DESC';
-		}
-
-		$query = new WP_Query( $args );
-
-		if ( $query->have_posts() ) {
-			ob_start();
-			while ( $query->have_posts() ) {
-				$query->the_post();
-				$this->render_file_card();
-			}
-			$html = ob_get_clean();
-			wp_reset_postdata();
-
-			wp_send_json_success(
-				array(
-					'html'     => $html,
-					'has_more' => $page < $query->max_num_pages,
-				)
-			);
-		} else {
-			wp_send_json_error();
-		}
 	}
 }
