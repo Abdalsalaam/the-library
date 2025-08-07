@@ -1,6 +1,6 @@
-=== WP Resource Library ===
+=== The Library ===
 Contributors: abdalsalaam
-Tags: file library, downloads, resource library
+Tags: file library, downloads, The Library
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
@@ -12,7 +12,7 @@ A comprehensive WordPress plugin for creating a files/books/videos library with 
 
 == Description ==
 
-WP Resource Library is a powerful WordPress plugin that allows you to create a comprehensive files library with advanced user data collection features. Perfect for businesses, educational institutions, and content creators who want to track and manage file downloads.
+The Library is a powerful WordPress plugin that allows you to create a comprehensive files library with advanced user data collection features. Perfect for businesses, educational institutions, and content creators who want to track and manage file downloads.
 
 = Admin Features =
 * **Custom Post Type**: "Files Library" with file upload capability
@@ -104,4 +104,4 @@ Yes, you can export all collected user data as CSV from the admin dashboard.
 == Upgrade Notice ==
 
 = 1.0.0 =
-Initial release of WP Resource Library plugin.
+Initial release of The Library plugin.

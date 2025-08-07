@@ -46,17 +46,17 @@ get_header(); ?>
 
 						<!-- Download Section -->
 						<div class="wprl-download-section">
-							<h3><?php esc_html_e( 'Download This File', 'wp-resource-library' ); ?></h3>
+							<h3><?php esc_html_e( 'Download This File', 'the-library' ); ?></h3>
 
 							<?php if ( ! empty( $file_data['url'] ) ) : ?>
 								<?php if ( is_user_logged_in() ) : ?>
 									<!-- Logged-in user - Direct download -->
 									<div class="wprl-logged-in-download">
-										<p><?php esc_html_e( 'Welcome back! You can download this file directly.', 'wp-resource-library' ); ?></p>
+										<p><?php esc_html_e( 'Welcome back! You can download this file directly.', 'the-library' ); ?></p>
 										<div class="wprl-direct-download-actions">
 											<button type="button" id="wprl-direct-download" class="wprl-download-button" data-post-id="<?php echo esc_attr( get_the_ID() ); ?>">
 												<i class="wprl-icon-download"></i>
-												<?php esc_html_e( 'Download File', 'wp-resource-library' ); ?>
+												<?php esc_html_e( 'Download File', 'the-library' ); ?>
 											</button>
 										</div>
 										<div id="wprl-direct-download-message" class="wprl-message" style="display: none;"></div>
@@ -64,11 +64,11 @@ get_header(); ?>
 								<?php else : ?>
 									<!-- Non-logged-in user - Form required -->
 									<div class="wprl-download-info">
-										<p><?php esc_html_e( 'To download this file, please provide your contact information below:', 'wp-resource-library' ); ?></p>
+										<p><?php esc_html_e( 'To download this file, please provide your contact information below:', 'the-library' ); ?></p>
 										<p><small>
 										<?php
 										/* translators: 1: opening link tag, 2: closing link tag */
-										printf( esc_html__( 'Already have an account? %1$sLogin here%2$s for direct downloads.', 'wp-resource-library' ), '<a href="' . esc_url( wp_login_url( get_permalink() ) ) . '">', '</a>' );
+										printf( esc_html__( 'Already have an account? %1$sLogin here%2$s for direct downloads.', 'the-library' ), '<a href="' . esc_url( wp_login_url( get_permalink() ) ) . '">', '</a>' );
 										?>
 										</small></p>
 									</div>
@@ -82,19 +82,19 @@ get_header(); ?>
 
 										<div class="wprl-form-row">
 											<div class="wprl-form-field">
-												<label for="wprl_user_name"><?php esc_html_e( 'Full Name *', 'wp-resource-library' ); ?></label>
+												<label for="wprl_user_name"><?php esc_html_e( 'Full Name *', 'the-library' ); ?></label>
 												<input type="text" id="wprl_user_name" name="user_name" required>
 											</div>
 
 											<div class="wprl-form-field">
-												<label for="wprl_user_email"><?php esc_html_e( 'Email Address (Optional)', 'wp-resource-library' ); ?></label>
+												<label for="wprl_user_email"><?php esc_html_e( 'Email Address (Optional)', 'the-library' ); ?></label>
 												<input type="email" id="wprl_user_email" name="user_email">
 											</div>
 										</div>
 
 										<div class="wprl-form-row">
 											<div class="wprl-form-field">
-												<label for="wprl_user_mobile"><?php esc_html_e( 'Mobile Number *', 'wp-resource-library' ); ?></label>
+												<label for="wprl_user_mobile"><?php esc_html_e( 'Mobile Number *', 'the-library' ); ?></label>
 												<input type="tel" id="wprl_user_mobile" name="user_mobile" required
 														pattern="[\d\s\-\+\(\)]+"
 														title="Please enter a valid mobile number (minimum 7 digits)"
@@ -106,7 +106,7 @@ get_header(); ?>
 										<div class="wprl-form-actions">
 											<button type="submit" class="wprl-download-button">
 												<i class="wprl-icon-download"></i>
-												<?php esc_html_e( 'Download File', 'wp-resource-library' ); ?>
+												<?php esc_html_e( 'Download File', 'the-library' ); ?>
 											</button>
 										</div>
 
@@ -117,17 +117,17 @@ get_header(); ?>
 								<div id="wprl-download-success" class="wprl-download-success" style="display: none;">
 									<div class="wprl-success-message">
 										<i class="wprl-icon-check"></i>
-										<h4><?php esc_html_e( 'Thank you!', 'wp-resource-library' ); ?></h4>
-										<p><?php esc_html_e( 'Your download will start automatically. If it doesn\'t start, click the button below.', 'wp-resource-library' ); ?></p>
+										<h4><?php esc_html_e( 'Thank you!', 'the-library' ); ?></h4>
+										<p><?php esc_html_e( 'Your download will start automatically. If it doesn\'t start, click the button below.', 'the-library' ); ?></p>
 										<button id="wprl-manual-download" class="wprl-manual-download-button">
-											<?php esc_html_e( 'Download Now', 'wp-resource-library' ); ?>
+											<?php esc_html_e( 'Download Now', 'the-library' ); ?>
 										</button>
 									</div>
 								</div>
 							<?php endif; ?>
 							<?php else : ?>
 								<div class="wprl-no-file">
-									<p><?php esc_html_e( 'No file available for download.', 'wp-resource-library' ); ?></p>
+									<p><?php esc_html_e( 'No file available for download.', 'the-library' ); ?></p>
 								</div>
 							<?php endif; ?>
 						</div>
@@ -136,34 +136,34 @@ get_header(); ?>
 					<aside class="wprl-file-sidebar">
 						<!-- File Information -->
 						<div class="wprl-sidebar-widget">
-							<h4><?php esc_html_e( 'File Information', 'wp-resource-library' ); ?></h4>
+							<h4><?php esc_html_e( 'File Information', 'the-library' ); ?></h4>
 							<ul class="wprl-file-info-list">
 								<?php if ( $file_data['size'] ) : ?>
 								<li>
-									<strong><?php esc_html_e( 'File Size:', 'wp-resource-library' ); ?></strong>
+									<strong><?php esc_html_e( 'File Size:', 'the-library' ); ?></strong>
 									<?php echo esc_html( size_format( $file_data['size'] ) ); ?>
 								</li>
 								<?php endif; ?>
 
 								<?php if ( $file_data['type'] ) : ?>
 								<li>
-									<strong><?php esc_html_e( 'File Type:', 'wp-resource-library' ); ?></strong>
+									<strong><?php esc_html_e( 'File Type:', 'the-library' ); ?></strong>
 									<?php echo esc_html( $file_data['type'] ); ?>
 								</li>
 								<?php endif; ?>
 
 								<li>
-									<strong><?php esc_html_e( 'Downloads:', 'wp-resource-library' ); ?></strong>
+									<strong><?php esc_html_e( 'Downloads:', 'the-library' ); ?></strong>
 									<?php echo intval( $file_data['download_count'] ); ?>
 								</li>
 
 								<li>
-									<strong><?php esc_html_e( 'Published:', 'wp-resource-library' ); ?></strong>
+									<strong><?php esc_html_e( 'Published:', 'the-library' ); ?></strong>
 									<?php echo esc_html( get_the_date() ); ?>
 								</li>
 
 								<li>
-									<strong><?php esc_html_e( 'Last Updated:', 'wp-resource-library' ); ?></strong>
+									<strong><?php esc_html_e( 'Last Updated:', 'the-library' ); ?></strong>
 									<?php echo esc_html( get_the_modified_date() ); ?>
 								</li>
 							</ul>
@@ -172,7 +172,7 @@ get_header(); ?>
 						<!-- Categories -->
 						<?php if ( $categories && ! is_wp_error( $categories ) ) : ?>
 						<div class="wprl-sidebar-widget">
-							<h4><?php esc_html_e( 'Categories', 'wp-resource-library' ); ?></h4>
+							<h4><?php esc_html_e( 'Categories', 'the-library' ); ?></h4>
 							<ul class="wprl-categories-list">
 								<?php foreach ( $categories as $category ) : ?>
 								<li>
@@ -211,7 +211,7 @@ get_header(); ?>
 						if ( $related_query->have_posts() ) :
 							?>
 						<div class="wprl-sidebar-widget">
-							<h4><?php esc_html_e( 'Related Files', 'wp-resource-library' ); ?></h4>
+							<h4><?php esc_html_e( 'Related Files', 'the-library' ); ?></h4>
 							<ul class="wprl-related-files">
 								<?php
 								while ( $related_query->have_posts() && $posts < 5 ) :
@@ -245,7 +245,7 @@ get_header(); ?>
 						<!-- Back to Library -->
 						<div class="wprl-sidebar-widget">
 							<a href="<?php echo esc_url( get_post_type_archive_link( 'wprl_files_library' ) ); ?>" class="wprl-back-to-library">
-								<?php esc_html_e( '← Back to Files Library', 'wp-resource-library' ); ?>
+								<?php esc_html_e( '← Back to Files Library', 'the-library' ); ?>
 							</a>
 						</div>
 					</aside>
@@ -270,7 +270,7 @@ jQuery(document).ready(function($) {
 		var originalText = $button.html();
 
 		// Show loading state.
-		$button.html('<span class="wprl-spinner"></span> <?php esc_html_e( 'Processing...', 'wp-resource-library' ); ?>').prop('disabled', true);
+		$button.html('<span class="wprl-spinner"></span> <?php esc_html_e( 'Processing...', 'the-library' ); ?>').prop('disabled', true);
 		$messageDiv.hide();
 
 		$.ajax({
@@ -292,7 +292,7 @@ jQuery(document).ready(function($) {
 			},
 			error: function() {
 				$messageDiv.removeClass('wprl-success').addClass('wprl-error')
-					.text('<?php esc_html_e( 'An error occurred. Please try again.', 'wp-resource-library' ); ?>').show();
+					.text('<?php esc_html_e( 'An error occurred. Please try again.', 'the-library' ); ?>').show();
 			},
 			complete: function() {
 				$button.html(originalText).prop('disabled', false);
@@ -308,7 +308,7 @@ jQuery(document).ready(function($) {
 		var messageDiv = $('#wprl-download-message');
 
 		// Disable submit button
-		submitButton.prop('disabled', true).text('<?php esc_html_e( 'Processing...', 'wp-resource-library' ); ?>');
+		submitButton.prop('disabled', true).text('<?php esc_html_e( 'Processing...', 'the-library' ); ?>');
 
 		$.ajax({
 			url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
@@ -339,10 +339,10 @@ jQuery(document).ready(function($) {
 			},
 			error: function() {
 				messageDiv.removeClass('wprl-success').addClass('wprl-error')
-						.text('<?php esc_html_e( 'An error occurred. Please try again.', 'wp-resource-library' ); ?>').show();
+						.text('<?php esc_html_e( 'An error occurred. Please try again.', 'the-library' ); ?>').show();
 			},
 			complete: function() {
-				submitButton.prop('disabled', false).html('<i class="wprl-icon-download"></i> <?php esc_html_e( 'Download File', 'wp-resource-library' ); ?>');
+				submitButton.prop('disabled', false).html('<i class="wprl-icon-download"></i> <?php esc_html_e( 'Download File', 'the-library' ); ?>');
 			}
 		});
 	});

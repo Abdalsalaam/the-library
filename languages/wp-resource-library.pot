@@ -2,10 +2,10 @@
 # This file is distributed under the GPL v3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Resource Library 1.0\n"
+"Project-Id-Version: The Library 1.0.0\n"
 "Report-Msgid-Bugs-To: "
-"https://wordpress.org/support/plugin/wp-resource-library\n"
-"POT-Creation-Date: 2025-07-28 01:40:32+00:00\n"
+"https://wordpress.org/support/plugin/the-library\n"
+"POT-Creation-Date: 2025-08-07 00:16:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -669,68 +669,100 @@ msgstr ""
 msgid "Files Library"
 msgstr ""
 
-#: templates/archive-files-library.php:47
+#: templates/archive-files-library.php:56
 msgid "Search files..."
 msgstr ""
 
-#: templates/archive-files-library.php:54
-msgid "All Categories"
+#: templates/archive-files-library.php:58
+msgid "Search files"
+msgstr ""
+
+#: templates/archive-files-library.php:60
+msgid "Clear search"
+msgstr ""
+
+#: templates/archive-files-library.php:72
+msgid "Category"
 msgstr ""
 
 #: templates/archive-files-library.php:75
+msgid "Filter by category"
+msgstr ""
+
+#: templates/archive-files-library.php:76
+msgid "All Categories"
+msgstr ""
+
+#: templates/archive-files-library.php:101
+msgid "File Type"
+msgstr ""
+
+#: templates/archive-files-library.php:104
+msgid "Filter by file type"
+msgstr ""
+
+#: templates/archive-files-library.php:105
 msgid "All File Types"
 msgstr ""
 
-#: templates/archive-files-library.php:94
+#: templates/archive-files-library.php:126
+msgid "Sort By"
+msgstr ""
+
+#: templates/archive-files-library.php:129
+msgid "Sort files"
+msgstr ""
+
+#: templates/archive-files-library.php:132
 msgid "Newest First"
 msgstr ""
 
-#: templates/archive-files-library.php:95
+#: templates/archive-files-library.php:133
 msgid "Oldest First"
 msgstr ""
 
-#: templates/archive-files-library.php:96
+#: templates/archive-files-library.php:134
 msgid "Title A-Z"
 msgstr ""
 
-#: templates/archive-files-library.php:97
+#: templates/archive-files-library.php:135
 msgid "Title Z-A"
 msgstr ""
 
-#: templates/archive-files-library.php:98
+#: templates/archive-files-library.php:136
 msgid "Most Downloaded"
 msgstr ""
 
-#: templates/archive-files-library.php:114
-msgid "Filter"
+#: templates/archive-files-library.php:159
+msgid "Apply Filters"
 msgstr ""
 
-#: templates/archive-files-library.php:125
-msgid "Clear Filters"
+#: templates/archive-files-library.php:172
+msgid "Clear All"
 msgstr ""
 
-#: templates/archive-files-library.php:149
+#: templates/archive-files-library.php:198
 #. translators: 1: start number, 2: end number, 3: total number
 msgid "Showing %1$d-%2$d of %3$d files"
 msgstr ""
 
-#: templates/archive-files-library.php:189
+#: templates/archive-files-library.php:238
 msgid "&laquo; Previous"
 msgstr ""
 
-#: templates/archive-files-library.php:190
+#: templates/archive-files-library.php:239
 msgid "Next &raquo;"
 msgstr ""
 
-#: templates/archive-files-library.php:202
+#: templates/archive-files-library.php:251
 msgid "No files found"
 msgstr ""
 
-#: templates/archive-files-library.php:203
+#: templates/archive-files-library.php:252
 msgid "Try adjusting your search criteria or browse all files."
 msgstr ""
 
-#: templates/archive-files-library.php:205
+#: templates/archive-files-library.php:254
 msgid "Browse All Files"
 msgstr ""
 
@@ -821,7 +853,7 @@ msgid "An error occurred. Please try again."
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-msgid "WP Resource Library"
+msgid "The Library"
 msgstr ""
 
 #. Author URI of the plugin/theme

@@ -1,5 +1,5 @@
 /**
- * Frontend JavaScript for WP Resource Library
+ * Frontend JavaScript for The Library
  */
 
 (
@@ -27,8 +27,15 @@
 					WPRL_Frontend.performSearch()
 				} )
 
-				// Filter changes
-				$( document ).on( 'change', '#wprl-category-filter, #wprl-sort-filter', function () {
+				// Clear search functionality
+				$( document ).on( 'click', '.wprl-search-clear', function ( e ) {
+					e.preventDefault()
+					$( '#wprl-search-input' ).val( '' ).focus()
+					WPRL_Frontend.performSearch()
+				} )
+
+				// Filter changes - auto-submit on change
+				$( document ).on( 'change', '#wprl-category-filter, #wprl-file-type-filter, #wprl-sort-filter', function () {
 					WPRL_Frontend.applyFilters()
 				} )
 
@@ -80,6 +87,10 @@
 					$( '#wprl-category-filter' ).val( urlParams.get( 'wprl_category' ) )
 				}
 
+				if ( urlParams.has( 'wprl_file_type' ) ) {
+					$( '#wprl-file-type-filter' ).val( urlParams.get( 'wprl_file_type' ) )
+				}
+
 				if ( urlParams.has( 'wprl_sort' ) ) {
 					$( '#wprl-sort-filter' ).val( urlParams.get( 'wprl_sort' ) )
 				}
@@ -103,6 +114,7 @@
 
 			applyFilters: function () {
 				var category = $( '#wprl-category-filter' ).val()
+				var fileType = $( '#wprl-file-type-filter' ).val()
 				var sort = $( '#wprl-sort-filter' ).val()
 				var currentUrl = new URL( window.location.href )
 
@@ -110,6 +122,12 @@
 					currentUrl.searchParams.set( 'wprl_category', category )
 				} else {
 					currentUrl.searchParams.delete( 'wprl_category' )
+				}
+
+				if ( fileType ) {
+					currentUrl.searchParams.set( 'wprl_file_type', fileType )
+				} else {
+					currentUrl.searchParams.delete( 'wprl_file_type' )
 				}
 
 				if ( sort ) {

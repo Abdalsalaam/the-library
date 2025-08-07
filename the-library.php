@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: WP Resource Library
- * Plugin URI: https://github.com/Abdalsalaam
+ * Plugin Name: The Library
+ * Plugin URI: https://github.com/Abdalsalaam/wp-resource-library
  * Description: A comprehensive files/books/videos library plugin with user data collection for downloads.
  * Version: 1.0.0
  * Author: Abdalsalaam Halawa
  * Author URI: https://github.com/Abdalsalaam
  * License: GPL v3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain: wp-resource-library
+ * Text Domain: the-library
  *
  * @package WPResourceLibrary
  */

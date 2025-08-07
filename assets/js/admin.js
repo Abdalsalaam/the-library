@@ -1,5 +1,5 @@
 /**
- * Admin JavaScript for WP Resource Library
+ * Admin JavaScript for The Library
  */
 
 (function($) {

@@ -34,8 +34,8 @@ class Admin {
 	public function add_admin_menu() {
 		add_submenu_page(
 			'edit.php?post_type=wprl_files_library',
-			esc_html__( 'Download Requests', 'wp-resource-library' ),
-			esc_html__( 'Download Requests', 'wp-resource-library' ),
+			esc_html__( 'Download Requests', 'the-library' ),
+			esc_html__( 'Download Requests', 'the-library' ),
 			'manage_options',
 			'wprl-download-requests',
 			array( $this, 'download_requests_page' )
@@ -43,8 +43,8 @@ class Admin {
 
 		add_submenu_page(
 			'edit.php?post_type=wprl_files_library',
-			esc_html__( 'System Logs', 'wp-resource-library' ),
-			esc_html__( 'System Logs', 'wp-resource-library' ),
+			esc_html__( 'System Logs', 'the-library' ),
+			esc_html__( 'System Logs', 'the-library' ),
 			'manage_options',
 			'wprl-system-logs',
 			array( $this, 'system_logs_page' )
@@ -52,8 +52,8 @@ class Admin {
 
 		add_submenu_page(
 			'edit.php?post_type=wprl_files_library',
-			esc_html__( 'System Maintenance', 'wp-resource-library' ),
-			esc_html__( 'Maintenance', 'wp-resource-library' ),
+			esc_html__( 'System Maintenance', 'the-library' ),
+			esc_html__( 'Maintenance', 'the-library' ),
 			'manage_options',
 			'wprl-maintenance',
 			array( $this, 'maintenance_page' )
@@ -68,12 +68,12 @@ class Admin {
 		if ( isset( $_POST['action'] ) && 'bulk_delete' === sanitize_text_field( wp_unslash( $_POST['action'] ) ) && isset( $_POST['request_ids'] ) ) {
 			// Verify nonce for security.
 			if ( ! isset( $_POST['wprl_bulk_action_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wprl_bulk_action_nonce'] ) ), 'wprl_bulk_delete_requests' ) ) {
-				wp_die( esc_html__( 'Security check failed. Please try again.', 'wp-resource-library' ) );
+				wp_die( esc_html__( 'Security check failed. Please try again.', 'the-library' ) );
 			}
 
 			// Check user permissions.
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You do not have sufficient permissions to perform this action.', 'wp-resource-library' ) );
+				wp_die( esc_html__( 'You do not have sufficient permissions to perform this action.', 'the-library' ) );
 			}
 
 			$request_ids = array_map( 'intval', (array) wp_unslash( $_POST['request_ids'] ) );
@@ -84,12 +84,12 @@ class Admin {
 					echo '<div class="notice notice-success"><p>' . esc_html(
 						sprintf(
 						/* translators: %d: number of deleted requests */
-							_n( '%d request deleted successfully.', '%d requests deleted successfully.', $deleted, 'wp-resource-library' ),
+							_n( '%d request deleted successfully.', '%d requests deleted successfully.', $deleted, 'the-library' ),
 							$deleted
 						)
 					) . '</p></div>';
 				} else {
-					echo '<div class="notice notice-error"><p>' . esc_html__( 'Error deleting requests. Please try again.', 'wp-resource-library' ) . '</p></div>';
+					echo '<div class="notice notice-error"><p>' . esc_html__( 'Error deleting requests. Please try again.', 'the-library' ) . '</p></div>';
 				}
 			}
 		}
@@ -116,7 +116,7 @@ class Admin {
 
 		?>
 		<div class="wrap">
-			<h1 class="wp-heading-inline"><?php esc_html_e( 'Download Requests', 'wp-resource-library' ); ?></h1>
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Download Requests', 'the-library' ); ?></h1>
 
 			<!-- Export button with nonce -->
 			<a href="
@@ -133,7 +133,7 @@ class Admin {
 			);
 			?>
 						" class="page-title-action">
-				<?php esc_html_e( 'Export CSV', 'wp-resource-library' ); ?>
+				<?php esc_html_e( 'Export CSV', 'the-library' ); ?>
 			</a>
 
 			<hr class="wp-header-end">
@@ -143,9 +143,9 @@ class Admin {
 				<input type="hidden" name="post_type" value="wprl_files_library">
 				<input type="hidden" name="page" value="wprl-download-requests">
 				<p class="search-box">
-					<label class="screen-reader-text" for="request-search-input"><?php esc_html_e( 'Search requests:', 'wp-resource-library' ); ?></label>
-					<input type="search" id="request-search-input" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_html_e( 'Search by name, email, or mobile...', 'wp-resource-library' ); ?>">
-					<input type="submit" id="search-submit" class="button" value="<?php esc_html_e( 'Search', 'wp-resource-library' ); ?>">
+					<label class="screen-reader-text" for="request-search-input"><?php esc_html_e( 'Search requests:', 'the-library' ); ?></label>
+					<input type="search" id="request-search-input" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_html_e( 'Search by name, email, or mobile...', 'the-library' ); ?>">
+					<input type="submit" id="search-submit" class="button" value="<?php esc_html_e( 'Search', 'the-library' ); ?>">
 				</p>
 			</form>
 
@@ -155,10 +155,10 @@ class Admin {
 				<div class="tablenav top">
 					<div class="alignleft actions bulkactions">
 						<select name="action">
-							<option value="-1"><?php esc_html_e( 'Bulk Actions', 'wp-resource-library' ); ?></option>
-							<option value="bulk_delete"><?php esc_html_e( 'Delete', 'wp-resource-library' ); ?></option>
+							<option value="-1"><?php esc_html_e( 'Bulk Actions', 'the-library' ); ?></option>
+							<option value="bulk_delete"><?php esc_html_e( 'Delete', 'the-library' ); ?></option>
 						</select>
-						<input type="submit" class="button action" value="<?php esc_html_e( 'Apply', 'wp-resource-library' ); ?>">
+						<input type="submit" class="button action" value="<?php esc_html_e( 'Apply', 'the-library' ); ?>">
 					</div>
 
 					<?php if ( $total_pages > 1 ) : ?>
@@ -166,7 +166,7 @@ class Admin {
 						<span class="displaying-num">
 							<?php
 							/* translators: %s: number of items */
-							printf( esc_html( _n( '%s item', '%s items', $total_items, 'wp-resource-library' ) ), esc_html( number_format_i18n( $total_items ) ) );
+							printf( esc_html( _n( '%s item', '%s items', $total_items, 'the-library' ) ), esc_html( number_format_i18n( $total_items ) ) );
 							?>
 						</span>
 
@@ -196,19 +196,19 @@ class Admin {
 							<td class="manage-column column-cb check-column">
 								<input type="checkbox" id="cb-select-all-1">
 							</td>
-							<th scope="col" class="manage-column"><?php esc_html_e( 'File', 'wp-resource-library' ); ?></th>
-							<th scope="col" class="manage-column"><?php esc_html_e( 'Name', 'wp-resource-library' ); ?></th>
-							<th scope="col" class="manage-column"><?php esc_html_e( 'Email', 'wp-resource-library' ); ?></th>
-							<th scope="col" class="manage-column"><?php esc_html_e( 'Mobile', 'wp-resource-library' ); ?></th>
-							<th scope="col" class="manage-column"><?php esc_html_e( 'Download Date', 'wp-resource-library' ); ?></th>
-							<th scope="col" class="manage-column"><?php esc_html_e( 'IP Address', 'wp-resource-library' ); ?></th>
-							<th scope="col" class="manage-column"><?php esc_html_e( 'Actions', 'wp-resource-library' ); ?></th>
+							<th scope="col" class="manage-column"><?php esc_html_e( 'File', 'the-library' ); ?></th>
+							<th scope="col" class="manage-column"><?php esc_html_e( 'Name', 'the-library' ); ?></th>
+							<th scope="col" class="manage-column"><?php esc_html_e( 'Email', 'the-library' ); ?></th>
+							<th scope="col" class="manage-column"><?php esc_html_e( 'Mobile', 'the-library' ); ?></th>
+							<th scope="col" class="manage-column"><?php esc_html_e( 'Download Date', 'the-library' ); ?></th>
+							<th scope="col" class="manage-column"><?php esc_html_e( 'IP Address', 'the-library' ); ?></th>
+							<th scope="col" class="manage-column"><?php esc_html_e( 'Actions', 'the-library' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php if ( empty( $requests ) ) : ?>
 						<tr>
-							<td colspan="8" class="no-items"><?php esc_html_e( 'No download requests found.', 'wp-resource-library' ); ?></td>
+							<td colspan="8" class="no-items"><?php esc_html_e( 'No download requests found.', 'the-library' ); ?></td>
 						</tr>
 						<?php else : ?>
 							<?php foreach ( $requests as $request ) : ?>
@@ -222,7 +222,7 @@ class Admin {
 										<?php echo esc_html( $request->post_title ); ?>
 									</a>
 								<?php else : ?>
-									<em><?php esc_html_e( 'File not found', 'wp-resource-library' ); ?></em>
+									<em><?php esc_html_e( 'File not found', 'the-library' ); ?></em>
 								<?php endif; ?>
 							</td>
 							<td><?php echo esc_html( $request->user_name ); ?></td>
@@ -232,7 +232,7 @@ class Admin {
 										<?php echo esc_html( $request->user_email ); ?>
 									</a>
 								<?php else : ?>
-									<em><?php esc_html_e( 'Not provided', 'wp-resource-library' ); ?></em>
+									<em><?php esc_html_e( 'Not provided', 'the-library' ); ?></em>
 								<?php endif; ?>
 							</td>
 							<td><?php echo esc_html( $request->user_mobile ); ?></td>
@@ -240,7 +240,7 @@ class Admin {
 							<td><?php echo esc_html( $request->ip_address ); ?></td>
 							<td>
 								<button type="button" class="button button-small wprl-delete-request" data-id="<?php echo esc_attr( $request->id ); ?>">
-									<?php esc_html_e( 'Delete', 'wp-resource-library' ); ?>
+									<?php esc_html_e( 'Delete', 'the-library' ); ?>
 								</button>
 							</td>
 						</tr>
@@ -260,7 +260,7 @@ class Admin {
 			
 			// Handle individual delete buttons.
 			$('.wprl-delete-request').on('click', function() {
-				if (confirm('<?php esc_html_e( 'Are you sure you want to delete this request?', 'wp-resource-library' ); ?>')) {
+				if (confirm('<?php esc_html_e( 'Are you sure you want to delete this request?', 'the-library' ); ?>')) {
 					var requestId = $(this).data('id');
 					var row = $(this).closest('tr');
 
@@ -272,7 +272,7 @@ class Admin {
 						if (response.success) {
 							row.fadeOut();
 						} else {
-							alert('<?php echo esc_js( __( 'Error deleting request.', 'wp-resource-library' ) ); ?>');
+							alert('<?php echo esc_js( __( 'Error deleting request.', 'the-library' ) ); ?>');
 						}
 					});
 				}
@@ -289,26 +289,26 @@ class Admin {
 		check_ajax_referer( 'wprl_delete_request', 'nonce' );
 
 		if ( ! Utils::current_user_can_manage() ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'You do not have sufficient permissions to perform this action.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'You do not have sufficient permissions to perform this action.', 'the-library' ) ) );
 		}
 
 		// Validate and sanitize input.
 		if ( ! isset( $_POST['request_id'] ) ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Invalid request ID.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Invalid request ID.', 'the-library' ) ) );
 		}
 
 		$request_id = intval( wp_unslash( $_POST['request_id'] ) );
 
 		if ( $request_id <= 0 ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Invalid request ID.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Invalid request ID.', 'the-library' ) ) );
 		}
 
 		$result = Database::get_instance()->delete_download_request( $request_id );
 
 		if ( $result ) {
-			wp_send_json_success( array( 'message' => esc_html__( 'Request deleted successfully.', 'wp-resource-library' ) ) );
+			wp_send_json_success( array( 'message' => esc_html__( 'Request deleted successfully.', 'the-library' ) ) );
 		} else {
-			wp_send_json_error( array( 'message' => esc_html__( 'Error deleting request or request not found.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Error deleting request or request not found.', 'the-library' ) ) );
 		}
 	}
 
@@ -334,13 +334,13 @@ class Admin {
 		$error_logs   = $table_exists ? Utils::get_error_logs( 100 ) : array();
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'System Logs', 'wp-resource-library' ); ?></h1>
+			<h1><?php esc_html_e( 'System Logs', 'the-library' ); ?></h1>
 
 			<?php if ( ! $table_exists ) : ?>
 				<div class="notice notice-warning">
 					<p>
-						<strong><?php esc_html_e( 'Error logs table does not exist.', 'wp-resource-library' ); ?></strong>
-						<?php esc_html_e( 'Please deactivate and reactivate the plugin to create the required database tables.', 'wp-resource-library' ); ?>
+						<strong><?php esc_html_e( 'Error logs table does not exist.', 'the-library' ); ?></strong>
+						<?php esc_html_e( 'Please deactivate and reactivate the plugin to create the required database tables.', 'the-library' ); ?>
 					</p>
 				</div>
 			<?php endif; ?>
@@ -348,24 +348,24 @@ class Admin {
 			<div class="wprl-logs-actions" style="margin: 20px 0;">
 				<?php if ( $table_exists ) : ?>
 					<button type="button" class="button" onclick="wprlClearLogs();">
-						<?php esc_html_e( 'Clear Old Logs', 'wp-resource-library' ); ?>
+						<?php esc_html_e( 'Clear Old Logs', 'the-library' ); ?>
 					</button>
 				<?php endif; ?>
 			</div>
 
 			<?php if ( ! $table_exists ) : ?>
-				<p><?php esc_html_e( 'Error logs table is not available. Please reactivate the plugin.', 'wp-resource-library' ); ?></p>
+				<p><?php esc_html_e( 'Error logs table is not available. Please reactivate the plugin.', 'the-library' ); ?></p>
 			<?php elseif ( empty( $error_logs ) ) : ?>
-				<p><?php esc_html_e( 'No error logs found.', 'wp-resource-library' ); ?></p>
+				<p><?php esc_html_e( 'No error logs found.', 'the-library' ); ?></p>
 			<?php else : ?>
 				<table class="wp-list-table widefat fixed striped">
 					<thead>
 						<tr>
-							<th style="width: 150px;"><?php esc_html_e( 'Timestamp', 'wp-resource-library' ); ?></th>
-							<th style="width: 80px;"><?php esc_html_e( 'Level', 'wp-resource-library' ); ?></th>
-							<th><?php esc_html_e( 'Message', 'wp-resource-library' ); ?></th>
-							<th style="width: 100px;"><?php esc_html_e( 'User', 'wp-resource-library' ); ?></th>
-							<th style="width: 120px;"><?php esc_html_e( 'IP Address', 'wp-resource-library' ); ?></th>
+							<th style="width: 150px;"><?php esc_html_e( 'Timestamp', 'the-library' ); ?></th>
+							<th style="width: 80px;"><?php esc_html_e( 'Level', 'the-library' ); ?></th>
+							<th><?php esc_html_e( 'Message', 'the-library' ); ?></th>
+							<th style="width: 100px;"><?php esc_html_e( 'User', 'the-library' ); ?></th>
+							<th style="width: 120px;"><?php esc_html_e( 'IP Address', 'the-library' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -391,7 +391,7 @@ class Admin {
 										<?php $user = get_user_by( 'id', $log->user_id ); ?>
 										<?php echo $user ? esc_html( $user->display_name ) : esc_html( $log->user_id ); ?>
 									<?php else : ?>
-										<?php esc_html_e( 'Guest', 'wp-resource-library' ); ?>
+										<?php esc_html_e( 'Guest', 'the-library' ); ?>
 									<?php endif; ?>
 								</td>
 								<td><?php echo esc_html( $log->ip_address ); ?></td>
@@ -418,7 +418,7 @@ class Admin {
 
 		<script>
 		function wprlClearLogs() {
-			if (confirm('<?php echo esc_js( __( 'Are you sure you want to clear old logs?', 'wp-resource-library' ) ); ?>')) {
+			if (confirm('<?php echo esc_js( __( 'Are you sure you want to clear old logs?', 'the-library' ) ); ?>')) {
 				jQuery.post(ajaxurl, {
 					action: 'wprl_clear_logs',
 					nonce: '<?php echo esc_js( wp_create_nonce( 'wprl_clear_logs' ) ); ?>'
@@ -426,7 +426,7 @@ class Admin {
 					if (response.success) {
 						location.reload();
 					} else {
-						alert('<?php echo esc_js( __( 'Failed to clear logs.', 'wp-resource-library' ) ); ?>');
+						alert('<?php echo esc_js( __( 'Failed to clear logs.', 'the-library' ) ); ?>');
 					}
 				});
 			}
@@ -442,7 +442,7 @@ class Admin {
 		check_ajax_referer( 'wprl_clear_logs', 'nonce' );
 
 		if ( ! Utils::current_user_can_manage() ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions.', 'the-library' ) ) );
 		}
 
 		try {
@@ -451,7 +451,7 @@ class Admin {
 				array(
 					'message' => sprintf(
 						/* translators: %d: number of deleted logs */
-						esc_html__( '%d old logs cleared successfully.', 'wp-resource-library' ),
+						esc_html__( '%d old logs cleared successfully.', 'the-library' ),
 						$deleted
 					),
 				)
@@ -469,82 +469,82 @@ class Admin {
 		$stats = Database::get_instance()->get_statistics();
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'System Maintenance', 'wp-resource-library' ); ?></h1>
+			<h1><?php esc_html_e( 'System Maintenance', 'the-library' ); ?></h1>
 
 			<div class="wprl-stats-section" style="margin-bottom: 30px;">
-				<h2><?php esc_html_e( 'Database Statistics', 'wp-resource-library' ); ?></h2>
+				<h2><?php esc_html_e( 'Database Statistics', 'the-library' ); ?></h2>
 				<div class="wprl-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
 					<div class="wprl-stat-card" style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
-						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'Total Downloads', 'wp-resource-library' ); ?></h3>
+						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'Total Downloads', 'the-library' ); ?></h3>
 						<p style="font-size: 24px; font-weight: bold; margin: 0; color: #2271b1;"><?php echo esc_html( number_format( $stats['total_downloads'] ) ); ?></p>
 					</div>
 					<div class="wprl-stat-card" style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
-						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'Today', 'wp-resource-library' ); ?></h3>
+						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'Today', 'the-library' ); ?></h3>
 						<p style="font-size: 24px; font-weight: bold; margin: 0; color: #00a32a;"><?php echo esc_html( number_format( $stats['downloads_today'] ) ); ?></p>
 					</div>
 					<div class="wprl-stat-card" style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
-						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'This Week', 'wp-resource-library' ); ?></h3>
+						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'This Week', 'the-library' ); ?></h3>
 						<p style="font-size: 24px; font-weight: bold; margin: 0; color: #996800;"><?php echo esc_html( number_format( $stats['downloads_this_week'] ) ); ?></p>
 					</div>
 					<div class="wprl-stat-card" style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
-						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'This Month', 'wp-resource-library' ); ?></h3>
+						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'This Month', 'the-library' ); ?></h3>
 						<p style="font-size: 24px; font-weight: bold; margin: 0; color: #8c8f94;"><?php echo esc_html( number_format( $stats['downloads_this_month'] ) ); ?></p>
 					</div>
 					<div class="wprl-stat-card" style="background: #fff; padding: 20px; border: 1px solid #ccd0d4; border-radius: 4px;">
-						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'Error Logs', 'wp-resource-library' ); ?></h3>
+						<h3 style="margin: 0 0 10px 0; color: #1d2327;"><?php esc_html_e( 'Error Logs', 'the-library' ); ?></h3>
 						<p style="font-size: 24px; font-weight: bold; margin: 0; color: #d63638;"><?php echo esc_html( number_format( $stats['error_logs_count'] ) ); ?></p>
 					</div>
 				</div>
 			</div>
 
 			<div class="wprl-maintenance-section">
-				<h2><?php esc_html_e( 'Database Cleanup', 'wp-resource-library' ); ?></h2>
-				<p><?php esc_html_e( 'Clean up old data to optimize database performance.', 'wp-resource-library' ); ?></p>
+				<h2><?php esc_html_e( 'Database Cleanup', 'the-library' ); ?></h2>
+				<p><?php esc_html_e( 'Clean up old data to optimize database performance.', 'the-library' ); ?></p>
 
 				<table class="form-table">
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Download Requests', 'wp-resource-library' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Download Requests', 'the-library' ); ?></th>
 						<td>
 							<button type="button" class="button" onclick="wprlRunCleanup('download_requests')">
-								<?php esc_html_e( 'Clean Old Download Requests', 'wp-resource-library' ); ?>
+								<?php esc_html_e( 'Clean Old Download Requests', 'the-library' ); ?>
 							</button>
-							<p class="description"><?php esc_html_e( 'Remove download requests older than 1 year.', 'wp-resource-library' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Remove download requests older than 1 year.', 'the-library' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Error Logs', 'wp-resource-library' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Error Logs', 'the-library' ); ?></th>
 						<td>
 							<button type="button" class="button" onclick="wprlRunCleanup('error_logs')">
-								<?php esc_html_e( 'Clean Old Error Logs', 'wp-resource-library' ); ?>
+								<?php esc_html_e( 'Clean Old Error Logs', 'the-library' ); ?>
 							</button>
-							<p class="description"><?php esc_html_e( 'Remove error logs older than 30 days.', 'wp-resource-library' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Remove error logs older than 30 days.', 'the-library' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Expired Transients', 'wp-resource-library' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Expired Transients', 'the-library' ); ?></th>
 						<td>
 							<button type="button" class="button" onclick="wprlRunCleanup('transients')">
-								<?php esc_html_e( 'Clean Expired Transients', 'wp-resource-library' ); ?>
+								<?php esc_html_e( 'Clean Expired Transients', 'the-library' ); ?>
 							</button>
-							<p class="description"><?php esc_html_e( 'Remove expired download tokens and cache data.', 'wp-resource-library' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Remove expired download tokens and cache data.', 'the-library' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Orphaned Metadata', 'wp-resource-library' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Orphaned Metadata', 'the-library' ); ?></th>
 						<td>
 							<button type="button" class="button" onclick="wprlRunCleanup('orphaned_meta')">
-								<?php esc_html_e( 'Clean Orphaned Metadata', 'wp-resource-library' ); ?>
+								<?php esc_html_e( 'Clean Orphaned Metadata', 'the-library' ); ?>
 							</button>
-							<p class="description"><?php esc_html_e( 'Remove metadata for deleted posts.', 'wp-resource-library' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Remove metadata for deleted posts.', 'the-library' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Full Cleanup', 'wp-resource-library' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Full Cleanup', 'the-library' ); ?></th>
 						<td>
 							<button type="button" class="button button-primary" onclick="wprlRunCleanup('full')">
-								<?php esc_html_e( 'Run Full Cleanup', 'wp-resource-library' ); ?>
+								<?php esc_html_e( 'Run Full Cleanup', 'the-library' ); ?>
 							</button>
-							<p class="description"><?php esc_html_e( 'Run all cleanup tasks at once.', 'wp-resource-library' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Run all cleanup tasks at once.', 'the-library' ); ?></p>
 						</td>
 					</tr>
 				</table>
@@ -553,26 +553,26 @@ class Admin {
 			</div>
 
 			<div class="wprl-maintenance-section" style="margin-top: 40px;">
-				<h2><?php esc_html_e( 'Cache Management', 'wp-resource-library' ); ?></h2>
-				<p><?php esc_html_e( 'Manage plugin cache for better performance.', 'wp-resource-library' ); ?></p>
+				<h2><?php esc_html_e( 'Cache Management', 'the-library' ); ?></h2>
+				<p><?php esc_html_e( 'Manage plugin cache for better performance.', 'the-library' ); ?></p>
 
 				<table class="form-table">
 					<tr>
-						<th scope="row"><?php esc_html_e( 'File Types Cache', 'wp-resource-library' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'File Types Cache', 'the-library' ); ?></th>
 						<td>
 							<button type="button" class="button" onclick="wprlClearCache('file_types')">
-								<?php esc_html_e( 'Clear File Types Cache', 'wp-resource-library' ); ?>
+								<?php esc_html_e( 'Clear File Types Cache', 'the-library' ); ?>
 							</button>
-							<p class="description"><?php esc_html_e( 'Force refresh of file types dropdown cache.', 'wp-resource-library' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Force refresh of file types dropdown cache.', 'the-library' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'All Caches', 'wp-resource-library' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'All Caches', 'the-library' ); ?></th>
 						<td>
 							<button type="button" class="button button-secondary" onclick="wprlClearCache('all')">
-								<?php esc_html_e( 'Clear All Plugin Caches', 'wp-resource-library' ); ?>
+								<?php esc_html_e( 'Clear All Plugin Caches', 'the-library' ); ?>
 							</button>
-							<p class="description"><?php esc_html_e( 'Clear all plugin-related cache data.', 'wp-resource-library' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Clear all plugin-related cache data.', 'the-library' ); ?></p>
 						</td>
 					</tr>
 				</table>
@@ -586,7 +586,7 @@ class Admin {
 			var resultsDiv = document.getElementById('wprl-cleanup-results');
 
 			button.disabled = true;
-			button.textContent = '<?php echo esc_js( __( 'Running...', 'wp-resource-library' ) ); ?>';
+			button.textContent = '<?php echo esc_js( __( 'Running...', 'the-library' ) ); ?>';
 
 			jQuery.post(ajaxurl, {
 				action: 'wprl_run_cleanup',
@@ -608,7 +608,7 @@ class Admin {
 			}).fail(function() {
 				button.disabled = false;
 				button.textContent = originalText;
-				resultsDiv.innerHTML = '<div class="notice notice-error"><p><?php echo esc_js( __( 'Cleanup failed. Please try again.', 'wp-resource-library' ) ); ?></p></div>';
+				resultsDiv.innerHTML = '<div class="notice notice-error"><p><?php echo esc_js( __( 'Cleanup failed. Please try again.', 'the-library' ) ); ?></p></div>';
 			});
 		}
 
@@ -618,7 +618,7 @@ class Admin {
 			var resultsDiv = document.getElementById('wprl-cleanup-results');
 
 			button.disabled = true;
-			button.textContent = '<?php echo esc_js( __( 'Clearing...', 'wp-resource-library' ) ); ?>';
+			button.textContent = '<?php echo esc_js( __( 'Clearing...', 'the-library' ) ); ?>';
 
 			jQuery.post(ajaxurl, {
 				action: 'wprl_clear_cache',
@@ -640,7 +640,7 @@ class Admin {
 			}).fail(function() {
 				button.disabled = false;
 				button.textContent = originalText;
-				resultsDiv.innerHTML = '<div class="notice notice-error"><p><?php echo esc_js( __( 'Failed to clear cache. Please try again.', 'wp-resource-library' ) ); ?></p></div>';
+				resultsDiv.innerHTML = '<div class="notice notice-error"><p><?php echo esc_js( __( 'Failed to clear cache. Please try again.', 'the-library' ) ); ?></p></div>';
 
 				setTimeout(function() {
 					resultsDiv.innerHTML = '';
@@ -658,12 +658,12 @@ class Admin {
 		check_ajax_referer( 'wprl_run_cleanup', 'nonce' );
 
 		if ( ! Utils::current_user_can_manage() ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions.', 'the-library' ) ) );
 		}
 
 		// Validate and sanitize input.
 		if ( ! isset( $_POST['cleanup_type'] ) ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Invalid cleanup type.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Invalid cleanup type.', 'the-library' ) ) );
 		}
 
 		$cleanup_type = sanitize_text_field( wp_unslash( $_POST['cleanup_type'] ) );
@@ -675,20 +675,20 @@ class Admin {
 				case 'download_requests':
 					$deleted = $database->cleanup_download_requests( 365 );
 					/* translators: %d: number of deleted requests */
-					wp_send_json_success( array( 'message' => sprintf( esc_html__( 'Cleaned up %d old download requests.', 'wp-resource-library' ), $deleted ) ) );
+					wp_send_json_success( array( 'message' => sprintf( esc_html__( 'Cleaned up %d old download requests.', 'the-library' ), $deleted ) ) );
 					break;
 
 				case 'error_logs':
 					$deleted = $database->cleanup_error_logs( 30 );
 					/* translators: %d: number of deleted logs */
-					wp_send_json_success( array( 'message' => sprintf( esc_html__( 'Cleaned up %d error logs.', 'wp-resource-library' ), $deleted ) ) );
+					wp_send_json_success( array( 'message' => sprintf( esc_html__( 'Cleaned up %d error logs.', 'the-library' ), $deleted ) ) );
 					break;
 
 				case 'full':
 					$results = $database->run_full_cleanup();
 					$message = sprintf(
 						/* translators: 1: number of download requests cleaned, 2: number of error logs cleaned, 3: number of transients cleaned, 4: number of orphaned metadata cleaned */
-						esc_html__( 'Full cleanup completed. Download requests: %1$d, Error logs: %2$d, Transients: %3$d, Orphaned metadata: %4$d', 'wp-resource-library' ),
+						esc_html__( 'Full cleanup completed. Download requests: %1$d, Error logs: %2$d, Transients: %3$d, Orphaned metadata: %4$d', 'the-library' ),
 						$results['download_requests'] ?? 0,
 						$results['error_logs'] ?? 0,
 						$results['expired_transients'] ?? 0,
@@ -698,7 +698,7 @@ class Admin {
 					break;
 
 				default:
-					wp_send_json_error( array( 'message' => esc_html__( 'Invalid cleanup type.', 'wp-resource-library' ) ) );
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid cleanup type.', 'the-library' ) ) );
 			}
 		} catch ( Exception $e ) {
 			wp_send_json_error( array( 'message' => esc_html( $e->getMessage() ) ) );
@@ -712,12 +712,12 @@ class Admin {
 		check_ajax_referer( 'wprl_clear_cache', 'nonce' );
 
 		if ( ! Utils::current_user_can_manage() ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions.', 'the-library' ) ) );
 		}
 
 		// Validate and sanitize input.
 		if ( ! isset( $_POST['cache_type'] ) ) {
-			wp_send_json_error( array( 'message' => esc_html__( 'Invalid cache type.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Invalid cache type.', 'the-library' ) ) );
 		}
 
 		$cache_type = sanitize_text_field( wp_unslash( $_POST['cache_type'] ) );
@@ -726,16 +726,16 @@ class Admin {
 			switch ( $cache_type ) {
 				case 'file_types':
 					Utils::clear_file_types_cache();
-					wp_send_json_success( array( 'message' => esc_html__( 'File types cache cleared successfully.', 'wp-resource-library' ) ) );
+					wp_send_json_success( array( 'message' => esc_html__( 'File types cache cleared successfully.', 'the-library' ) ) );
 					break;
 
 				case 'all':
 					Utils::clear_all_caches();
-					wp_send_json_success( array( 'message' => esc_html__( 'All plugin caches cleared successfully.', 'wp-resource-library' ) ) );
+					wp_send_json_success( array( 'message' => esc_html__( 'All plugin caches cleared successfully.', 'the-library' ) ) );
 					break;
 
 				default:
-					wp_send_json_error( array( 'message' => esc_html__( 'Invalid cache type.', 'wp-resource-library' ) ) );
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid cache type.', 'the-library' ) ) );
 			}
 		} catch ( Exception $e ) {
 			wp_send_json_error( array( 'message' => esc_html( $e->getMessage() ) ) );

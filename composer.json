@@ -1,5 +1,5 @@
 {
-	"name": "abdalsalaam/wp-resource-library",
+	"name": "abdalsalaam/the-library",
 	"description": "A comprehensive files/books/videos library plugin with user data collection for downloads.",
 	"homepage": "https://github.com/Abdalsalaam",
 	"type": "wordpress-plugin",
@@ -19,7 +19,7 @@
 			"composer.json",
 			"composer.lock",
 			"pnpm-lock.yaml",
-			"wp-resource-library.zip",
+			"the-library.zip",
 			".*"
 		]
 	},

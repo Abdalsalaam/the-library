@@ -70,8 +70,8 @@ class Frontend {
 				'ajax_url'              => admin_url( 'admin-ajax.php' ),
 				'nonce'                 => wp_create_nonce( 'wprl_frontend_nonce' ),
 				'direct_download_nonce' => wp_create_nonce( 'wprl_direct_download_nonce' ),
-				'loading_text'          => esc_html__( 'Loading...', 'wp-resource-library' ),
-				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'wp-resource-library' ),
+				'loading_text'          => esc_html__( 'Loading...', 'the-library' ),
+				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'the-library' ),
 			)
 		);
 	}
@@ -218,7 +218,7 @@ class Frontend {
 					echo esc_attr(
 						sprintf(
 						/* translators: %s: file title */
-							__( 'Download %s', 'wp-resource-library' ),
+							__( 'Download %s', 'the-library' ),
 							$post_title
 						)
 					);
@@ -229,7 +229,7 @@ class Frontend {
 					echo esc_attr(
 						sprintf(
 						/* translators: %s: file title */
-							__( 'View details for %s', 'wp-resource-library' ),
+							__( 'View details for %s', 'the-library' ),
 							$post_title
 						)
 					);
@@ -248,7 +248,7 @@ class Frontend {
 						echo esc_attr(
 							sprintf(
 							/* translators: %s: file title */
-								__( 'Download %s', 'wp-resource-library' ),
+								__( 'Download %s', 'the-library' ),
 								$post_title
 							)
 						);
@@ -269,7 +269,7 @@ class Frontend {
 								echo esc_attr(
 									sprintf(
 									/* translators: %s: category name. */
-										__( 'View all %s files', 'wp-resource-library' ),
+										__( 'View all %s files', 'the-library' ),
 										$category->name
 									)
 								);
@@ -294,7 +294,7 @@ class Frontend {
 					<?php if ( $args['show_file_size'] && $file_data['size'] ) : ?>
 						<span class="wprl-file-size">
 							<i class="wprl-icon-size" aria-hidden="true"></i>
-							<span class="screen-reader-text"><?php esc_html_e( 'File size:', 'wp-resource-library' ); ?></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'File size:', 'the-library' ); ?></span>
 							<?php echo esc_html( size_format( $file_data['size'] ) ); ?>
 						</span>
 					<?php endif; ?>
@@ -302,25 +302,25 @@ class Frontend {
 					<?php if ( $file_data['type'] ) : ?>
 						<span class="wprl-file-type">
 							<i class="wprl-icon-type" aria-hidden="true"></i>
-							<span class="screen-reader-text"><?php esc_html_e( 'File type:', 'wp-resource-library' ); ?></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'File type:', 'the-library' ); ?></span>
 							<?php echo esc_html( $file_data['type'] ); ?>
 						</span>
 					<?php endif; ?>
 
 					<span class="wprl-download-count">
 						<i class="wprl-icon-download" aria-hidden="true"></i>
-						<span class="screen-reader-text"><?php esc_html_e( 'Download count:', 'wp-resource-library' ); ?></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Download count:', 'the-library' ); ?></span>
 						<?php echo esc_html( intval( $file_data['download_count'] ) ); ?>
 						<?php
 						/* translators: %d: download count */
-						printf( esc_html( _n( 'download', 'downloads', intval( $file_data['download_count'] ), 'wp-resource-library' ) ) );
+						printf( esc_html( _n( 'download', 'downloads', intval( $file_data['download_count'] ), 'the-library' ) ) );
 						?>
 					</span>
 
 					<?php if ( $args['show_date'] ) : ?>
 						<span class="wprl-file-date">
 							<i class="wprl-icon-date" aria-hidden="true"></i>
-							<span class="screen-reader-text"><?php esc_html_e( 'Published:', 'wp-resource-library' ); ?></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'Published:', 'the-library' ); ?></span>
 							<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
 								<?php echo esc_html( get_the_date() ); ?>
 							</time>
@@ -336,19 +336,19 @@ class Frontend {
 						echo esc_attr(
 							sprintf(
 							/* translators: %s: file title */
-								__( 'View details and download %s', 'wp-resource-library' ),
+								__( 'View details and download %s', 'the-library' ),
 								$post_title
 							)
 						);
 						?>
 						">
-						<?php esc_html_e( 'View Details', 'wp-resource-library' ); ?>
+						<?php esc_html_e( 'View Details', 'the-library' ); ?>
 						<span class="screen-reader-text">
 						<?php
 						echo esc_html(
 							sprintf(
 							/* translators: %s: file title */
-								__( 'for %s', 'wp-resource-library' ),
+								__( 'for %s', 'the-library' ),
 								$post_title
 							)
 						);
