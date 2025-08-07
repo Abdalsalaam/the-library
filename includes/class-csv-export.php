@@ -37,7 +37,7 @@ class CSV_Export {
 		) {
 
 			if ( ! Utils::current_user_can_manage() ) {
-				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.' ) );
+				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'the-library' ) );
 			}
 
 			$this->export_download_requests();
@@ -52,7 +52,7 @@ class CSV_Export {
 		$requests = Database::get_instance()->get_all_download_requests_for_export();
 
 		if ( empty( $requests ) ) {
-			wp_die( esc_html__( 'No download requests found to export.', 'wp-resource-library' ) );
+			wp_die( esc_html__( 'No download requests found to export.', 'the-library' ) );
 		}
 
 		// Set headers for CSV download.
@@ -72,14 +72,14 @@ class CSV_Export {
 
 		// Add CSV headers.
 		$headers = array(
-			esc_html__( 'ID', 'wp-resource-library' ),
-			__( 'File Title', 'wp-resource-library' ),
-			__( 'User Name', 'wp-resource-library' ),
-			__( 'User Email', 'wp-resource-library' ),
-			__( 'User Mobile', 'wp-resource-library' ),
-			__( 'Download Date', 'wp-resource-library' ),
-			__( 'IP Address', 'wp-resource-library' ),
-			__( 'User Agent', 'wp-resource-library' ),
+			esc_html__( 'ID', 'the-library' ),
+			__( 'File Title', 'the-library' ),
+			__( 'User Name', 'the-library' ),
+			__( 'User Email', 'the-library' ),
+			__( 'User Mobile', 'the-library' ),
+			__( 'Download Date', 'the-library' ),
+			__( 'IP Address', 'the-library' ),
+			__( 'User Agent', 'the-library' ),
 		);
 
 		fputcsv( $output, $headers );
@@ -88,7 +88,7 @@ class CSV_Export {
 		foreach ( $requests as $request ) {
 			$row = array(
 				$request->id,
-				$request->post_title ? $request->post_title : esc_html__( 'File not found', 'wp-resource-library' ),
+				$request->post_title ? $request->post_title : esc_html__( 'File not found', 'the-library' ),
 				$request->user_name,
 				$request->user_email,
 				$request->user_mobile,
@@ -100,7 +100,8 @@ class CSV_Export {
 			fputcsv( $output, $row );
 		}
 
-		fclose( $output );
+		// Close output stream - safe to ignore WPCS warning for php://output.
+		fclose( $output ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 		exit;
 	}
 }

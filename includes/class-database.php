@@ -64,6 +64,8 @@ class Database {
 
 	/**
 	 * Prevent un-serialization of the instance.
+	 *
+	 * @throws \Exception Un-serialization error.
 	 */
 	public function __wakeup() {
 		throw new \Exception( 'Cannot un-serialize singleton' );
@@ -109,7 +111,8 @@ class Database {
 	 * @return bool True on success, false on failure.
 	 */
 	private function create_download_requests_table(): bool {
-		$charset_collate = $this->wpdb->get_charset_collate();
+		global $wpdb;
+		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE {$this->download_requests_table} (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -139,7 +142,8 @@ class Database {
 	 * @return bool True on success, false on failure.
 	 */
 	private function create_error_logs_table(): bool {
-		$charset_collate = $this->wpdb->get_charset_collate();
+		global $wpdb;
+		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE {$this->error_logs_table} (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -170,8 +174,9 @@ class Database {
 	 * @return bool True if table exists, false otherwise.
 	 */
 	public function table_exists( string $table_name ): bool {
-		$result = $this->wpdb->get_var(
-			$this->wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name )
+		global $wpdb;
+		$result = $wpdb->get_var(
+			$wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name )
 		);
 
 		return $result === $table_name;
@@ -185,6 +190,7 @@ class Database {
 	 * @return int|false Insert ID on success, false on failure.
 	 */
 	public function insert_download_request( array $data ) {
+		global $wpdb;
 		$defaults = array(
 			'post_id'       => 0,
 			'user_name'     => '',
@@ -197,7 +203,7 @@ class Database {
 
 		$data = wp_parse_args( $data, $defaults );
 
-		$result = $this->wpdb->insert(
+		$result = $wpdb->insert(
 			$this->download_requests_table,
 			$data,
 			array( '%d', '%s', '%s', '%s', '%s', '%s', '%s' )
@@ -208,13 +214,13 @@ class Database {
 				'Failed to insert download request',
 				array(
 					'data'     => $data,
-					'db_error' => $this->wpdb->last_error,
+					'db_error' => $wpdb->last_error,
 				)
 			);
 			return false;
 		}
 
-		return $this->wpdb->insert_id;
+		return $wpdb->insert_id;
 	}
 
 	/**
@@ -225,6 +231,7 @@ class Database {
 	 * @return array Query results with data and pagination info.
 	 */
 	public function get_download_requests( array $args = array() ): array {
+		global $wpdb;
 		$defaults = array(
 			'search'        => '',
 			'per_page'      => 20,
@@ -241,7 +248,7 @@ class Database {
 		$query_params     = array();
 
 		if ( ! empty( $args['search'] ) ) {
-			$search_term        = '%' . $this->wpdb->esc_like( $args['search'] ) . '%';
+			$search_term        = '%' . $wpdb->esc_like( $args['search'] ) . '%';
 			$where_conditions[] = '(dr.user_name LIKE %s OR dr.user_email LIKE %s OR dr.user_mobile LIKE %s)';
 			$query_params[]     = $search_term;
 			$query_params[]     = $search_term;
@@ -259,9 +266,12 @@ class Database {
 		// Get total count.
 		$count_sql = "SELECT COUNT(*) FROM {$this->download_requests_table} dr {$where_clause}";
 		if ( ! empty( $query_params ) ) {
-			$count_sql = $this->wpdb->prepare( $count_sql, ...$query_params );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$count_sql = $wpdb->prepare( $count_sql, ...$query_params );
 		}
-		$total_items = (int) $this->wpdb->get_var( $count_sql );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$total_items = (int) $wpdb->get_var( $count_sql );
 
 		// Calculate pagination.
 		$per_page    = max( 1, (int) $args['per_page'] );
@@ -272,7 +282,7 @@ class Database {
 		// Build main query.
 		if ( $args['include_posts'] ) {
 			$select_clause = 'SELECT dr.*, p.post_title';
-			$from_clause   = "FROM {$this->download_requests_table} dr LEFT JOIN {$this->wpdb->posts} p ON dr.post_id = p.ID";
+			$from_clause   = "FROM {$this->download_requests_table} dr LEFT JOIN {$wpdb->posts} p ON dr.post_id = p.ID";
 		} else {
 			$select_clause = 'SELECT dr.*';
 			$from_clause   = "FROM {$this->download_requests_table} dr";
@@ -283,7 +293,9 @@ class Database {
 		$query_params[] = $offset;
 
 		$main_sql = "{$select_clause} {$from_clause} {$where_clause} {$order_clause} {$limit_clause}";
-		$results  = $this->wpdb->get_results( $this->wpdb->prepare( $main_sql, ...$query_params ) );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$results = $wpdb->get_results( $wpdb->prepare( $main_sql, ...$query_params ) );
 
 		return array(
 			'data'         => $results ? $results : array(),
@@ -302,7 +314,8 @@ class Database {
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete_download_request( int $id ): bool {
-		$result = $this->wpdb->delete(
+		global $wpdb;
+		$result = $wpdb->delete(
 			$this->download_requests_table,
 			array( 'id' => $id ),
 			array( '%d' )
@@ -319,6 +332,8 @@ class Database {
 	 * @return int Number of deleted records.
 	 */
 	public function delete_download_requests( array $ids ): int {
+		global $wpdb;
+
 		if ( empty( $ids ) ) {
 			return 0;
 		}
@@ -327,7 +342,8 @@ class Database {
 		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 		$query        = "DELETE FROM {$this->download_requests_table} WHERE id IN ($placeholders)";
 
-		$result = $this->wpdb->query( $this->wpdb->prepare( $query, ...$ids ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$result = $wpdb->query( $wpdb->prepare( $query, ...$ids ) );
 
 		return false !== $result ? (int) $result : 0;
 	}
@@ -340,9 +356,11 @@ class Database {
 	 * @return int Number of deleted records.
 	 */
 	public function cleanup_download_requests( int $days = 365 ): int {
-		$result = $this->wpdb->query(
-			$this->wpdb->prepare(
-				"DELETE FROM {$this->download_requests_table} WHERE download_date < DATE_SUB(NOW(), INTERVAL %d DAY)",
+		global $wpdb;
+
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$this->download_requests_table} WHERE download_date < DATE_SUB(NOW(), INTERVAL %d DAY)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$days
 			)
 		);
@@ -352,7 +370,7 @@ class Database {
 				'Failed to cleanup download requests',
 				array(
 					'days'     => $days,
-					'db_error' => $this->wpdb->last_error,
+					'db_error' => $wpdb->last_error,
 				)
 			);
 			return 0;
@@ -367,10 +385,13 @@ class Database {
 	 * @return array All download requests with post titles.
 	 */
 	public function get_all_download_requests_for_export(): array {
-		$results = $this->wpdb->get_results(
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = $wpdb->get_results(
 			"SELECT dr.*, p.post_title
 			FROM {$this->download_requests_table} dr
-			LEFT JOIN {$this->wpdb->posts} p ON dr.post_id = p.ID
+			LEFT JOIN {$wpdb->posts} p ON dr.post_id = p.ID
 			ORDER BY dr.download_date DESC"
 		);
 
@@ -385,6 +406,8 @@ class Database {
 	 * @return int|false Insert ID on success, false on failure.
 	 */
 	public function insert_error_log( array $data ) {
+		global $wpdb;
+
 		$defaults = array(
 			'timestamp'  => current_time( 'mysql' ),
 			'level'      => 'error',
@@ -402,7 +425,7 @@ class Database {
 			$data['context'] = wp_json_encode( $data['context'] );
 		}
 
-		return $this->wpdb->insert(
+		return $wpdb->insert(
 			$this->error_logs_table,
 			$data,
 			array( '%s', '%s', '%s', '%s', '%d', '%s', '%s' )
@@ -417,8 +440,10 @@ class Database {
 	 * @return array Error logs.
 	 */
 	public function get_error_logs( int $limit = 50 ): array {
-		$results = $this->wpdb->get_results(
-			$this->wpdb->prepare(
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
 				"SELECT * FROM {$this->error_logs_table} ORDER BY timestamp DESC LIMIT %d",
 				$limit
 			)
@@ -435,8 +460,10 @@ class Database {
 	 * @return int Number of deleted records.
 	 */
 	public function cleanup_error_logs( int $days = 30 ): int {
-		$result = $this->wpdb->query(
-			$this->wpdb->prepare(
+		global $wpdb;
+
+		$result = $wpdb->query(
+			$wpdb->prepare(
 				"DELETE FROM {$this->error_logs_table} WHERE timestamp < DATE_SUB(NOW(), INTERVAL %d DAY)",
 				$days
 			)
@@ -476,34 +503,40 @@ class Database {
 	 * @return array Database statistics.
 	 */
 	public function get_statistics(): array {
+		global $wpdb;
 		$stats = array();
 
 		// Total download requests.
-		$stats['total_downloads'] = (int) $this->wpdb->get_var(
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$stats['total_downloads'] = (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$this->download_requests_table}"
 		);
 
 		// Downloads today.
-		$stats['downloads_today'] = (int) $this->wpdb->get_var(
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$stats['downloads_today'] = (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$this->download_requests_table}
 			 WHERE DATE(download_date) = CURDATE()"
 		);
 
 		// Downloads this week.
-		$stats['downloads_this_week'] = (int) $this->wpdb->get_var(
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$stats['downloads_this_week'] = (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$this->download_requests_table}
 			 WHERE YEARWEEK(download_date, 1) = YEARWEEK(CURDATE(), 1)"
 		);
 
 		// Downloads this month.
-		$stats['downloads_this_month'] = (int) $this->wpdb->get_var(
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$stats['downloads_this_month'] = (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$this->download_requests_table}
 			 WHERE YEAR(download_date) = YEAR(CURDATE())
 			 AND MONTH(download_date) = MONTH(CURDATE())"
 		);
 
 		// Error logs count.
-		$stats['error_logs_count'] = (int) $this->wpdb->get_var(
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$stats['error_logs_count'] = (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$this->error_logs_table}"
 		);
 

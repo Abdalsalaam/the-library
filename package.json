@@ -1,6 +1,6 @@
 {
-	"name": "wp-resource-library",
-	"title": "WP Resource Library",
+	"name": "the-library",
+	"title": "The Library",
 	"version": "1.0.0",
 	"homepage": "https://github.com/Abdalsalaam",
 	"config": {
@@ -15,7 +15,7 @@
 	"scripts": {
 		"build": "pnpm makepot && pnpm archive",
 		"archive": "composer archive --file=$npm_package_name --format=zip",
-		"makepot": "wpi18n makepot --domain-path languages --pot-file $npm_package_name.pot --type plugin --main-file $npm_package_name.php --exclude node_modules,tests,docs"
+		"makepot": "wpi18n makepot --domain-path languages --pot-file $npm_package_name.pot --type plugin --main-file $npm_package_name.php --exclude vendor,node_modules,tests,docs"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^27.4.0",

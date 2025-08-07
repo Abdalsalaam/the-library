@@ -38,7 +38,7 @@ class Download_Handler {
 		if ( ! isset( $_POST['post_id'] ) || ! isset( $_POST['user_name'] ) || ! isset( $_POST['user_mobile'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Required fields are missing.', 'wp-resource-library' ),
+					'message' => esc_html__( 'Required fields are missing.', 'the-library' ),
 				)
 			);
 		}
@@ -52,7 +52,7 @@ class Download_Handler {
 		if ( empty( $user_name ) || empty( $user_mobile ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Please fill in all required fields.', 'wp-resource-library' ),
+					'message' => esc_html__( 'Please fill in all required fields.', 'the-library' ),
 				)
 			);
 		}
@@ -61,7 +61,7 @@ class Download_Handler {
 		if ( ! Utils::is_valid_mobile( $user_mobile ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Please enter a valid mobile number (minimum 7 digits).', 'wp-resource-library' ),
+					'message' => esc_html__( 'Please enter a valid mobile number (minimum 7 digits).', 'the-library' ),
 				)
 			);
 		}
@@ -70,7 +70,7 @@ class Download_Handler {
 		if ( ! empty( $user_email ) && ! is_email( $user_email ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Please enter a valid email address.', 'wp-resource-library' ),
+					'message' => esc_html__( 'Please enter a valid email address.', 'the-library' ),
 				)
 			);
 		}
@@ -80,7 +80,7 @@ class Download_Handler {
 		if ( empty( $file_data['url'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'File not found.', 'wp-resource-library' ),
+					'message' => esc_html__( 'File not found.', 'the-library' ),
 				)
 			);
 		}
@@ -110,15 +110,15 @@ class Download_Handler {
 					'db_error'   => Database::get_instance()->get_wpdb()->last_error,
 				)
 			);
-			wp_send_json_error( array( 'message' => esc_html__( 'Database error occurred. Please try again.', 'wp-resource-library' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Database error occurred. Please try again.', 'the-library' ) ) );
 		}
 
 		// Generate download token and URL.
-		$download_url = $this->generate_download_token_and_url( $post_id, $user_email );
+		$download_url = $this->generate_download_token_and_url( $post_id );
 
 		wp_send_json_success(
 			array(
-				'message'      => esc_html__( 'Thank you! Your download will start shortly.', 'wp-resource-library' ),
+				'message'      => esc_html__( 'Thank you! Your download will start shortly.', 'the-library' ),
 				'download_url' => $download_url,
 			)
 		);
@@ -134,7 +134,7 @@ class Download_Handler {
 		if ( ! isset( $_POST['token'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Download token is required.', 'wp-resource-library' ),
+					'message' => esc_html__( 'Download token is required.', 'the-library' ),
 				)
 			);
 		}
@@ -144,7 +144,7 @@ class Download_Handler {
 		if ( empty( $token ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Invalid download token.', 'wp-resource-library' ),
+					'message' => esc_html__( 'Invalid download token.', 'the-library' ),
 				)
 			);
 		}
@@ -162,7 +162,7 @@ class Download_Handler {
 
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Download token has expired. Please request the file again.', 'wp-resource-library' ),
+					'message' => esc_html__( 'Download token has expired. Please request the file again.', 'the-library' ),
 				)
 			);
 		}
@@ -173,7 +173,7 @@ class Download_Handler {
 		if ( empty( $file_data['url'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'File not found.', 'wp-resource-library' ),
+					'message' => esc_html__( 'File not found.', 'the-library' ),
 				)
 			);
 		}
@@ -201,32 +201,32 @@ class Download_Handler {
 		if ( isset( $_GET['wprl_download'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['wprl_download'] ) ) ) {
 			// Validate required parameters.
 			if ( ! isset( $_GET['post_id'] ) || ! isset( $_GET['token'] ) ) {
-				wp_die( esc_html__( 'Invalid download request. Missing parameters.', 'wp-resource-library' ) );
+				wp_die( esc_html__( 'Invalid download request. Missing parameters.', 'the-library' ) );
 			}
 
 			$post_id = intval( wp_unslash( $_GET['post_id'] ) );
 			$token   = sanitize_text_field( wp_unslash( $_GET['token'] ) );
 
 			if ( $post_id <= 0 || empty( $token ) ) {
-				wp_die( esc_html__( 'Invalid download request.', 'wp-resource-library' ) );
+				wp_die( esc_html__( 'Invalid download request.', 'the-library' ) );
 			}
 
 			// Validate the download token.
 			$download_data = get_transient( 'wprl_download_' . $token );
 
 			if ( ! $download_data ) {
-				wp_die( esc_html__( 'Download token has expired or is invalid. Please request the file again.', 'wp-resource-library' ) );
+				wp_die( esc_html__( 'Download token has expired or is invalid. Please request the file again.', 'the-library' ) );
 			}
 
 			// Check if token matches the post ID.
 			if ( (int) $download_data['post_id'] !== $post_id ) {
-				wp_die( esc_html__( 'Invalid download token for this file.', 'wp-resource-library' ) );
+				wp_die( esc_html__( 'Invalid download token for this file.', 'the-library' ) );
 			}
 
 			$file_data = Utils::get_file_data( $post_id );
 
 			if ( empty( $file_data['url'] ) ) {
-				wp_die( esc_html__( 'File not found.', 'wp-resource-library' ) );
+				wp_die( esc_html__( 'File not found.', 'the-library' ) );
 			}
 
 			// Get file path.
@@ -238,7 +238,7 @@ class Download_Handler {
 			}
 
 			if ( $file_data['file_id'] && ( ! $file_path || ! file_exists( $file_path ) ) ) {
-				wp_die( esc_html__( 'File not found on server.', 'wp-resource-library' ) );
+				wp_die( esc_html__( 'File not found on server.', 'the-library' ) );
 			}
 
 			// Get file info.
@@ -256,8 +256,14 @@ class Download_Handler {
 				header( 'Pragma: private' );
 				header( 'Expires: 0' );
 
-				// Output file.
-				readfile( $file_path );
+				global $wp_filesystem;
+				if ( empty( $wp_filesystem ) ) {
+					require_once ABSPATH . '/wp-admin/includes/file.php';
+					WP_Filesystem();
+				}
+
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $wp_filesystem->get_contents( $file_path );
 			} else {
 				// Redirect to external URL.
 				wp_redirect( $file_data['url'] );
@@ -275,7 +281,7 @@ class Download_Handler {
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'You must be logged in to download files directly.', 'wp-resource-library' ),
+					'message' => esc_html__( 'You must be logged in to download files directly.', 'the-library' ),
 				)
 			);
 		}
@@ -286,7 +292,7 @@ class Download_Handler {
 		if ( ! isset( $_POST['post_id'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Post ID is required.', 'wp-resource-library' ),
+					'message' => esc_html__( 'Post ID is required.', 'the-library' ),
 				)
 			);
 		}
@@ -296,7 +302,7 @@ class Download_Handler {
 		if ( $post_id <= 0 ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Invalid post ID.', 'wp-resource-library' ),
+					'message' => esc_html__( 'Invalid post ID.', 'the-library' ),
 				)
 			);
 		}
@@ -306,7 +312,7 @@ class Download_Handler {
 		if ( empty( $file_data['url'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'File not found.', 'wp-resource-library' ),
+					'message' => esc_html__( 'File not found.', 'the-library' ),
 				)
 			);
 		}
@@ -320,7 +326,7 @@ class Download_Handler {
 			$user_mobile = get_user_meta( $current_user->ID, 'phone', true );
 		}
 		if ( empty( $user_mobile ) ) {
-			$user_mobile = esc_html__( 'Not provided', 'wp-resource-library' );
+			$user_mobile = esc_html__( 'Not provided', 'the-library' );
 		}
 
 		// Save download request with user data.
@@ -341,13 +347,13 @@ class Download_Handler {
 		if ( false === $result ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Error saving your request. Please try again.', 'wp-resource-library' ),
+					'message' => esc_html__( 'Error saving your request. Please try again.', 'the-library' ),
 				)
 			);
 		}
 
 		// Generate download token and URL.
-		$download_url = $this->generate_download_token_and_url( $post_id, $user_email );
+		$download_url = $this->generate_download_token_and_url( $post_id );
 
 		wp_send_json_success(
 			array(
@@ -359,12 +365,11 @@ class Download_Handler {
 	/**
 	 * Generate download token and URL.
 	 *
-	 * @param int    $post_id    Post ID.
-	 * @param string $user_email User email.
+	 * @param int $post_id    Post ID.
 	 *
 	 * @return string Download URL.
 	 */
-	private function generate_download_token_and_url( int $post_id, string $user_email ): string {
+	private function generate_download_token_and_url( int $post_id ): string {
 		// Update download count using utility function.
 		Utils::increment_download_count( $post_id );
 
@@ -372,11 +377,8 @@ class Download_Handler {
 		$download_token = Utils::generate_token( 32 );
 		set_transient(
 			'wprl_download_' . $download_token,
-			array(
-				'post_id'    => $post_id,
-				'user_email' => $user_email,
-			),
-			24 * 60 * 60 // 24 hours
+			array( 'post_id' => $post_id ),
+			24 * 60 * 60 // 24 hours.
 		);
 
 		// Generate download URL.

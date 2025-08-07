@@ -29,13 +29,10 @@ class Frontend {
 	 * Constructor.
 	 */
 	public function __construct() {
-        add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'auto_enqueue_scripts' ) );
 		add_filter( 'template_include', array( $this, 'template_include' ) );
 		add_action( 'pre_get_posts', array( $this, 'modify_main_query' ) );
-		add_shortcode( 'files_library', array( $this, 'files_library_shortcode' ) );
-		add_action( 'wp_ajax_wprl_load_more_files', array( $this, 'load_more_files' ) );
-		add_action( 'wp_ajax_nopriv_wprl_load_more_files', array( $this, 'load_more_files' ) );
 	}
 
 	/**
@@ -57,19 +54,6 @@ class Frontend {
 	public function register_scripts() {
 		wp_register_style( 'wprl-frontend-css', Utils::get_plugin_url( 'assets/css/frontend.css' ), array(), Utils::get_version() );
 		wp_register_script( 'wprl-frontend-js', Utils::get_plugin_url( 'assets/js/frontend.js' ), array( 'jquery' ), Utils::get_version(), true );
-
-		wp_localize_script(
-			'wprl-frontend-js',
-			'wprl_ajax',
-			array(
-				'ajax_url'              => admin_url( 'admin-ajax.php' ),
-				'nonce'                 => wp_create_nonce( 'wprl_frontend_nonce' ),
-				'direct_download_nonce' => wp_create_nonce( 'wprl_direct_download_nonce' ),
-				'loading_text'          => esc_html__( 'Loading...', 'wp-resource-library' ),
-				'no_more_files'         => esc_html__( 'No more files to load.', 'wp-resource-library' ),
-				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'wp-resource-library' ),
-			)
-		);
 	}
 
 	/**
@@ -86,9 +70,8 @@ class Frontend {
 				'ajax_url'              => admin_url( 'admin-ajax.php' ),
 				'nonce'                 => wp_create_nonce( 'wprl_frontend_nonce' ),
 				'direct_download_nonce' => wp_create_nonce( 'wprl_direct_download_nonce' ),
-				'loading_text'          => esc_html__( 'Loading...', 'wp-resource-library' ),
-				'no_more_files'         => esc_html__( 'No more files to load.', 'wp-resource-library' ),
-				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'wp-resource-library' ),
+				'loading_text'          => esc_html__( 'Loading...', 'the-library' ),
+				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'the-library' ),
 			)
 		);
 	}
@@ -112,7 +95,7 @@ class Frontend {
 	 * @return string The path of the template to include.
 	 */
 	public function template_include( string $template ): string {
-		if ( Utils::is_files_archive() ) {
+		if ( Utils::is_files_archive() || Utils::is_file_category() ) {
 			$custom_template = Utils::get_plugin_path( 'templates/archive-files-library.php' );
 			if ( file_exists( $custom_template ) ) {
 				return $custom_template;
@@ -153,9 +136,9 @@ class Frontend {
 					'tax_query',
 					array(
 						array(
-							'taxonomy' => 'file_category',
+							'taxonomy' => 'wprl_file_category',
 							'field'    => 'term_id',
-							'terms'    => sanitize_text_field( wp_unslash( $_GET['wprl_category'] ) ),
+							'terms'    => intval( wp_unslash( $_GET['wprl_category'] ) ),
 						),
 					)
 				);
@@ -167,9 +150,8 @@ class Frontend {
 					'meta_query',
 					array(
 						array(
-							'key'     => '_wprl_file_data',
-							'value'   => '"type":"' . sanitize_text_field( wp_unslash( $_GET['wprl_file_type'] ) ) . '"',
-							'compare' => 'LIKE',
+							'key'   => '_wprl_file_type',
+							'value' => sanitize_title_for_query( wp_unslash( $_GET['wprl_file_type'] ) ),
 						),
 					)
 				);
@@ -178,10 +160,6 @@ class Frontend {
 			// Handle sorting.
 			if ( ! empty( $_GET['wprl_sort'] ) ) {
 				switch ( sanitize_text_field( wp_unslash( $_GET['wprl_sort'] ) ) ) {
-					case 'date_desc':
-						$query->set( 'orderby', 'date' );
-						$query->set( 'order', 'DESC' );
-						break;
 					case 'date_asc':
 						$query->set( 'orderby', 'date' );
 						$query->set( 'order', 'ASC' );
@@ -199,119 +177,14 @@ class Frontend {
 						$query->set( 'orderby', 'meta_value_num' );
 						$query->set( 'order', 'DESC' );
 						break;
+					case 'date_desc':
+					default:
+						$query->set( 'orderby', 'date' );
+						$query->set( 'order', 'DESC' );
+						break;
 				}
 			}
 		}
-	}
-
-	/**
-	 * Files library shortcode.
-	 *
-	 * @param array $atts Shortcode attributes.
-	 *
-	 * @return string Shortcode output.
-	 */
-	public function files_library_shortcode( array $atts ): string {
-		self::enqueue_scripts();
-
-		$atts = shortcode_atts(
-			array(
-				'posts_per_page' => 12,
-				'category'       => '',
-				'show_filters'   => 'true',
-				'show_search'    => 'true',
-				'columns'        => 3,
-			),
-			$atts,
-			'files_library'
-		);
-
-		$args = array(
-			'post_type'      => 'files_library',
-			'posts_per_page' => intval( $atts['posts_per_page'] ),
-			'post_status'    => 'publish',
-		);
-
-		if ( ! empty( $atts['category'] ) ) {
-			$args['tax_query'] = array(
-				array(
-					'taxonomy' => 'file_category',
-					'field'    => 'term_id',
-					'terms'    => explode( ',', $atts['category'] ),
-				),
-			);
-		}
-
-		$query = new WP_Query( $args );
-
-		ob_start();
-
-		if ( $query->have_posts() ) {
-			?>
-			<div class="wprl-files-library-shortcode">
-				<?php if ( 'true' === $atts['show_search'] || 'true' === $atts['show_filters'] ) : ?>
-				<div class="wprl-filters-wrapper">
-					<?php if ( 'true' === $atts['show_search'] ) : ?>
-					<div class="wprl-search-form">
-						<input type="text" id="wprl-search-input" placeholder="<?php esc_html_e( 'Search files...', 'wp-resource-library' ); ?>">
-						<button type="button" id="wprl-search-button"><?php esc_html_e( 'Search', 'wp-resource-library' ); ?></button>
-					</div>
-					<?php endif; ?>
-
-					<?php if ( 'true' === $atts['show_filters'] ) : ?>
-					<div class="wprl-filters">
-						<select id="wprl-category-filter">
-							<option value=""><?php esc_html_e( 'All Categories', 'wp-resource-library' ); ?></option>
-							<?php
-							$categories = get_terms(
-								array(
-									'taxonomy'   => 'file_category',
-									'hide_empty' => true,
-								)
-							);
-							foreach ( $categories as $category ) {
-								echo '<option value="' . esc_attr( $category->term_id ) . '">' . esc_html( $category->name ) . '</option>';
-							}
-							?>
-						</select>
-						
-						<select id="wprl-sort-filter">
-							<option value="date_desc"><?php esc_html_e( 'Newest First', 'wp-resource-library' ); ?></option>
-							<option value="date_asc"><?php esc_html_e( 'Oldest First', 'wp-resource-library' ); ?></option>
-							<option value="title_asc"><?php esc_html_e( 'Title A-Z', 'wp-resource-library' ); ?></option>
-							<option value="title_desc"><?php esc_html_e( 'Title Z-A', 'wp-resource-library' ); ?></option>
-							<option value="downloads"><?php esc_html_e( 'Most Downloaded', 'wp-resource-library' ); ?></option>
-						</select>
-					</div>
-					<?php endif; ?>
-				</div>
-				<?php endif; ?>
-
-				<div class="wprl-files-grid" data-columns="<?php echo esc_attr( $atts['columns'] ); ?>">
-					<?php
-					while ( $query->have_posts() ) :
-						$query->the_post();
-						?>
-						<?php $this->render_file_card(); ?>
-					<?php endwhile; ?>
-				</div>
-
-				<?php if ( $query->max_num_pages > 1 ) : ?>
-				<div class="wprl-load-more-wrapper">
-					<button type="button" id="wprl-load-more" data-page="1" data-max-pages="<?php echo esc_attr( $query->max_num_pages ); ?>">
-						<?php esc_html_e( 'Load More', 'wp-resource-library' ); ?>
-					</button>
-				</div>
-				<?php endif; ?>
-			</div>
-			<?php
-		} else {
-			echo '<p>' . esc_html__( 'No files found.', 'wp-resource-library' ) . '</p>';
-		}
-
-		wp_reset_postdata();
-
-		return ob_get_clean();
 	}
 
 	/**
@@ -332,7 +205,7 @@ class Frontend {
 
 		$args       = wp_parse_args( $args, $defaults );
 		$file_data  = Utils::get_file_data();
-		$categories = get_the_terms( get_the_ID(), 'file_category' );
+		$categories = get_the_terms( get_the_ID(), 'wprl_file_category' );
 		$post_title = get_the_title();
 		$permalink  = get_the_permalink();
 		?>
@@ -345,7 +218,7 @@ class Frontend {
 					echo esc_attr(
 						sprintf(
 						/* translators: %s: file title */
-							__( 'Download %s', 'wp-resource-library' ),
+							__( 'Download %s', 'the-library' ),
 							$post_title
 						)
 					);
@@ -356,7 +229,7 @@ class Frontend {
 					echo esc_attr(
 						sprintf(
 						/* translators: %s: file title */
-							__( 'View details for %s', 'wp-resource-library' ),
+							__( 'View details for %s', 'the-library' ),
 							$post_title
 						)
 					);
@@ -375,7 +248,7 @@ class Frontend {
 						echo esc_attr(
 							sprintf(
 							/* translators: %s: file title */
-								__( 'Download %s', 'wp-resource-library' ),
+								__( 'Download %s', 'the-library' ),
 								$post_title
 							)
 						);
@@ -396,7 +269,7 @@ class Frontend {
 								echo esc_attr(
 									sprintf(
 									/* translators: %s: category name. */
-										__( 'View all %s files', 'wp-resource-library' ),
+										__( 'View all %s files', 'the-library' ),
 										$category->name
 									)
 								);
@@ -421,7 +294,7 @@ class Frontend {
 					<?php if ( $args['show_file_size'] && $file_data['size'] ) : ?>
 						<span class="wprl-file-size">
 							<i class="wprl-icon-size" aria-hidden="true"></i>
-							<span class="screen-reader-text"><?php esc_html_e( 'File size:', 'wp-resource-library' ); ?></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'File size:', 'the-library' ); ?></span>
 							<?php echo esc_html( size_format( $file_data['size'] ) ); ?>
 						</span>
 					<?php endif; ?>
@@ -429,25 +302,25 @@ class Frontend {
 					<?php if ( $file_data['type'] ) : ?>
 						<span class="wprl-file-type">
 							<i class="wprl-icon-type" aria-hidden="true"></i>
-							<span class="screen-reader-text"><?php esc_html_e( 'File type:', 'wp-resource-library' ); ?></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'File type:', 'the-library' ); ?></span>
 							<?php echo esc_html( $file_data['type'] ); ?>
 						</span>
 					<?php endif; ?>
 
 					<span class="wprl-download-count">
 						<i class="wprl-icon-download" aria-hidden="true"></i>
-						<span class="screen-reader-text"><?php esc_html_e( 'Download count:', 'wp-resource-library' ); ?></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Download count:', 'the-library' ); ?></span>
 						<?php echo esc_html( intval( $file_data['download_count'] ) ); ?>
 						<?php
 						/* translators: %d: download count */
-						printf( esc_html( _n( 'download', 'downloads', intval( $file_data['download_count'] ), 'wp-resource-library' ) ) );
+						printf( esc_html( _n( 'download', 'downloads', intval( $file_data['download_count'] ), 'the-library' ) ) );
 						?>
 					</span>
 
 					<?php if ( $args['show_date'] ) : ?>
 						<span class="wprl-file-date">
 							<i class="wprl-icon-date" aria-hidden="true"></i>
-							<span class="screen-reader-text"><?php esc_html_e( 'Published:', 'wp-resource-library' ); ?></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'Published:', 'the-library' ); ?></span>
 							<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>">
 								<?php echo esc_html( get_the_date() ); ?>
 							</time>
@@ -463,19 +336,19 @@ class Frontend {
 						echo esc_attr(
 							sprintf(
 							/* translators: %s: file title */
-								__( 'View details and download %s', 'wp-resource-library' ),
+								__( 'View details and download %s', 'the-library' ),
 								$post_title
 							)
 						);
 						?>
 						">
-						<?php esc_html_e( 'View Details', 'wp-resource-library' ); ?>
+						<?php esc_html_e( 'View Details', 'the-library' ); ?>
 						<span class="screen-reader-text">
 						<?php
 						echo esc_html(
 							sprintf(
 							/* translators: %s: file title */
-								__( 'for %s', 'wp-resource-library' ),
+								__( 'for %s', 'the-library' ),
 								$post_title
 							)
 						);
@@ -486,83 +359,5 @@ class Frontend {
 			</div>
 		</article>
 		<?php
-	}
-
-	/**
-	 * Load more files via AJAX.
-	 */
-	public function load_more_files() {
-		check_ajax_referer( 'wprl_frontend_nonce', 'nonce' );
-
-		$page     = isset( $_POST['page'] ) ? intval( wp_unslash( $_POST['page'] ) ) : 1;
-		$search   = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
-		$category = isset( $_POST['category'] ) ? sanitize_text_field( wp_unslash( $_POST['category'] ) ) : '';
-		$sort     = isset( $_POST['sort'] ) ? sanitize_text_field( wp_unslash( $_POST['sort'] ) ) : 'date_desc';
-
-		$args = array(
-			'post_type'      => 'files_library',
-			'posts_per_page' => 12,
-			'paged'          => $page,
-			'post_status'    => 'publish',
-		);
-
-		if ( ! empty( $search ) ) {
-			$args['s'] = $search;
-		}
-
-		if ( ! empty( $category ) ) {
-			$args['tax_query'] = array(
-				array(
-					'taxonomy' => 'file_category',
-					'field'    => 'term_id',
-					'terms'    => $category,
-				),
-			);
-		}
-
-		// Handle sorting.
-		switch ( $sort ) {
-			case 'date_asc':
-				$args['orderby'] = 'date';
-				$args['order']   = 'ASC';
-				break;
-			case 'title_asc':
-				$args['orderby'] = 'title';
-				$args['order']   = 'ASC';
-				break;
-			case 'title_desc':
-				$args['orderby'] = 'title';
-				$args['order']   = 'DESC';
-				break;
-			case 'downloads':
-				$args['meta_key'] = '_wprl_download_count';
-				$args['orderby']  = 'meta_value_num';
-				$args['order']    = 'DESC';
-				break;
-			default:
-				$args['orderby'] = 'date';
-				$args['order']   = 'DESC';
-		}
-
-		$query = new WP_Query( $args );
-
-		if ( $query->have_posts() ) {
-			ob_start();
-			while ( $query->have_posts() ) {
-				$query->the_post();
-				$this->render_file_card();
-			}
-			$html = ob_get_clean();
-			wp_reset_postdata();
-
-			wp_send_json_success(
-				array(
-					'html'     => $html,
-					'has_more' => $page < $query->max_num_pages,
-				)
-			);
-		} else {
-			wp_send_json_error();
-		}
 	}
 }

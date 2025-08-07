@@ -1,4 +1,4 @@
-# WP Resource Library WordPress Plugin
+# The Library WordPress Plugin
 
 A comprehensive WordPress plugin for creating a files/books/videos library with user data collection for downloads.
 
@@ -20,7 +20,6 @@ A comprehensive WordPress plugin for creating a files/books/videos library with 
 - **Download Protection**: Users must provide contact information to download
 - **User Data Collection**: Collect name, email, and mobile number before download
 - **Download Tokens**: Secure download links valid for 24 hours
-- **Email Notifications**: Optional email notifications (disabled by default)
 
 ### Security Features
 - **Nonce Protection**: All AJAX requests are protected with nonces
@@ -51,20 +50,6 @@ A comprehensive WordPress plugin for creating a files/books/videos library with 
 2. Use the search and filter options to find specific requests
 3. Export data as CSV using the "Export CSV" button
 4. Delete individual requests or use bulk actions
-
-### Shortcode Usage
-Display files anywhere using the shortcode:
-
-```
-[files_library posts_per_page="12" category="books,videos" show_filters="true" show_search="true" columns="3"]
-```
-
-**Shortcode Parameters:**
-- `posts_per_page`: Number of files to display (default: 12)
-- `category`: Comma-separated list of category slugs to filter
-- `show_filters`: Show filter dropdowns (true/false, default: true)
-- `show_search`: Show search box (true/false, default: true)
-- `columns`: Number of columns in grid (1-4, default: 3)
 
 ## Customization
 

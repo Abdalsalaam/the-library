@@ -33,7 +33,7 @@ class Utils {
 	 * @return bool
 	 */
 	public static function is_files_archive(): bool {
-		return is_post_type_archive( 'files_library' );
+		return is_post_type_archive( 'wprl_files_library' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Utils {
 	 * @return bool
 	 */
 	public static function is_single_file(): bool {
-		return is_singular( 'files_library' );
+		return is_singular( 'wprl_files_library' );
 	}
 
 	/**
@@ -51,7 +51,7 @@ class Utils {
 	 * @return bool
 	 */
 	public static function is_file_category(): bool {
-		return is_tax( 'file_category' );
+		return is_tax( 'wprl_file_category' );
 	}
 
 	/**
@@ -227,6 +227,7 @@ class Utils {
 		$current_data = self::get_file_data( $post_id );
 		$updated_data = array_merge( $current_data, $data );
 
+		update_post_meta( $post_id, '_wprl_file_type', $updated_data['type'] );
 		return update_post_meta( $post_id, '_wprl_file_data', $updated_data );
 	}
 
@@ -388,7 +389,7 @@ class Utils {
 		if ( false === $file_types ) {
 			$posts = get_posts(
 				array(
-					'post_type'      => 'files_library',
+					'post_type'      => 'wprl_files_library',
 					'posts_per_page' => -1,
 					'post_status'    => 'publish',
 					'meta_query'     => array(
