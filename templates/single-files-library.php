@@ -5,6 +5,10 @@
  * @package WPResourceLibrary
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 get_header(); ?>
 
 <div class="wprl-single-wrapper">
@@ -185,7 +189,7 @@ get_header(); ?>
 							</ul>
 						</div>
 						<?php endif; ?>
-						
+
 						<!-- Related Files -->
 						<?php
 						$related_args = array(

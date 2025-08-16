@@ -250,35 +250,6 @@ class Admin {
 				</table>
 			</form>
 		</div>
-		
-		<script>
-		jQuery(document).ready(function($) {
-			// Handle select all checkbox.
-			$('#cb-select-all-1').on('change', function() {
-				$('input[name="request_ids[]"]').prop('checked', this.checked);
-			});
-			
-			// Handle individual delete buttons.
-			$('.wprl-delete-request').on('click', function() {
-				if (confirm('<?php esc_html_e( 'Are you sure you want to delete this request?', 'the-library' ); ?>')) {
-					var requestId = $(this).data('id');
-					var row = $(this).closest('tr');
-
-					$.post(ajaxurl, {
-						action: 'wprl_delete_download_request',
-						request_id: requestId,
-						nonce: '<?php echo esc_js( wp_create_nonce( 'wprl_delete_request' ) ); ?>'
-					}, function(response) {
-						if (response.success) {
-							row.fadeOut();
-						} else {
-							alert('<?php echo esc_js( __( 'Error deleting request.', 'the-library' ) ); ?>');
-						}
-					});
-				}
-			});
-		});
-		</script>
 		<?php
 	}
 
@@ -318,11 +289,40 @@ class Admin {
 	 * @param string $hook The current admin page hook.
 	 */
 	public function enqueue_admin_scripts( $hook ) {
-		if ( false === strpos( $hook, 'wprl-download-requests' ) ) {
+		// Only load on our plugin pages.
+		if ( false === strpos( $hook, 'wprl-download-requests' ) && false === strpos( $hook, 'wprl-system-logs' ) && false === strpos( $hook, 'wprl-maintenance' ) ) {
 			return;
 		}
 
 		wp_enqueue_style( 'wprl-admin-css', Utils::get_plugin_url( 'assets/css/admin.css' ), array(), Utils::get_version() );
+		wp_enqueue_script( 'wprl-admin-js', Utils::get_plugin_url( 'assets/js/admin.js' ), array( 'jquery' ), Utils::get_version(), true );
+
+		// Localize nonces and i18n strings for admin JS.
+		wp_localize_script(
+			'wprl-admin-js',
+			'wprl_admin_nonces',
+			array(
+				'wprl_delete_request' => wp_create_nonce( 'wprl_delete_request' ),
+				'wprl_clear_logs'     => wp_create_nonce( 'wprl_clear_logs' ),
+				'wprl_run_cleanup'    => wp_create_nonce( 'wprl_run_cleanup' ),
+				'wprl_clear_cache'    => wp_create_nonce( 'wprl_clear_cache' ),
+			)
+		);
+
+		wp_localize_script(
+			'wprl-admin-js',
+			'wprl_admin_i18n',
+			array(
+				'confirmDeleteRequest' => __( 'Are you sure you want to delete this request?', 'the-library' ),
+				'errorDeleteRequest'   => __( 'Error deleting request.', 'the-library' ),
+				'confirmClearLogs'     => __( 'Are you sure you want to clear old logs?', 'the-library' ),
+				'failedClearLogs'      => __( 'Failed to clear logs.', 'the-library' ),
+				'running'              => __( 'Running...', 'the-library' ),
+				'cleanupFailed'        => __( 'Cleanup failed. Please try again.', 'the-library' ),
+				'clearing'             => __( 'Clearing...', 'the-library' ),
+				'clearCacheFailed'     => __( 'Failed to clear cache. Please try again.', 'the-library' ),
+			)
+		);
 	}
 
 	/**
@@ -401,37 +401,6 @@ class Admin {
 				</table>
 			<?php endif; ?>
 		</div>
-
-		<style>
-		.wprl-log-level {
-			padding: 2px 8px;
-			border-radius: 3px;
-			font-size: 11px;
-			font-weight: bold;
-			text-transform: uppercase;
-		}
-		.wprl-log-error { background: #dc3232; color: white; }
-		.wprl-log-warning { background: #ffb900; color: black; }
-		.wprl-log-info { background: #00a0d2; color: white; }
-		.wprl-log-debug { background: #666; color: white; }
-		</style>
-
-		<script>
-		function wprlClearLogs() {
-			if (confirm('<?php echo esc_js( __( 'Are you sure you want to clear old logs?', 'the-library' ) ); ?>')) {
-				jQuery.post(ajaxurl, {
-					action: 'wprl_clear_logs',
-					nonce: '<?php echo esc_js( wp_create_nonce( 'wprl_clear_logs' ) ); ?>'
-				}, function(response) {
-					if (response.success) {
-						location.reload();
-					} else {
-						alert('<?php echo esc_js( __( 'Failed to clear logs.', 'the-library' ) ); ?>');
-					}
-				});
-			}
-		}
-		</script>
 		<?php
 	}
 
@@ -578,76 +547,6 @@ class Admin {
 				</table>
 			</div>
 		</div>
-
-		<script>
-		function wprlRunCleanup(type) {
-			var button = event.target;
-			var originalText = button.textContent;
-			var resultsDiv = document.getElementById('wprl-cleanup-results');
-
-			button.disabled = true;
-			button.textContent = '<?php echo esc_js( __( 'Running...', 'the-library' ) ); ?>';
-
-			jQuery.post(ajaxurl, {
-				action: 'wprl_run_cleanup',
-				cleanup_type: type,
-				nonce: '<?php echo esc_js( wp_create_nonce( 'wprl_run_cleanup' ) ); ?>'
-			}, function(response) {
-				button.disabled = false;
-				button.textContent = originalText;
-
-				if (response.success) {
-					resultsDiv.innerHTML = '<div class="notice notice-success"><p>' + response.data.message + '</p></div>';
-				} else {
-					resultsDiv.innerHTML = '<div class="notice notice-error"><p>' + response.data.message + '</p></div>';
-				}
-
-				setTimeout(function() {
-					resultsDiv.innerHTML = '';
-				}, 5000);
-			}).fail(function() {
-				button.disabled = false;
-				button.textContent = originalText;
-				resultsDiv.innerHTML = '<div class="notice notice-error"><p><?php echo esc_js( __( 'Cleanup failed. Please try again.', 'the-library' ) ); ?></p></div>';
-			});
-		}
-
-		function wprlClearCache(type) {
-			var button = event.target;
-			var originalText = button.textContent;
-			var resultsDiv = document.getElementById('wprl-cleanup-results');
-
-			button.disabled = true;
-			button.textContent = '<?php echo esc_js( __( 'Clearing...', 'the-library' ) ); ?>';
-
-			jQuery.post(ajaxurl, {
-				action: 'wprl_clear_cache',
-				cache_type: type,
-				nonce: '<?php echo esc_js( wp_create_nonce( 'wprl_clear_cache' ) ); ?>'
-			}, function(response) {
-				button.disabled = false;
-				button.textContent = originalText;
-
-				if (response.success) {
-					resultsDiv.innerHTML = '<div class="notice notice-success"><p>' + response.data.message + '</p></div>';
-				} else {
-					resultsDiv.innerHTML = '<div class="notice notice-error"><p>' + response.data.message + '</p></div>';
-				}
-
-				setTimeout(function() {
-					resultsDiv.innerHTML = '';
-				}, 3000);
-			}).fail(function() {
-				button.disabled = false;
-				button.textContent = originalText;
-				resultsDiv.innerHTML = '<div class="notice notice-error"><p><?php echo esc_js( __( 'Failed to clear cache. Please try again.', 'the-library' ) ); ?></p></div>';
-
-				setTimeout(function() {
-					resultsDiv.innerHTML = '';
-				}, 5000);
-			});
-		}
-		</script>
 		<?php
 	}
 

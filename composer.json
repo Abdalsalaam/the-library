@@ -44,9 +44,6 @@
 		],
 		"check-all:fix": [
 			"./vendor/bin/phpcbf . --ignore=vendor,.git,assets,node_modules,tests,dist --standard=WooCommerce-Core,WordPress-Core,WordPress-Extra,WordPress-Docs  --report-full --report-summary --colors"
-		],
-		"qit:security": [
-			"npm run build && composer install && ./vendor/bin/qit run:security woocommerce-shipping-ups --zip=woocommerce-shipping-ups.zip"
 		]
 	},
 	"config": {

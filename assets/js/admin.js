@@ -155,7 +155,7 @@
                 data: {
                     action: 'wprl_delete_download_request',
                     request_id: requestId,
-                    nonce: WPRL_Admin.getNonce('wprl_delete_request')
+                    nonce: (window.wprl_admin_nonces && window.wprl_admin_nonces.wprl_delete_request) || ''
                 },
                 success: function(response) {
                     if (response.success) {

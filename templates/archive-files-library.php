@@ -5,6 +5,10 @@
  * @package WPResourceLibrary
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 use WPResourceLibrary\Utils;
 
 get_header(); ?>

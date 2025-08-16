@@ -4,7 +4,7 @@ Tags: file library, downloads, The Library
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -93,6 +93,9 @@ Yes, you can export all collected user data as CSV from the admin dashboard.
 == Changelog ==
 
 = 1.0.0 =
+* Security fix.
+
+= 1.0.0 =
 * Initial release
 * Custom post type for files library
 * User data collection for downloads
@@ -100,8 +103,3 @@ Yes, you can export all collected user data as CSV from the admin dashboard.
 * CSV export functionality
 * Secure download tokens
 * Search and filter functionality
-
-== Upgrade Notice ==
-
-= 1.0.0 =
-Initial release of The Library plugin.
