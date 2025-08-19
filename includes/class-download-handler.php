@@ -2,10 +2,10 @@
 /**
  * Download Handler Class
  *
- * @package WPResourceLibrary
+ * @package TheLibrary
  */
 
-namespace WPResourceLibrary;
+namespace TheLibrary;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

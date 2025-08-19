@@ -10,7 +10,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: the-library
  *
- * @package WPResourceLibrary
+ * @package TheLibrary
  */
 
 // Prevent direct access.
@@ -37,4 +37,4 @@ if ( ! defined( 'WPRL_VERSION' ) ) {
 
 // Initialize the plugin.
 require_once WPRL_PLUGIN_PATH . 'includes/class-main.php';
-new \WPResourceLibrary\Main();
+new \TheLibrary\Main();

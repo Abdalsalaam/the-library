@@ -2,14 +2,14 @@
 /**
  * Archive template for Files Library.
  *
- * @package WPResourceLibrary
+ * @package TheLibrary
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use WPResourceLibrary\Utils;
+use TheLibrary\Utils;
 
 get_header(); ?>
 
@@ -109,7 +109,7 @@ get_header(); ?>
 											<option value=""><?php esc_html_e( 'All File Types', 'the-library' ); ?></option>
 											<?php
 											// Get cached file types for better performance.
-											$file_types         = WPResourceLibrary\Utils::get_cached_file_types();
+											$file_types         = TheLibrary\Utils::get_cached_file_types();
 											$selected_file_type = isset( $_GET['wprl_file_type'] ) ? sanitize_text_field( wp_unslash( $_GET['wprl_file_type'] ) ) : '';
 
 											foreach ( $file_types as $type_name => $count ) {
@@ -212,7 +212,7 @@ get_header(); ?>
 		<?php if ( have_posts() ) : ?>
 		<div class="wprl-files-grid">
 			<?php
-			$frontend_instance = WPResourceLibrary\Frontend::get_instance();
+			$frontend_instance = TheLibrary\Frontend::get_instance();
 			while ( have_posts() ) :
 				the_post();
 

@@ -2,10 +2,10 @@
 /**
  * Utils Class - Common utility functions
  *
- * @package WPResourceLibrary
+ * @package TheLibrary
  */
 
-namespace WPResourceLibrary;
+namespace TheLibrary;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

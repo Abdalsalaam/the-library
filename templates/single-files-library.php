@@ -2,7 +2,7 @@
 /**
  * Single file template for Files Library.
  *
- * @package WPResourceLibrary
+ * @package TheLibrary
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,7 +18,7 @@ get_header(); ?>
 			the_post();
 			?>
 			<?php
-			$file_data  = WPResourceLibrary\Utils::get_file_data();
+			$file_data  = TheLibrary\Utils::get_file_data();
 			$categories = get_the_terms( get_the_ID(), 'wprl_file_category' );
 			?>
 			<article class="wprl-single-file">

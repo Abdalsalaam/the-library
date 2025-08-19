@@ -2,10 +2,10 @@
 /**
  * Database Class - Centralized database operations.
  *
- * @package WPResourceLibrary
+ * @package TheLibrary
  */
 
-namespace WPResourceLibrary;
+namespace TheLibrary;
 
 use wpdb;
 

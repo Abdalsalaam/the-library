@@ -1,7 +1,7 @@
 {
 	"name": "abdalsalaam/the-library",
 	"description": "A comprehensive files/books/videos library plugin with user data collection for downloads.",
-	"homepage": "https://github.com/Abdalsalaam",
+	"homepage": "https://github.com/Abdalsalaam/the-library",
 	"type": "wordpress-plugin",
 	"license": "GPL-3.0-or-later",
 	"archive": {
