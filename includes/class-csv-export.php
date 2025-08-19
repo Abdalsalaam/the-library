@@ -82,7 +82,8 @@ class CSV_Export {
 			__( 'User Agent', 'the-library' ),
 		);
 
-		fputcsv( $output, $headers );
+		// Explicitly pass separator, enclosure, and escape to avoid PHP deprecation warnings.
+		fputcsv( $output, $headers, ',', '"', '\\' );
 
 		// Add data rows.
 		foreach ( $requests as $request ) {
@@ -97,7 +98,8 @@ class CSV_Export {
 				$request->user_agent,
 			);
 
-			fputcsv( $output, $row );
+			// Explicitly pass separator, enclosure, and escape to avoid PHP deprecation warnings.
+			fputcsv( $output, $row, ',', '"', '\\' );
 		}
 
 		// Close output stream - safe to ignore WPCS warning for php://output.

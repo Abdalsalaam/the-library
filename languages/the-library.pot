@@ -2,10 +2,10 @@
 # This file is distributed under the GPL v3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: The Library 1.0.0\n"
+"Project-Id-Version: The Library 1.0.2\n"
 "Report-Msgid-Bugs-To: "
-"https://wordpress.org/support/plugin/the-library\n"
-"POT-Creation-Date: 2025-08-07 00:16:12+00:00\n"
+"https://wordpress.org/support/plugin/wp-resource-library\n"
+"POT-Creation-Date: 2025-08-19 15:45:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,16 +15,16 @@ msgstr ""
 "X-Generator: node-wp-i18n 1.2.8\n"
 
 #: includes/class-admin.php:37 includes/class-admin.php:38
-#: includes/class-admin.php:119 includes/class-admin.php:506
+#: includes/class-admin.php:119 includes/class-admin.php:480
 msgid "Download Requests"
 msgstr ""
 
 #: includes/class-admin.php:46 includes/class-admin.php:47
-#: includes/class-admin.php:337
+#: includes/class-admin.php:342
 msgid "System Logs"
 msgstr ""
 
-#: includes/class-admin.php:55 includes/class-admin.php:472
+#: includes/class-admin.php:55 includes/class-admin.php:446
 msgid "System Maintenance"
 msgstr ""
 
@@ -36,7 +36,7 @@ msgstr ""
 msgid "Security check failed. Please try again."
 msgstr ""
 
-#: includes/class-admin.php:76 includes/class-admin.php:292
+#: includes/class-admin.php:76 includes/class-admin.php:268
 msgid "You do not have sufficient permissions to perform this action."
 msgstr ""
 
@@ -71,7 +71,7 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: includes/class-admin.php:159 includes/class-admin.php:243
+#: includes/class-admin.php:159 includes/class-admin.php:248
 msgid "Delete"
 msgstr ""
 
@@ -106,7 +106,7 @@ msgstr ""
 msgid "Download Date"
 msgstr ""
 
-#: includes/class-admin.php:204 includes/class-admin.php:368
+#: includes/class-admin.php:204 includes/class-admin.php:373
 #: includes/class-csv-export.php:81
 msgid "IP Address"
 msgstr ""
@@ -119,258 +119,245 @@ msgstr ""
 msgid "No download requests found."
 msgstr ""
 
-#: includes/class-admin.php:225 includes/class-csv-export.php:91
+#: includes/class-admin.php:230 includes/class-csv-export.php:92
 msgid "File not found"
 msgstr ""
 
-#: includes/class-admin.php:235 includes/class-download-handler.php:329
+#: includes/class-admin.php:240 includes/class-download-handler.php:329
 msgid "Not provided"
 msgstr ""
 
-#: includes/class-admin.php:263
-msgid "Are you sure you want to delete this request?"
-msgstr ""
-
-#: includes/class-admin.php:275
-msgid "Error deleting request."
-msgstr ""
-
-#: includes/class-admin.php:297 includes/class-admin.php:303
+#: includes/class-admin.php:273 includes/class-admin.php:279
 msgid "Invalid request ID."
 msgstr ""
 
-#: includes/class-admin.php:309
+#: includes/class-admin.php:285
 msgid "Request deleted successfully."
 msgstr ""
 
-#: includes/class-admin.php:311
+#: includes/class-admin.php:287
 msgid "Error deleting request or request not found."
 msgstr ""
 
-#: includes/class-admin.php:342
+#: includes/class-admin.php:321
+msgid "Are you sure you want to delete this request?"
+msgstr ""
+
+#: includes/class-admin.php:322
+msgid "Error deleting request."
+msgstr ""
+
+#: includes/class-admin.php:323
+msgid "Are you sure you want to clear old logs?"
+msgstr ""
+
+#: includes/class-admin.php:324
+msgid "Failed to clear logs."
+msgstr ""
+
+#: includes/class-admin.php:325
+msgid "Running..."
+msgstr ""
+
+#: includes/class-admin.php:326
+msgid "Cleanup failed. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:327
+msgid "Clearing..."
+msgstr ""
+
+#: includes/class-admin.php:328
+msgid "Failed to clear cache. Please try again."
+msgstr ""
+
+#: includes/class-admin.php:347
 msgid "Error logs table does not exist."
 msgstr ""
 
-#: includes/class-admin.php:343
+#: includes/class-admin.php:348
 msgid ""
 "Please deactivate and reactivate the plugin to create the required database "
 "tables."
 msgstr ""
 
-#: includes/class-admin.php:351
+#: includes/class-admin.php:356
 msgid "Clear Old Logs"
 msgstr ""
 
-#: includes/class-admin.php:357
+#: includes/class-admin.php:362
 msgid "Error logs table is not available. Please reactivate the plugin."
 msgstr ""
 
-#: includes/class-admin.php:359
+#: includes/class-admin.php:364
 msgid "No error logs found."
 msgstr ""
 
-#: includes/class-admin.php:364
+#: includes/class-admin.php:369
 msgid "Timestamp"
 msgstr ""
 
-#: includes/class-admin.php:365
+#: includes/class-admin.php:370
 msgid "Level"
 msgstr ""
 
-#: includes/class-admin.php:366
+#: includes/class-admin.php:371
 msgid "Message"
 msgstr ""
 
-#: includes/class-admin.php:367
+#: includes/class-admin.php:372
 msgid "User"
 msgstr ""
 
-#: includes/class-admin.php:394
+#: includes/class-admin.php:399
 msgid "Guest"
 msgstr ""
 
-#: includes/class-admin.php:421
-msgid "Are you sure you want to clear old logs?"
-msgstr ""
-
-#: includes/class-admin.php:429
-msgid "Failed to clear logs."
-msgstr ""
-
-#: includes/class-admin.php:445 includes/class-admin.php:661
-#: includes/class-admin.php:715
+#: includes/class-admin.php:419 includes/class-admin.php:556
+#: includes/class-admin.php:609
 msgid "Insufficient permissions."
 msgstr ""
 
-#: includes/class-admin.php:454
+#: includes/class-admin.php:428
 #. translators: %d: number of deleted logs
 msgid "%d old logs cleared successfully."
 msgstr ""
 
-#: includes/class-admin.php:475
+#: includes/class-admin.php:449
 msgid "Database Statistics"
 msgstr ""
 
-#: includes/class-admin.php:478
+#: includes/class-admin.php:452
 msgid "Total Downloads"
 msgstr ""
 
-#: includes/class-admin.php:482
+#: includes/class-admin.php:456
 msgid "Today"
 msgstr ""
 
-#: includes/class-admin.php:486
+#: includes/class-admin.php:460
 msgid "This Week"
 msgstr ""
 
-#: includes/class-admin.php:490
+#: includes/class-admin.php:464
 msgid "This Month"
 msgstr ""
 
-#: includes/class-admin.php:494 includes/class-admin.php:515
+#: includes/class-admin.php:468 includes/class-admin.php:489
 msgid "Error Logs"
 msgstr ""
 
-#: includes/class-admin.php:501
+#: includes/class-admin.php:475
 msgid "Database Cleanup"
 msgstr ""
 
-#: includes/class-admin.php:502
+#: includes/class-admin.php:476
 msgid "Clean up old data to optimize database performance."
 msgstr ""
 
-#: includes/class-admin.php:509
+#: includes/class-admin.php:483
 msgid "Clean Old Download Requests"
 msgstr ""
 
-#: includes/class-admin.php:511
+#: includes/class-admin.php:485
 msgid "Remove download requests older than 1 year."
 msgstr ""
 
-#: includes/class-admin.php:518
+#: includes/class-admin.php:492
 msgid "Clean Old Error Logs"
 msgstr ""
 
-#: includes/class-admin.php:520
+#: includes/class-admin.php:494
 msgid "Remove error logs older than 30 days."
 msgstr ""
 
-#: includes/class-admin.php:524
+#: includes/class-admin.php:498
 msgid "Expired Transients"
 msgstr ""
 
-#: includes/class-admin.php:527
+#: includes/class-admin.php:501
 msgid "Clean Expired Transients"
 msgstr ""
 
-#: includes/class-admin.php:529
+#: includes/class-admin.php:503
 msgid "Remove expired download tokens and cache data."
 msgstr ""
 
-#: includes/class-admin.php:533
-msgid "Orphaned Metadata"
-msgstr ""
-
-#: includes/class-admin.php:536
-msgid "Clean Orphaned Metadata"
-msgstr ""
-
-#: includes/class-admin.php:538
-msgid "Remove metadata for deleted posts."
-msgstr ""
-
-#: includes/class-admin.php:542
+#: includes/class-admin.php:507
 msgid "Full Cleanup"
 msgstr ""
 
-#: includes/class-admin.php:545
+#: includes/class-admin.php:510
 msgid "Run Full Cleanup"
 msgstr ""
 
-#: includes/class-admin.php:547
+#: includes/class-admin.php:512
 msgid "Run all cleanup tasks at once."
 msgstr ""
 
-#: includes/class-admin.php:556
+#: includes/class-admin.php:521
 msgid "Cache Management"
 msgstr ""
 
-#: includes/class-admin.php:557
+#: includes/class-admin.php:522
 msgid "Manage plugin cache for better performance."
 msgstr ""
 
-#: includes/class-admin.php:561
+#: includes/class-admin.php:526
 msgid "File Types Cache"
 msgstr ""
 
-#: includes/class-admin.php:564
+#: includes/class-admin.php:529
 msgid "Clear File Types Cache"
 msgstr ""
 
-#: includes/class-admin.php:566
+#: includes/class-admin.php:531
 msgid "Force refresh of file types dropdown cache."
 msgstr ""
 
-#: includes/class-admin.php:570
+#: includes/class-admin.php:535
 msgid "All Caches"
 msgstr ""
 
-#: includes/class-admin.php:573
+#: includes/class-admin.php:538
 msgid "Clear All Plugin Caches"
 msgstr ""
 
-#: includes/class-admin.php:575
+#: includes/class-admin.php:540
 msgid "Clear all plugin-related cache data."
 msgstr ""
 
-#: includes/class-admin.php:589
-msgid "Running..."
-msgstr ""
-
-#: includes/class-admin.php:611
-msgid "Cleanup failed. Please try again."
-msgstr ""
-
-#: includes/class-admin.php:621
-msgid "Clearing..."
-msgstr ""
-
-#: includes/class-admin.php:643
-msgid "Failed to clear cache. Please try again."
-msgstr ""
-
-#: includes/class-admin.php:666 includes/class-admin.php:701
+#: includes/class-admin.php:561 includes/class-admin.php:595
 msgid "Invalid cleanup type."
 msgstr ""
 
-#: includes/class-admin.php:678
+#: includes/class-admin.php:573
 #. translators: %d: number of deleted requests
 msgid "Cleaned up %d old download requests."
 msgstr ""
 
-#: includes/class-admin.php:684
+#: includes/class-admin.php:579
 #. translators: %d: number of deleted logs
 msgid "Cleaned up %d error logs."
 msgstr ""
 
-#: includes/class-admin.php:691
+#: includes/class-admin.php:586
 #. translators: 1: number of download requests cleaned, 2: number of error logs
-#. cleaned, 3: number of transients cleaned, 4: number of orphaned metadata
-#. cleaned
+#. cleaned, 3: number of transients cleaned
 msgid ""
 "Full cleanup completed. Download requests: %1$d, Error logs: %2$d, "
-"Transients: %3$d, Orphaned metadata: %4$d"
+"Transients: %3$d"
 msgstr ""
 
-#: includes/class-admin.php:720 includes/class-admin.php:738
+#: includes/class-admin.php:614 includes/class-admin.php:632
 msgid "Invalid cache type."
 msgstr ""
 
-#: includes/class-admin.php:729
+#: includes/class-admin.php:623
 msgid "File types cache cleared successfully."
 msgstr ""
 
-#: includes/class-admin.php:734
+#: includes/class-admin.php:628
 msgid "All plugin caches cleared successfully."
 msgstr ""
 
@@ -504,7 +491,7 @@ msgid "Upload the file that users will be able to download."
 msgstr ""
 
 #: includes/class-custom-post-type.php:178
-#: templates/single-files-library.php:143
+#: templates/single-files-library.php:147
 msgid "File Size:"
 msgstr ""
 
@@ -514,7 +501,7 @@ msgid "N/A"
 msgstr ""
 
 #: includes/class-custom-post-type.php:179
-#: templates/single-files-library.php:150
+#: templates/single-files-library.php:154
 msgid "File Type:"
 msgstr ""
 
@@ -643,7 +630,7 @@ msgid_plural "downloads"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-frontend.php:323 templates/single-files-library.php:161
+#: includes/class-frontend.php:323 templates/single-files-library.php:165
 msgid "Published:"
 msgstr ""
 
@@ -661,203 +648,192 @@ msgstr ""
 msgid "for %s"
 msgstr ""
 
-#: templates/archive-files-library.php:18
+#: templates/archive-files-library.php:22
 msgid "Files in Category: "
 msgstr ""
 
-#: templates/archive-files-library.php:20
+#: templates/archive-files-library.php:24
 msgid "Files Library"
 msgstr ""
 
-#: templates/archive-files-library.php:56
+#: templates/archive-files-library.php:60
 msgid "Search files..."
 msgstr ""
 
-#: templates/archive-files-library.php:58
+#: templates/archive-files-library.php:62
 msgid "Search files"
 msgstr ""
 
-#: templates/archive-files-library.php:60
+#: templates/archive-files-library.php:64
 msgid "Clear search"
 msgstr ""
 
-#: templates/archive-files-library.php:72
+#: templates/archive-files-library.php:76
 msgid "Category"
 msgstr ""
 
-#: templates/archive-files-library.php:75
+#: templates/archive-files-library.php:79
 msgid "Filter by category"
 msgstr ""
 
-#: templates/archive-files-library.php:76
+#: templates/archive-files-library.php:80
 msgid "All Categories"
 msgstr ""
 
-#: templates/archive-files-library.php:101
+#: templates/archive-files-library.php:105
 msgid "File Type"
 msgstr ""
 
-#: templates/archive-files-library.php:104
+#: templates/archive-files-library.php:108
 msgid "Filter by file type"
 msgstr ""
 
-#: templates/archive-files-library.php:105
+#: templates/archive-files-library.php:109
 msgid "All File Types"
 msgstr ""
 
-#: templates/archive-files-library.php:126
+#: templates/archive-files-library.php:130
 msgid "Sort By"
 msgstr ""
 
-#: templates/archive-files-library.php:129
+#: templates/archive-files-library.php:133
 msgid "Sort files"
 msgstr ""
 
-#: templates/archive-files-library.php:132
+#: templates/archive-files-library.php:136
 msgid "Newest First"
 msgstr ""
 
-#: templates/archive-files-library.php:133
+#: templates/archive-files-library.php:137
 msgid "Oldest First"
 msgstr ""
 
-#: templates/archive-files-library.php:134
+#: templates/archive-files-library.php:138
 msgid "Title A-Z"
 msgstr ""
 
-#: templates/archive-files-library.php:135
+#: templates/archive-files-library.php:139
 msgid "Title Z-A"
 msgstr ""
 
-#: templates/archive-files-library.php:136
+#: templates/archive-files-library.php:140
 msgid "Most Downloaded"
 msgstr ""
 
-#: templates/archive-files-library.php:159
+#: templates/archive-files-library.php:163
 msgid "Apply Filters"
 msgstr ""
 
-#: templates/archive-files-library.php:172
+#: templates/archive-files-library.php:176
 msgid "Clear All"
 msgstr ""
 
-#: templates/archive-files-library.php:198
+#: templates/archive-files-library.php:202
 #. translators: 1: start number, 2: end number, 3: total number
 msgid "Showing %1$d-%2$d of %3$d files"
 msgstr ""
 
-#: templates/archive-files-library.php:238
+#: templates/archive-files-library.php:242
 msgid "&laquo; Previous"
 msgstr ""
 
-#: templates/archive-files-library.php:239
+#: templates/archive-files-library.php:243
 msgid "Next &raquo;"
 msgstr ""
 
-#: templates/archive-files-library.php:251
+#: templates/archive-files-library.php:255
 msgid "No files found"
 msgstr ""
 
-#: templates/archive-files-library.php:252
+#: templates/archive-files-library.php:256
 msgid "Try adjusting your search criteria or browse all files."
 msgstr ""
 
-#: templates/archive-files-library.php:254
+#: templates/archive-files-library.php:258
 msgid "Browse All Files"
 msgstr ""
 
-#: templates/single-files-library.php:49
+#: templates/single-files-library.php:53
 msgid "Download This File"
 msgstr ""
 
-#: templates/single-files-library.php:55
+#: templates/single-files-library.php:59
 msgid "Welcome back! You can download this file directly."
 msgstr ""
 
-#: templates/single-files-library.php:59 templates/single-files-library.php:109
-#: templates/single-files-library.php:345
+#: templates/single-files-library.php:63 templates/single-files-library.php:113
 msgid "Download File"
 msgstr ""
 
-#: templates/single-files-library.php:67
+#: templates/single-files-library.php:71
 msgid "To download this file, please provide your contact information below:"
 msgstr ""
 
-#: templates/single-files-library.php:71
+#: templates/single-files-library.php:75
 #. translators: 1: opening link tag, 2: closing link tag
 msgid "Already have an account? %1$sLogin here%2$s for direct downloads."
 msgstr ""
 
-#: templates/single-files-library.php:85
+#: templates/single-files-library.php:89
 msgid "Full Name *"
 msgstr ""
 
-#: templates/single-files-library.php:90
+#: templates/single-files-library.php:94
 msgid "Email Address (Optional)"
 msgstr ""
 
-#: templates/single-files-library.php:97
+#: templates/single-files-library.php:101
 msgid "Mobile Number *"
 msgstr ""
 
-#: templates/single-files-library.php:120
+#: templates/single-files-library.php:124
 msgid "Thank you!"
 msgstr ""
 
-#: templates/single-files-library.php:121
+#: templates/single-files-library.php:125
 msgid ""
 "Your download will start automatically. If it doesn't start, click the "
 "button below."
 msgstr ""
 
-#: templates/single-files-library.php:123
+#: templates/single-files-library.php:127
 msgid "Download Now"
 msgstr ""
 
-#: templates/single-files-library.php:130
+#: templates/single-files-library.php:134
 msgid "No file available for download."
 msgstr ""
 
-#: templates/single-files-library.php:139
+#: templates/single-files-library.php:143
 msgid "File Information"
 msgstr ""
 
-#: templates/single-files-library.php:156
+#: templates/single-files-library.php:160
 msgid "Downloads:"
 msgstr ""
 
-#: templates/single-files-library.php:166
+#: templates/single-files-library.php:170
 msgid "Last Updated:"
 msgstr ""
 
-#: templates/single-files-library.php:175
+#: templates/single-files-library.php:179
 msgid "Categories"
 msgstr ""
 
-#: templates/single-files-library.php:214
+#: templates/single-files-library.php:218
 msgid "Related Files"
 msgstr ""
 
-#: templates/single-files-library.php:248
+#: templates/single-files-library.php:252
 msgid "← Back to Files Library"
-msgstr ""
-
-#: templates/single-files-library.php:273
-#: templates/single-files-library.php:311
-msgid "Processing..."
-msgstr ""
-
-#: templates/single-files-library.php:295
-#: templates/single-files-library.php:342
-msgid "An error occurred. Please try again."
 msgstr ""
 
 #. Plugin Name of the plugin/theme
 msgid "The Library"
 msgstr ""
 
-#. Author URI of the plugin/theme
-msgid "https://github.com/Abdalsalaam"
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/Abdalsalaam/wp-resource-library"
 msgstr ""
 
 #. Description of the plugin/theme
@@ -868,6 +844,10 @@ msgstr ""
 
 #. Author of the plugin/theme
 msgid "Abdalsalaam Halawa"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://github.com/Abdalsalaam"
 msgstr ""
 
 #: includes/class-custom-post-type.php:38

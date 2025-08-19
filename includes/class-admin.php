@@ -218,9 +218,14 @@ class Admin {
 							</th>
 							<td>
 								<?php if ( ! empty( $request->post_title ) ) : ?>
-									<a href="<?php echo esc_url( get_edit_post_link( $request->post_id ) ); ?>" target="_blank">
+									<?php $edit_link = get_edit_post_link( (int) $request->post_id ); ?>
+									<?php if ( $edit_link ) : ?>
+										<a href="<?php echo esc_url( $edit_link ); ?>" target="_blank">
+											<?php echo esc_html( $request->post_title ); ?>
+										</a>
+									<?php else : ?>
 										<?php echo esc_html( $request->post_title ); ?>
-									</a>
+									<?php endif; ?>
 								<?php else : ?>
 									<em><?php esc_html_e( 'File not found', 'the-library' ); ?></em>
 								<?php endif; ?>
@@ -499,15 +504,6 @@ class Admin {
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Orphaned Metadata', 'the-library' ); ?></th>
-						<td>
-							<button type="button" class="button" onclick="wprlRunCleanup('orphaned_meta')">
-								<?php esc_html_e( 'Clean Orphaned Metadata', 'the-library' ); ?>
-							</button>
-							<p class="description"><?php esc_html_e( 'Remove metadata for deleted posts.', 'the-library' ); ?></p>
-						</td>
-					</tr>
-					<tr>
 						<th scope="row"><?php esc_html_e( 'Full Cleanup', 'the-library' ); ?></th>
 						<td>
 							<button type="button" class="button button-primary" onclick="wprlRunCleanup('full')">
@@ -586,12 +582,11 @@ class Admin {
 				case 'full':
 					$results = $database->run_full_cleanup();
 					$message = sprintf(
-						/* translators: 1: number of download requests cleaned, 2: number of error logs cleaned, 3: number of transients cleaned, 4: number of orphaned metadata cleaned */
-						esc_html__( 'Full cleanup completed. Download requests: %1$d, Error logs: %2$d, Transients: %3$d, Orphaned metadata: %4$d', 'the-library' ),
+						/* translators: 1: number of download requests cleaned, 2: number of error logs cleaned, 3: number of transients cleaned */
+						esc_html__( 'Full cleanup completed. Download requests: %1$d, Error logs: %2$d, Transients: %3$d', 'the-library' ),
 						$results['download_requests'] ?? 0,
 						$results['error_logs'] ?? 0,
-						$results['expired_transients'] ?? 0,
-						$results['orphaned_meta'] ?? 0
+						$results['expired_transients'] ?? 0
 					);
 					wp_send_json_success( array( 'message' => $message ) );
 					break;

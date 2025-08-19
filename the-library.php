@@ -3,7 +3,7 @@
  * Plugin Name: The Library
  * Plugin URI: https://github.com/Abdalsalaam/wp-resource-library
  * Description: A comprehensive files/books/videos library plugin with user data collection for downloads.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Abdalsalaam Halawa
  * Author URI: https://github.com/Abdalsalaam
  * License: GPL v3 or later
@@ -32,7 +32,7 @@ if ( ! defined( 'WPRL_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'WPRL_VERSION' ) ) {
-	define( 'WPRL_VERSION', '1.0.1' );
+	define( 'WPRL_VERSION', '1.0.2' );
 }
 
 // Initialize the plugin.

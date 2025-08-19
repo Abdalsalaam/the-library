@@ -89,7 +89,7 @@ get_header(); ?>
 
 											foreach ( $categories as $category ) {
 												$selected = selected( $selected_category, $category->term_id, false );
-												echo '<option value="' . esc_attr( $category->term_id ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $category->name ) . ' (' . esc_html( $category->count ) . ')</option>';
+												echo '<option value="' . esc_attr( $category->term_id ) . '" ' . $selected . '>' . esc_html( $category->name ) . ' (' . esc_html( $category->count ) . ')</option>';
 											}
 											?>
 										</select>
@@ -114,7 +114,7 @@ get_header(); ?>
 
 											foreach ( $file_types as $type_name => $count ) {
 												$selected = selected( $selected_file_type, $type_name, false );
-												echo '<option value="' . esc_attr( $type_name ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $type_name ) . ' (' . esc_html( $count ) . ')</option>';
+												echo '<option value="' . esc_attr( $type_name ) . '" ' . $selected . '>' . esc_html( $type_name ) . ' (' . esc_html( $count ) . ')</option>';
 											}
 											?>
 										</select>
@@ -144,7 +144,7 @@ get_header(); ?>
 
 											foreach ( $sort_options as $value => $label ) {
 												$selected = selected( $selected_sort, $value, false );
-												echo '<option value="' . esc_attr( $value ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $label ) . '</option>';
+												echo '<option value="' . esc_attr( $value ) . '" ' . $selected . '>' . esc_html( $label ) . '</option>';
 											}
 											?>
 										</select>

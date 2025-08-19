@@ -210,7 +210,7 @@ get_header(); ?>
 
 						$related_query = new WP_Query( $related_args );
 						$exclude       = get_the_ID();
-						$posts         = 0;
+						$related_count = 0;
 
 						if ( $related_query->have_posts() ) :
 							?>
@@ -218,12 +218,12 @@ get_header(); ?>
 							<h4><?php esc_html_e( 'Related Files', 'the-library' ); ?></h4>
 							<ul class="wprl-related-files">
 								<?php
-								while ( $related_query->have_posts() && $posts < 5 ) :
+								while ( $related_query->have_posts() && $related_count < 5 ) :
 									$related_query->the_post();
 									if ( get_the_ID() === $exclude ) {
 										continue;
 									}
-									++$posts;
+									++$related_count;
 									?>
 								<li>
 									<a href="<?php the_permalink(); ?>" class="wprl-related-file">
@@ -234,7 +234,7 @@ get_header(); ?>
 										<?php endif; ?>
 										<div class="wprl-related-content">
 											<h5><?php the_title(); ?></h5>
-											<span class="wprl-related-date"><?php echo get_the_date(); ?></span>
+											<span class="wprl-related-date"><?php echo esc_html( get_the_date() ); ?></span>
 										</div>
 									</a>
 								</li>
@@ -258,114 +258,5 @@ get_header(); ?>
 		<?php endwhile; ?>
 	</div>
 </div>
-
-<script>
-jQuery(document).ready(function($) {
-	var downloadToken = null;
-	var downloadUrl = null;
-
-	// Handle direct download for logged-in users
-	$('#wprl-direct-download').on('click', function(e) {
-		e.preventDefault();
-
-		var $button = $(this);
-		var postId = $button.data('post-id');
-		var $messageDiv = $('#wprl-direct-download-message');
-		var originalText = $button.html();
-
-		// Show loading state.
-		$button.html('<span class="wprl-spinner"></span> <?php esc_html_e( 'Processing...', 'the-library' ); ?>').prop('disabled', true);
-		$messageDiv.hide();
-
-		$.ajax({
-			url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
-			type: 'POST',
-			data: {
-				action: 'wprl_direct_download',
-				nonce: '<?php echo esc_js( wp_create_nonce( 'wprl_direct_download_nonce' ) ); ?>',
-				post_id: postId
-			},
-			success: function(response) {
-				if (response.success) {
-					// Start download immediately
-					window.location.href = response.data.download_url;
-				} else {
-					$messageDiv.removeClass('wprl-success').addClass('wprl-error')
-						.text(response.data.message).show();
-				}
-			},
-			error: function() {
-				$messageDiv.removeClass('wprl-success').addClass('wprl-error')
-					.text('<?php esc_html_e( 'An error occurred. Please try again.', 'the-library' ); ?>').show();
-			},
-			complete: function() {
-				$button.html(originalText).prop('disabled', false);
-			}
-		});
-	});
-
-	$('#wprl-download-form').on('submit', function(e) {
-		e.preventDefault();
-
-		var form = $(this);
-		var submitButton = form.find('button[type="submit"]');
-		var messageDiv = $('#wprl-download-message');
-
-		// Disable submit button
-		submitButton.prop('disabled', true).text('<?php esc_html_e( 'Processing...', 'the-library' ); ?>');
-
-		$.ajax({
-			url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
-			type: 'POST',
-			data: {
-				action: 'wprl_submit_download_form',
-				nonce: $('#wprl_download_nonce').val(),
-				post_id: $('input[name="post_id"]').val(),
-				user_name: $('#wprl_user_name').val(),
-				user_email: $('#wprl_user_email').val(),
-				user_mobile: $('#wprl_user_mobile').val()
-			},
-			success: function(response) {
-				if (response.success) {
-					downloadToken = response.data.download_token;
-					downloadUrl = response.data.download_url;
-					$('#wprl-download-form-container').hide();
-					$('#wprl-download-success').show();
-
-					// Auto-start download after 2 seconds
-					setTimeout(function() {
-						startDownload();
-					}, 2000);
-				} else {
-					messageDiv.removeClass('wprl-success').addClass('wprl-error')
-							.text(response.data.message).show();
-				}
-			},
-			error: function() {
-				messageDiv.removeClass('wprl-success').addClass('wprl-error')
-						.text('<?php esc_html_e( 'An error occurred. Please try again.', 'the-library' ); ?>').show();
-			},
-			complete: function() {
-				submitButton.prop('disabled', false).html('<i class="wprl-icon-download"></i> <?php esc_html_e( 'Download File', 'the-library' ); ?>');
-			}
-		});
-	});
-
-	$('#wprl-manual-download').on('click', function() {
-		startDownload();
-	});
-
-	function startDownload() {
-		if (downloadUrl) {
-			// Directly use the download URL
-			window.location.href = downloadUrl;
-		} else if (downloadToken) {
-			// Fallback: construct URL from token (for backward compatibility)
-			var fallbackUrl = '<?php echo esc_js( home_url() ); ?>?wprl_download=1&token=' + downloadToken + '&post_id=<?php echo esc_js( get_the_ID() ); ?>';
-			window.location.href = fallbackUrl;
-		}
-	}
-});
-</script>
 
 <?php get_footer(); ?>
