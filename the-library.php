@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: The Library
- * Plugin URI: https://github.com/Abdalsalaam/wp-resource-library
+ * Plugin URI: https://github.com/Abdalsalaam/the-library
  * Description: A comprehensive files/books/videos library plugin with user data collection for downloads.
  * Version: 1.0.2
  * Author: Abdalsalaam Halawa
