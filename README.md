@@ -1,3 +1,4 @@
+![cover.jpg](cover.jpg)
 # The Library WordPress Plugin
 
 A comprehensive WordPress plugin for creating a files/books/videos library with user data collection for downloads.

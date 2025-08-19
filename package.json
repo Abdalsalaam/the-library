@@ -1,7 +1,7 @@
 {
 	"name": "the-library",
 	"title": "The Library",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"homepage": "https://github.com/Abdalsalaam/the-library",
 	"config": {
 		"use_pnpm": true,

@@ -20,7 +20,8 @@
 			"composer.lock",
 			"pnpm-lock.yaml",
 			"the-library.zip",
-			".*"
+			".*",
+            "cover.jpg"
 		]
 	},
 	"require-dev": {
