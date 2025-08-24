@@ -58,6 +58,15 @@ class Admin {
 			'wprl-maintenance',
 			array( $this, 'maintenance_page' )
 		);
+
+		add_submenu_page(
+			'edit.php?post_type=wprl_files_library',
+			esc_html__( 'Form Settings', 'the-library' ),
+			esc_html__( 'Form Settings', 'the-library' ),
+			'manage_options',
+			'wprl-form-settings',
+			array( $this, 'form_settings_page' )
+		);
 	}
 
 	/**
@@ -634,5 +643,13 @@ class Admin {
 		} catch ( Exception $e ) {
 			wp_send_json_error( array( 'message' => esc_html( $e->getMessage() ) ) );
 		}
+	}
+
+	/**
+	 * Form settings admin page.
+	 */
+	public function form_settings_page() {
+		$settings = new Settings();
+		$settings->render_settings_page();
 	}
 }

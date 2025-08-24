@@ -72,6 +72,7 @@ class Frontend {
 				'direct_download_nonce' => wp_create_nonce( 'wprl_direct_download_nonce' ),
 				'loading_text'          => esc_html__( 'Loading...', 'the-library' ),
 				'error_message'         => esc_html__( 'Error loading files. Please try again.', 'the-library' ),
+				'form_validation'       => self::get_form_validation_rules(),
 			)
 		);
 	}
@@ -359,5 +360,125 @@ class Frontend {
 			</div>
 		</article>
 		<?php
+	}
+
+	/**
+	 * Generate dynamic download form fields based on admin settings.
+	 *
+	 * @return string Form fields HTML.
+	 */
+	public static function get_download_form_fields(): string {
+		$enabled_fields  = Settings::get_enabled_fields();
+		$required_fields = Settings::get_required_fields();
+		$form_html       = '';
+
+		// Name field.
+		if ( in_array( 'name_field', $enabled_fields, true ) ) {
+			$is_required = in_array( 'name_field', $required_fields, true );
+			$form_html  .= self::render_form_field(
+				'name',
+				'user_name',
+				esc_html__( 'Full Name', 'the-library' ),
+				'text',
+				$is_required
+			);
+		}
+
+		// Email field.
+		if ( in_array( 'email_field', $enabled_fields, true ) ) {
+			$is_required = in_array( 'email_field', $required_fields, true );
+			$form_html  .= self::render_form_field(
+				'email',
+				'user_email',
+				esc_html__( 'Email Address', 'the-library' ),
+				'email',
+				$is_required
+			);
+		}
+
+		// Phone field.
+		if ( in_array( 'phone_field', $enabled_fields, true ) ) {
+			$is_required = in_array( 'phone_field', $required_fields, true );
+			$form_html  .= self::render_form_field(
+				'phone',
+				'user_mobile',
+				esc_html__( 'Mobile Number', 'the-library' ),
+				'tel',
+				$is_required
+			);
+		}
+
+		return $form_html;
+	}
+
+	/**
+	 * Render individual form field.
+	 *
+	 * @param string $field_type Field type identifier.
+	 * @param string $field_name Field name attribute.
+	 * @param string $field_label Field label text.
+	 * @param string $input_type HTML input type.
+	 * @param bool   $is_required Whether field is required.
+	 * @return string Field HTML.
+	 */
+	private static function render_form_field( string $field_type, string $field_name, string $field_label, string $input_type, bool $is_required ): string {
+		$required_attr = $is_required ? 'required' : '';
+		$required_text = $is_required ? ' *' : '';
+		$field_id      = 'wprl_' . $field_name;
+
+		ob_start();
+		?>
+		<div class="wprl-form-field">
+			<label for="<?php echo esc_attr( $field_id ); ?>">
+				<?php echo esc_html( $field_label . $required_text ); ?>
+			</label>
+			<input type="<?php echo esc_attr( $input_type ); ?>"
+					id="<?php echo esc_attr( $field_id ); ?>"
+					name="<?php echo esc_attr( $field_name ); ?>"
+					<?php echo esc_attr( $required_attr ); ?>
+					data-field-type="<?php echo esc_attr( $field_type ); ?>">
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get form validation rules for JavaScript.
+	 *
+	 * @return array Validation rules.
+	 */
+	public static function get_form_validation_rules(): array {
+		$enabled_fields   = Settings::get_enabled_fields();
+		$required_fields  = Settings::get_required_fields();
+		$validation_rules = array();
+
+		// Name field rules.
+		if ( in_array( 'name_field', $enabled_fields, true ) ) {
+			$validation_rules['user_name'] = array(
+				'enabled'  => true,
+				'required' => in_array( 'name_field', $required_fields, true ),
+				'type'     => 'text',
+			);
+		}
+
+		// Email field rules.
+		if ( in_array( 'email_field', $enabled_fields, true ) ) {
+			$validation_rules['user_email'] = array(
+				'enabled'  => true,
+				'required' => in_array( 'email_field', $required_fields, true ),
+				'type'     => 'email',
+			);
+		}
+
+		// Phone field rules.
+		if ( in_array( 'phone_field', $enabled_fields, true ) ) {
+			$validation_rules['user_mobile'] = array(
+				'enabled'  => true,
+				'required' => in_array( 'phone_field', $required_fields, true ),
+				'type'     => 'tel',
+			);
+		}
+
+		return $validation_rules;
 	}
 }

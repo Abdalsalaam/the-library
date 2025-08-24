@@ -56,6 +56,7 @@ class Main {
 		require_once WPRL_PLUGIN_PATH . 'includes/class-frontend.php';
 		require_once WPRL_PLUGIN_PATH . 'includes/class-download-handler.php';
 		require_once WPRL_PLUGIN_PATH . 'includes/class-csv-export.php';
+		require_once WPRL_PLUGIN_PATH . 'includes/class-settings.php';
 	}
 
 	/**
@@ -67,6 +68,7 @@ class Main {
 		new Frontend();
 		new Download_Handler();
 		new CSV_Export();
+		new Settings();
 	}
 
 	/**

@@ -35,44 +35,73 @@ class Download_Handler {
 		check_ajax_referer( 'wprl_download_nonce', 'nonce' );
 
 		// Validate required POST parameters exist.
-		if ( ! isset( $_POST['post_id'] ) || ! isset( $_POST['user_name'] ) || ! isset( $_POST['user_mobile'] ) ) {
+		if ( ! isset( $_POST['post_id'] ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Required fields are missing.', 'the-library' ),
+					'message' => esc_html__( 'Post ID is required.', 'the-library' ),
 				)
 			);
 		}
 
-		$post_id     = intval( wp_unslash( $_POST['post_id'] ) );
-		$user_name   = sanitize_text_field( wp_unslash( $_POST['user_name'] ) );
-		$user_email  = isset( $_POST['user_email'] ) ? sanitize_email( wp_unslash( $_POST['user_email'] ) ) : '';
-		$user_mobile = sanitize_text_field( wp_unslash( $_POST['user_mobile'] ) );
+		$post_id = intval( wp_unslash( $_POST['post_id'] ) );
 
-		// Validate required fields.
-		if ( empty( $user_name ) || empty( $user_mobile ) ) {
-			wp_send_json_error(
-				array(
-					'message' => esc_html__( 'Please fill in all required fields.', 'the-library' ),
-				)
-			);
-		}
+		// Get form field settings.
+		$enabled_fields  = Settings::get_enabled_fields();
+		$required_fields = Settings::get_required_fields();
 
-		// Validate mobile number.
-		if ( ! Utils::is_valid_mobile( $user_mobile ) ) {
-			wp_send_json_error(
-				array(
-					'message' => esc_html__( 'Please enter a valid mobile number (minimum 7 digits).', 'the-library' ),
-				)
-			);
-		}
+		// If no fields are enabled, allow download with minimal data.
+		if ( empty( $enabled_fields ) ) {
+			$user_name   = esc_html__( 'Anonymous User', 'the-library' );
+			$user_email  = '';
+			$user_mobile = '';
+		} else {
+			// Initialize user data variables.
+			$user_name   = '';
+			$user_email  = '';
+			$user_mobile = '';
 
-		// Validate email.
-		if ( ! empty( $user_email ) && ! is_email( $user_email ) ) {
-			wp_send_json_error(
-				array(
-					'message' => esc_html__( 'Please enter a valid email address.', 'the-library' ),
-				)
-			);
+			// Process and validate each enabled field.
+			$validation_errors = array();
+
+			// Name field validation.
+			if ( in_array( 'name_field', $enabled_fields, true ) ) {
+				$user_name = isset( $_POST['user_name'] ) ? sanitize_text_field( wp_unslash( $_POST['user_name'] ) ) : '';
+
+				if ( in_array( 'name_field', $required_fields, true ) && empty( $user_name ) ) {
+					$validation_errors[] = esc_html__( 'Name is required.', 'the-library' );
+				}
+			}
+
+			// Email field validation.
+			if ( in_array( 'email_field', $enabled_fields, true ) ) {
+				$user_email = isset( $_POST['user_email'] ) ? sanitize_email( wp_unslash( $_POST['user_email'] ) ) : '';
+
+				if ( in_array( 'email_field', $required_fields, true ) && empty( $user_email ) ) {
+					$validation_errors[] = esc_html__( 'Email is required.', 'the-library' );
+				} elseif ( ! empty( $user_email ) && ! is_email( $user_email ) ) {
+					$validation_errors[] = esc_html__( 'Please enter a valid email address.', 'the-library' );
+				}
+			}
+
+			// Phone field validation.
+			if ( in_array( 'phone_field', $enabled_fields, true ) ) {
+				$user_mobile = isset( $_POST['user_mobile'] ) ? sanitize_text_field( wp_unslash( $_POST['user_mobile'] ) ) : '';
+
+				if ( in_array( 'phone_field', $required_fields, true ) && empty( $user_mobile ) ) {
+					$validation_errors[] = esc_html__( 'Phone number is required.', 'the-library' );
+				} elseif ( ! empty( $user_mobile ) && ! Utils::is_valid_mobile( $user_mobile ) ) {
+					$validation_errors[] = esc_html__( 'Please enter a valid mobile number (minimum 7 digits).', 'the-library' );
+				}
+			}
+
+			// Return validation errors if any.
+			if ( ! empty( $validation_errors ) ) {
+				wp_send_json_error(
+					array(
+						'message' => implode( ' ', $validation_errors ),
+					)
+				);
+			}
 		}
 
 		// Validate post exists and has file.
