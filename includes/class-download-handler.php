@@ -44,6 +44,13 @@ class Download_Handler {
 		}
 
 		$post_id = intval( wp_unslash( $_POST['post_id'] ) );
+		if ( $post_id <= 0 ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Invalid post ID.', 'the-library' ),
+				)
+			);
+		}
 
 		// Get form field settings.
 		$enabled_fields  = Settings::get_enabled_fields();
