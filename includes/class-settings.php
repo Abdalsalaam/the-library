@@ -134,8 +134,7 @@ class Settings {
 				<span><?php esc_html_e( 'Display this field', 'the-library' ); ?></span>
 			</label>
 
-			<label class="wprl-field-setting-row wprl-required-setting"
-					style="margin-left: 20px; <?php echo $field_settings['enabled'] ? '' : 'display: none;'; ?>">
+			<label class="wprl-field-setting-row wprl-required-setting"<?php echo $field_settings['enabled'] ? '' : ' style="display: none;"'; ?>>
 				<input type="checkbox"
 						name="<?php echo esc_attr( $required_name ); ?>"
 						value="1"
@@ -155,8 +154,7 @@ class Settings {
 	 * @return array Sanitized settings.
 	 */
 	public function sanitize_settings( $input ): array {
-		// Handle null input (when no checkboxes are checked).
-		if ( null === $input || ! is_array( $input ) ) {
+		if ( ! is_array( $input ) ) {
 			$input = array();
 		}
 
@@ -182,61 +180,21 @@ class Settings {
 			return;
 		}
 
-		wp_enqueue_style( 'wprl-admin-css' );
-		wp_add_inline_style( 'wprl-admin-css', $this->get_settings_css() );
-		wp_add_inline_script( 'wprl-admin-js', $this->get_settings_js() );
-	}
+		// Enqueue settings-specific styles and scripts.
+		wp_enqueue_style(
+			'wprl-settings-css',
+			Utils::get_plugin_url( 'assets/css/settings.css' ),
+			array(),
+			Utils::get_version()
+		);
 
-	/**
-	 * Get settings CSS.
-	 *
-	 * @return string CSS styles.
-	 */
-	private function get_settings_css(): string {
-		return '
-		.wprl-field-setting {
-			margin-bottom: 15px;
-			padding: 15px;
-			background: #f9f9f9;
-			border: 1px solid #ddd;
-			border-radius: 4px;
-		}
-		.wprl-field-setting-row {
-			display: block;
-			margin-bottom: 8px;
-			cursor: pointer;
-		}
-		.wprl-field-setting-row input[type="checkbox"] {
-			margin-right: 8px;
-		}
-		.wprl-required-setting.disabled {
-			opacity: 0.5;
-		}
-		';
-	}
-
-	/**
-	 * Get settings JavaScript.
-	 *
-	 * @return string JavaScript code.
-	 */
-	private function get_settings_js(): string {
-		return '
-		jQuery(document).ready(function($) {
-			$(".wprl-field-enabled").on("change", function() {
-				var $requiredSetting = $(this).closest(".wprl-field-setting").find(".wprl-required-setting");
-				var $requiredCheckbox = $requiredSetting.find(".wprl-field-required");
-
-				if ($(this).is(":checked")) {
-					$requiredSetting.show();
-					$requiredCheckbox.prop("disabled", false);
-				} else {
-					$requiredSetting.hide();
-					$requiredCheckbox.prop("checked", false).prop("disabled", true);
-				}
-			});
-		});
-		';
+		wp_enqueue_script(
+			'wprl-settings-js',
+			Utils::get_plugin_url( 'assets/js/settings.js' ),
+			array( 'jquery' ),
+			Utils::get_version(),
+			true
+		);
 	}
 
 	/**
@@ -258,14 +216,14 @@ class Settings {
 				?>
 			</form>
 
-			<div class="wprl-settings-info" style="margin-top: 30px; padding: 15px; background: #fff; border: 1px solid #ccd0d4;">
+			<div class="wprl-settings-info">
 				<h3><?php esc_html_e( 'Field Information', 'the-library' ); ?></h3>
 				<ul>
 					<li><strong><?php esc_html_e( 'Name Field:', 'the-library' ); ?></strong> <?php esc_html_e( 'Collects the user\'s full name', 'the-library' ); ?></li>
 					<li><strong><?php esc_html_e( 'Email Field:', 'the-library' ); ?></strong> <?php esc_html_e( 'Collects the user\'s email address', 'the-library' ); ?></li>
 					<li><strong><?php esc_html_e( 'Phone Field:', 'the-library' ); ?></strong> <?php esc_html_e( 'Collects the user\'s mobile/phone number', 'the-library' ); ?></li>
 				</ul>
-				<p><em><?php esc_html_e( 'At least one field must be enabled and required to ensure user data collection.', 'the-library' ); ?></em></p>
+				<p><em><?php esc_html_e( 'All fields can be disabled to allow anonymous downloads without data collection.', 'the-library' ); ?></em></p>
 			</div>
 		</div>
 		<?php
@@ -289,42 +247,6 @@ class Settings {
 		}
 
 		return $settings;
-	}
-
-	/**
-	 * Get field configuration.
-	 *
-	 * @param string $field_key Field key (name_field, email_field, phone_field).
-	 * @return array Field configuration.
-	 */
-	public static function get_field_config( string $field_key ): array {
-		$settings = self::get_settings();
-		return $settings[ $field_key ] ?? self::$default_settings[ $field_key ] ?? array(
-			'enabled'  => false,
-			'required' => false,
-		);
-	}
-
-	/**
-	 * Check if field is enabled.
-	 *
-	 * @param string $field_key Field key.
-	 * @return bool True if field is enabled.
-	 */
-	public static function is_field_enabled( string $field_key ): bool {
-		$config = self::get_field_config( $field_key );
-		return ! empty( $config['enabled'] );
-	}
-
-	/**
-	 * Check if field is required.
-	 *
-	 * @param string $field_key Field key.
-	 * @return bool True if field is required.
-	 */
-	public static function is_field_required( string $field_key ): bool {
-		$config = self::get_field_config( $field_key );
-		return ! empty( $config['required'] ) && ! empty( $config['enabled'] );
 	}
 
 	/**
