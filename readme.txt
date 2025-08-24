@@ -22,14 +22,18 @@ The Library is a powerful WordPress plugin that allows you to create a comprehen
 * **CSV Export**: Export collected user data as CSV
 * **Admin Dashboard**: View and manage download requests
 * **File Statistics**: View download counts and file details
+* **Form Customization**: Configure download form fields (show/hide, required/optional)
+* **Flexible Data Collection**: Control what user information is collected
 
 = Frontend Features =
 * **Library Archive**: Main library page similar to blog archive
 * **Search & Filters**: Search files and filter by category, file type, and sort options
 * **Responsive Design**: Mobile-friendly interface
-* **Download Protection**: Users must provide contact information to download
-* **User Data Collection**: Collect name, email, and mobile number before download
+* **Dynamic Download Forms**: Forms adapt based on admin configuration
+* **Flexible Data Collection**: Collect only the information you need (name, email, phone)
+* **Smart User Experience**: Form instructions and login prompts adapt to configuration
 * **Download Tokens**: Secure download links valid for 24 hours
+* **Anonymous Downloads**: Support for downloads without data collection when configured
 
 = Security Features =
 * **Nonce Protection**: All AJAX requests are protected with nonces
@@ -62,6 +66,27 @@ The Library is a powerful WordPress plugin that allows you to create a comprehen
 4. Delete individual requests or use bulk actions
 
 == Customization ==
+
+= Admin-Configurable Download Form Fields =
+#### Accessing Form Settings
+1. Go to **Files Library > Form Settings** in your WordPress admin
+2. Configure each field (Name, Email, Phone) individually
+3. Save your settings
+
+#### Field Configuration Options
+For each field, you can:
+* **Enable/Disable**: Show or hide the field completely
+* **Required/Optional**: Make the field mandatory or optional for users
+
+#### Default Configuration
+* **Name Field**: Enabled and Required
+* **Email Field**: Enabled and Optional
+* **Phone Field**: Enabled and Required
+
+#### Flexible Download Options
+* **With Form Fields**: Users fill out enabled fields before downloading
+* **No Form Fields**: When all fields are disabled, users can download directly without providing any information
+* **Mixed Configuration**: Any combination of enabled/disabled and required/optional fields
 
 = Template Override =
 
