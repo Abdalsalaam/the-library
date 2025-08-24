@@ -92,6 +92,9 @@ Yes, you can export all collected user data as CSV from the admin dashboard.
 
 == Changelog ==
 
+= 1.1.0 =
+* Add admin configurable download form fields.
+
 = 1.0.2 =
 * PHP and JS warnings fixes.
 
