@@ -247,13 +247,7 @@
 					},
 					success: function ( response ) {
 						if ( response.success ) {
-							// Show success message if message div exists
-							if ( $messageDiv.length ) {
-								$messageDiv.removeClass( 'wprl-error' ).addClass( 'wprl-success' )
-									.text( response.data.message ).show()
-							}
-
-							// Start download immediately
+							// Start download immediately (no success message needed)
 							window.location.href = response.data.download_url
 						} else {
 							// Show error message
