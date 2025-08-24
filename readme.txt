@@ -74,7 +74,7 @@ You can override the plugin templates by copying them to your theme:
 == Frequently Asked Questions ==
 
 = Can I customize the download form fields? =
-Currently, the plugin collects name, email (optional), and mobile number. Future versions will include customizable fields.
+Yes. As of 1.1.0 you can enable/disable Name, Email, and Phone, and mark each as required/optional in Files Library > Form Settings. You can also allow direct downloads by disabling all fields.
 
 = Are downloads secure? =
 Yes, the plugin uses secure download tokens that expire after 24 hours and includes nonce protection for all requests.
