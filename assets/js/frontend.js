@@ -57,21 +57,24 @@
 				WPRL_Frontend.handleDirectDownload( $( this ) )
 			} )
 
-			// Real-time mobile number validation
-			$( document ).on( 'input', '#wprl_user_mobile', function () {
+			// Real-time field validation based on dynamic configuration
+			$( document ).on( 'input', 'input[data-field-type]', function () {
 				var $this = $( this )
-				var mobile = $this.val()
+				var fieldType = $this.data( 'field-type' )
+				var value = $this.val()
 
-				// Remove any characters that aren't allowed
-				var cleaned = mobile.replace( /[^\d\s\-\+\(\)]/g, '' )
-				if ( cleaned !== mobile ) {
-					$this.val( cleaned )
+				// Handle mobile number cleaning
+				if ( fieldType === 'phone' ) {
+					// Remove any characters that aren't allowed
+					var cleaned = value.replace( /[^\d\s\-\+\(\)]/g, '' )
+					if ( cleaned !== value ) {
+						$this.val( cleaned )
+						value = cleaned
+					}
 				}
 
-				// Remove error class if valid
-				if ( WPRL_Frontend.isValidMobile( cleaned ) ) {
-					$this.removeClass( 'error' )
-				}
+				// Validate field based on type and configuration
+				WPRL_Frontend.validateField( $this, fieldType, value )
 			} )
 			},
 
@@ -147,35 +150,10 @@
 				var $messageDiv = $( '#wprl-download-message' )
 				var originalBtnText = $submitBtn.html()
 
-				// Validate form
-				var isValid = true
-				$form.find( 'input[required]' ).each( function () {
-					if ( !$( this ).val().trim() ) {
-						isValid = false
-						$( this ).addClass( 'error' )
-					} else {
-						$( this ).removeClass( 'error' )
-					}
-				} )
-
-				if ( !isValid ) {
-					WPRL_Frontend.showMessage( 'Please fill in all required fields.', 'error', $messageDiv )
-					return
-				}
-
-				// Validate mobile number
-				var mobile = $( '#wprl_user_mobile' ).val().trim()
-				if ( mobile && !WPRL_Frontend.isValidMobile( mobile ) ) {
-					WPRL_Frontend.showMessage( 'Please enter a valid mobile number (minimum 7 digits).', 'error', $messageDiv )
-					$( '#wprl_user_mobile' ).addClass( 'error' )
-					return
-				}
-
-				// Validate email if provided
-				var email = $( '#wprl_user_email' ).val().trim()
-				if ( email && !WPRL_Frontend.isValidEmail( email ) ) {
-					WPRL_Frontend.showMessage( 'Please enter a valid email address.', 'error', $messageDiv )
-					$( '#wprl_user_email' ).addClass( 'error' )
+				// Validate form using dynamic validation rules
+				var validationResult = WPRL_Frontend.validateForm( $form )
+				if ( !validationResult.isValid ) {
+					WPRL_Frontend.showMessage( validationResult.message, 'error', $messageDiv )
 					return
 				}
 
@@ -183,17 +161,27 @@
 				$submitBtn.html( '<span class="wprl-spinner"></span> Processing...' ).prop( 'disabled', true )
 				$messageDiv.hide()
 
+				// Prepare form data dynamically
+				var formData = {
+					action: 'wprl_submit_download_form',
+					nonce: $form.find( '#wprl_download_nonce' ).val(),
+					post_id: $form.find( 'input[name="post_id"]' ).val()
+				}
+
+				// Add enabled field values to form data
+				$form.find( 'input[data-field-type]' ).each( function () {
+					var $field = $( this )
+					var fieldName = $field.attr( 'name' )
+					var fieldValue = $field.val()
+					if ( fieldName && fieldValue !== undefined ) {
+						formData[fieldName] = fieldValue
+					}
+				} )
+
 				$.ajax( {
 					url: wprl_ajax.ajax_url,
 					type: 'POST',
-					data: {
-						action: 'wprl_submit_download_form',
-						nonce: $form.find( '#wprl_download_nonce' ).val(),
-						post_id: $form.find( 'input[name="post_id"]' ).val(),
-						user_name: $( '#wprl_user_name' ).val(),
-						user_email: $( '#wprl_user_email' ).val(),
-						user_mobile: $( '#wprl_user_mobile' ).val()
-					},
+					data: formData,
 					success: function ( response ) {
 						if ( response.success ) {
 							// Hide form and show success message
@@ -259,13 +247,7 @@
 					},
 					success: function ( response ) {
 						if ( response.success ) {
-							// Show success message if message div exists
-							if ( $messageDiv.length ) {
-								$messageDiv.removeClass( 'wprl-error' ).addClass( 'wprl-success' )
-									.text( response.data.message ).show()
-							}
-
-							// Start download immediately
+							// Start download immediately (no success message needed)
 							window.location.href = response.data.download_url
 						} else {
 							// Show error message
@@ -355,6 +337,98 @@
 					url.searchParams.delete( key )
 				}
 				return url.toString()
+			},
+
+			// Validate individual field based on type and configuration
+			validateField: function ( $field, fieldType, value ) {
+				var isValid = true
+				var validationRules = wprl_ajax.form_validation || {}
+				var fieldName = $field.attr( 'name' )
+				var fieldConfig = validationRules[fieldName]
+
+				if ( !fieldConfig || !fieldConfig.enabled ) {
+					return true
+				}
+
+				// Check if required field is empty
+				if ( fieldConfig.required && !value.trim() ) {
+					isValid = false
+				}
+
+				// Type-specific validation
+				if ( value.trim() && fieldType === 'email' && !this.isValidEmail( value ) ) {
+					isValid = false
+				}
+
+				if ( value.trim() && fieldType === 'phone' && !this.isValidMobile( value ) ) {
+					isValid = false
+				}
+
+				// Update field visual state
+				if ( isValid ) {
+					$field.removeClass( 'error' )
+				} else {
+					$field.addClass( 'error' )
+				}
+
+				return isValid
+			},
+
+			// Validate entire form using dynamic rules
+			validateForm: function ( $form ) {
+				var isValid = true
+				var errors = []
+				var validationRules = wprl_ajax.form_validation || {}
+
+				// Validate each enabled field
+				$form.find( 'input[data-field-type]' ).each( function () {
+					var $field = $( this )
+					var fieldType = $field.data( 'field-type' )
+					var fieldName = $field.attr( 'name' )
+					var value = $field.val()
+					var fieldConfig = validationRules[fieldName]
+
+					if ( !fieldConfig || !fieldConfig.enabled ) {
+						return true
+					}
+
+					// Check required fields
+					if ( fieldConfig.required && !value.trim() ) {
+						isValid = false
+						$field.addClass( 'error' )
+
+						// Add specific error message based on field type
+						if ( fieldType === 'name' ) {
+							errors.push( 'Name is required.' )
+						} else if ( fieldType === 'email' ) {
+							errors.push( 'Email is required.' )
+						} else if ( fieldType === 'phone' ) {
+							errors.push( 'Phone number is required.' )
+						}
+					} else {
+						$field.removeClass( 'error' )
+					}
+
+					// Type-specific validation for non-empty fields
+					if ( value.trim() ) {
+						if ( fieldType === 'email' && !WPRL_Frontend.isValidEmail( value ) ) {
+							isValid = false
+							$field.addClass( 'error' )
+							errors.push( 'Please enter a valid email address.' )
+						}
+
+						if ( fieldType === 'phone' && !WPRL_Frontend.isValidMobile( value ) ) {
+							isValid = false
+							$field.addClass( 'error' )
+							errors.push( 'Please enter a valid mobile number (minimum 7 digits).' )
+						}
+					}
+				} )
+
+				return {
+					isValid: isValid,
+					message: errors.length > 0 ? errors[0] : 'Please fill in all required fields.'
+				}
 			}
 		}
 

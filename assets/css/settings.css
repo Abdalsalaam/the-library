@@ -1,0 +1,50 @@
+/**
+ * Settings Page Styles
+ *
+ * @package TheLibrary
+ */
+/* Field Setting Rows */
+.wprl-field-setting-row {
+	display: block;
+	margin-bottom: 8px;
+	cursor: pointer;
+}
+
+.wprl-field-setting-row input[type="checkbox"] {
+	margin-right: 8px;
+}
+
+/* Required Setting State */
+.wprl-required-setting {
+	transition: opacity 0.3s ease;
+}
+
+.wprl-required-setting.disabled {
+	opacity: 0.5;
+}
+
+/* Ensure proper display states */
+.wprl-required-setting[style*="display: none"] {
+	display: none !important;
+}
+
+/* Settings Info Box */
+.wprl-settings-info {
+	margin-top: 30px;
+	padding: 15px;
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 4px;
+}
+
+.wprl-settings-info h3 {
+	margin-top: 0;
+}
+
+.wprl-settings-info ul {
+	margin-bottom: 15px;
+}
+
+.wprl-settings-info li {
+	margin-bottom: 5px;
+}

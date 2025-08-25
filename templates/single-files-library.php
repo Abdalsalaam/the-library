@@ -5,8 +5,10 @@
  * @package TheLibrary
  */
 
+use TheLibrary\Frontend;
+
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 get_header(); ?>
@@ -66,15 +68,19 @@ get_header(); ?>
 										<div id="wprl-direct-download-message" class="wprl-message" style="display: none;"></div>
 									</div>
 								<?php else : ?>
-									<!-- Non-logged-in user - Form required -->
+									<!-- Non-logged-in user - Dynamic message based on form fields -->
 									<div class="wprl-download-info">
-										<p><?php esc_html_e( 'To download this file, please provide your contact information below:', 'the-library' ); ?></p>
-										<p><small>
-										<?php
-										/* translators: 1: opening link tag, 2: closing link tag */
-										printf( esc_html__( 'Already have an account? %1$sLogin here%2$s for direct downloads.', 'the-library' ), '<a href="' . esc_url( wp_login_url( get_permalink() ) ) . '">', '</a>' );
-										?>
-										</small></p>
+										<?php if ( ! empty( Frontend::get_download_form_fields() ) ) : ?>
+											<p><?php esc_html_e( 'To download this file, please provide your contact information below:', 'the-library' ); ?></p>
+											<p><small>
+											<?php
+											/* translators: 1: opening link tag, 2: closing link tag */
+											printf( esc_html__( 'Already have an account? %1$sLogin here%2$s for direct downloads.', 'the-library' ), '<a href="' . esc_url( wp_login_url( get_permalink() ) ) . '">', '</a>' );
+											?>
+											</small></p>
+										<?php else : ?>
+											<p><?php esc_html_e( 'Click the button below to download this file:', 'the-library' ); ?></p>
+										<?php endif; ?>
 									</div>
 								<?php endif; ?>
 
@@ -84,39 +90,24 @@ get_header(); ?>
 										<?php wp_nonce_field( 'wprl_download_nonce', 'wprl_download_nonce' ); ?>
 										<input type="hidden" name="post_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
 
-										<div class="wprl-form-row">
-											<div class="wprl-form-field">
-												<label for="wprl_user_name"><?php esc_html_e( 'Full Name *', 'the-library' ); ?></label>
-												<input type="text" id="wprl_user_name" name="user_name" required>
-											</div>
-
-											<div class="wprl-form-field">
-												<label for="wprl_user_email"><?php esc_html_e( 'Email Address (Optional)', 'the-library' ); ?></label>
-												<input type="email" id="wprl_user_email" name="user_email">
-											</div>
-										</div>
-
-										<div class="wprl-form-row">
-											<div class="wprl-form-field">
-												<label for="wprl_user_mobile"><?php esc_html_e( 'Mobile Number *', 'the-library' ); ?></label>
-												<input type="tel" id="wprl_user_mobile" name="user_mobile" required
-														pattern="[\d\s\-\+\(\)]+"
-														title="Please enter a valid mobile number (minimum 7 digits)"
-														placeholder="e.g., +1234567890 or 123-456-7890"
-														minlength="7" maxlength="20">
-											</div>
+										<div class="wprl-form-fields">
+											<?php
+											// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+											echo Frontend::get_download_form_fields();
+											?>
 										</div>
 
 										<div class="wprl-form-actions">
 											<button type="submit" class="wprl-download-button">
 												<i class="wprl-icon-download"></i>
-												<?php esc_html_e( 'Download File', 'the-library' ); ?>
+												<?php esc_html_e( 'Get File', 'the-library' ); ?>
 											</button>
 										</div>
 
 										<div id="wprl-download-message" class="wprl-message" style="display: none;"></div>
 									</form>
 								</div>
+								<?php endif; ?>
 
 								<div id="wprl-download-success" class="wprl-download-success" style="display: none;">
 									<div class="wprl-success-message">
@@ -128,7 +119,6 @@ get_header(); ?>
 										</button>
 									</div>
 								</div>
-							<?php endif; ?>
 							<?php else : ?>
 								<div class="wprl-no-file">
 									<p><?php esc_html_e( 'No file available for download.', 'the-library' ); ?></p>
